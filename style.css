@@ -1,0 +1,15 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  background: #000;
+}
+
+canvas{
+  background: yellow;
+  width: 100%;
+  object-fit: contain;
+}
