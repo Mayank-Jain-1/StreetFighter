@@ -9,7 +9,11 @@ body{
 }
 
 canvas{
-  background: yellow;
-  width: 100%;
+  background: black;
+  /* width: 100%; */
   object-fit: contain;
+}
+
+img{
+  display: none;
 }
