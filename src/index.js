@@ -1,40 +1,40 @@
+import { STAGE_FLOOR } from "./constants/Stage.js";
 import { Ken } from "./entitites/fighters/Ken.js";
 import { Ryu } from "./entitites/fighters/Ryu.js";
 import { FpsCounter } from "./entitites/FpsCounter.js";
 import { Stage } from "./entitites/Stage.js";
 
-const GameViewport = {
-  WIDTH: 384,
-  HEIGHT: 224,
-  SCALE: 1,
-};
 
 
 window.onload = () => {
   const canvasEL = document.querySelector('canvas');
   const context = canvasEL.getContext('2d');
-  canvasEL.width = GameViewport.WIDTH ;
-  canvasEL.height = GameViewport.HEIGHT;
 
   const entities = [
     new Stage(),
-    new Ryu(180,80, -150),
-    new Ken(80, 80,150 ), 
+    new Ryu(180,STAGE_FLOOR,-50),
+    new Ken(80, STAGE_FLOOR, 50 ), 
     new FpsCounter(),
   ]
 
-  let secondsElapsed = 0;
-  let previousTime = 0;
+  let frameTime = {
+    secondsPassed: 0,
+    previous:0
+  }
 
   const frame = (time) => {
-    secondsElapsed = (time - previousTime)/1000;
-    previousTime = time;
     window.requestAnimationFrame(frame)
+
+    frameTime = {
+      secondsPassed: (time - frameTime.previous)/1000,
+      previous:time
+    }
     for( const entity of entities ) {
-      entity.update( secondsElapsed, context);
+      entity.update( frameTime, context);
     }
     for( const entity of entities ) {
       entity.draw(context);
+      context.drawImage
     }
   }
 
