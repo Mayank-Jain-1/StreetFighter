@@ -12,8 +12,8 @@ window.onload = () => {
 
   const entities = [
     new Stage(),
-    new Ryu(180,STAGE_FLOOR,-50),
-    new Ken(80, STAGE_FLOOR, 50 ), 
+    new Ryu(180,STAGE_FLOOR, 150),
+    new Ken(80, STAGE_FLOOR, 150 ), 
     new FpsCounter(),
   ]
 
