@@ -7,10 +7,20 @@
   <link rel="stylesheet" href="src/style.css">
   <script type="module" src="src/index.js"></script>
 </head>
-
+ 
 <body>
-  <canvas width="382px" height="224px"></canvas>
-  <img id="KenImage" src="./assets/ken.png">
+  <form action="">
+    <label style="color: white;" for="Ken">Ken</label>
+    <input type="checkbox" name="Ken" id="KenCheckbox" value="Ken">
+    <label style="color: white;" for="Ryu">Ryu</label>
+    <input type="checkbox" name="Ryu" id="RyuCheckbox" value="Ryu">
+    <select name="Walkbackward" id="MoveSelect"></select>
+    <button type="submit" >Transition</button>
+  </form>
+  <main>
+    <canvas width="382px" height="224px"></canvas>
+  </main>
+    <img id="KenImage" src="./assets/ken.png">
   <img id="StageImage" src="assets/stage.png">
   <img id="RyuImage" src="assets/Ryu.png">
 </body>
