@@ -23,7 +23,6 @@ const handleFormSubmit = (event, fighters) => {
 		event.target.querySelectorAll("input:checked")
 	).map((checkbox) => checkbox.value);
 	const selectedState = event.target.querySelector("select").value;
-  console.log(fighters)
   fighters.forEach((fighter) => {
     selectedCheckboxes.includes(fighter.name) && fighter.changeState(selectedState)
   })

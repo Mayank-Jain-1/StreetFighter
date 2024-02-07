@@ -1,3 +1,4 @@
+import { STAGE_FLOOR } from "../../constants/Stage.js";
 import { FighterDirection, FighterState } from "../../constants/fighter.js";
 
 export class Fighter {
@@ -5,7 +6,12 @@ export class Fighter {
 		this.name = name;
 		this.position = { x, y };
 		this.direction = direction;
-		this.velocity = 0;
+		this.velocity = {
+			x: 0,
+			y: 0,
+		};
+		this.initialVelocity = {};
+		this.gravity = 0;
 		this.image = new Image();
 		this.frames = new Map();
 		this.animationFrame = 0;
@@ -23,6 +29,10 @@ export class Fighter {
 			[FighterState.WALK_BACKWARD]: {
 				init: this.handleWalkBackwardInit.bind(this),
 				update: () => {},
+			},
+			[FighterState.JUMP_UP]: {
+				init: this.handleJumpUpInit.bind(this),
+				update: this.handleJumpUpUpdate.bind(this),
 			},
 		};
 		this.changeState(FighterState.IDLE);
@@ -46,39 +56,62 @@ export class Fighter {
 	};
 
 	handleIdleInit = () => {
-    this.velocity = 0;
-  };
+		this.velocity.x = 0;
+		this.velocity.y = 0;
+	};
 	handleIdleUpdate = () => {};
 
 	handleWalkForwardInit = () => {
-		this.velocity = 150 * this.direction;
+		this.velocity.x = 150 * this.direction;
 	};
 
 	handleWalkForwardUpdate = () => {};
 
 	handleWalkBackwardInit = () => {
-		this.velocity = -150 * this.direction;
+		this.velocity.x = -150 * this.direction;
 	};
 
 	handleWalkBackwardUpdate = () => {};
 
-	update = (time, context) => {
-		if (time.previous >= this.animationTime + 300) {
+	handleJumpUpInit = () => {
+		this.velocity.y = this.initialVelocity.jump;
+	};
+	handleJumpUpUpdate = (time) => {
+		this.velocity.y += time.secondsPassed * this.gravity;
+		if (this.position.y > STAGE_FLOOR) {
+			this.position.y = STAGE_FLOOR;
+			this.changeState(FighterState.IDLE);
+		}
+	};
+
+	updateAnimation = (time) => {
+		if (
+			time.previous >=
+			this.animationTime +
+				this.animations[this.currentState][this.animationFrame][1]
+		) {
 			this.animationTime = time.previous;
 			this.animationFrame++;
-			if (this.animationFrame > 5) this.animationFrame = 0;
+			if (this.animationFrame > this.animations[this.currentState].length - 1)
+				this.animationFrame = 0;
 		}
-		this.position.x += Math.round(this.velocity * time.secondsPassed);
+		this.states[this.currentState].update(time);
+	};
+
+	update = (time, context) => {
+		this.updateAnimation(time);
+		this.position.x += this.velocity.x * time.secondsPassed;
+		this.position.y += this.velocity.y * time.secondsPassed;
 
 		const [[, , width]] = this.frames.get(
-			this.animations[this.currentState][this.animationFrame]
+			this.animations[this.currentState][this.animationFrame][0]
 		);
 		this.updateStageConstraints(context);
 	};
 
 	draw = (context) => {
 		const [[x, y, width, height], [originX, originY]] = this.frames.get(
-			this.animations[this.currentState][this.animationFrame]
+			this.animations[this.currentState][this.animationFrame][0]
 		);
 
 		context.scale(this.direction, 1);

@@ -1,3 +1,4 @@
+import { FighterState } from "../../constants/fighter.js";
 import { Fighter } from "./Fighter.js";
 
 export class Ken extends Fighter {
@@ -122,33 +123,94 @@ export class Ken extends Fighter {
 					[36, 87],
 				],
 			],
+
+			// Jump Up
+
+			[
+				"jump-up-1",
+				[
+					[724, 1036, 56, 104],
+					[32, 107],
+				],
+			],
+			[
+				"jump-up-2",
+				[
+					[792, 995, 50, 89],
+					[25, 103],
+				],
+			],
+			[
+				"jump-up-3",
+				[
+					[853, 967, 54, 77],
+					[25, 103],
+				],
+			],
+			[
+				"jump-up-4",
+				[
+					[911, 966, 48, 70],
+					[28, 101],
+				],
+			],
+			[
+				"jump-up-5",
+				[
+					[975, 977, 48, 86],
+					[25, 103],
+				],
+			],
+			[
+				"jump-up-6",
+				[
+					[1031, 1008, 55, 103],
+					[32, 107],
+				],
+			],
 		]);
 
 		this.animations = {
-			idle: [
-				"idle-1",
-				"idle-2",
-				"idle-3",
-				"idle-4",
-				"idle-3",
-				"idle-2",
+			[FighterState.IDLE]: [
+				["idle-1", 68],
+				["idle-2", 68],
+				["idle-3", 68],
+				["idle-4", 68],
+				["idle-3", 68],
+				["idle-2", 68],
 			],
-			walkForwards: [
-				"forwards-1",
-				"forwards-2",
-				"forwards-3",
-				"forwards-4",
-				"forwards-5",
-				"forwards-6",
+
+			[FighterState.WALK_FORWARD]: [
+				["forwards-1", 65],
+				["forwards-2", 65],
+				["forwards-3", 65],
+				["forwards-4", 65],
+				["forwards-5", 65],
+				["forwards-6", 65],
 			],
-			walkBackwards: [
-				"backwards-1",
-				"backwards-2",
-				"backwards-3",
-				"backwards-4",
-				"backwards-5",
-				"backwards-6",
+
+			[FighterState.WALK_BACKWARD]: [
+				["backwards-1", 65],
+				["backwards-2", 65],
+				["backwards-3", 65],
+				["backwards-4", 65],
+				["backwards-5", 65],
+				["backwards-6", 65],
+			],
+			[FighterState.JUMP_UP]: [
+				["jump-up-1", 180],
+				["jump-up-2", 100],
+				["jump-up-3", 100],
+				["jump-up-4", 100],
+				["jump-up-5", 100],
+				["jump-up-6", -1],
 			],
 		};
+
+		this.initialVelocity = {
+			jump: -420,
+		};
+
+		this.gravity = 1000;
 	}
 }
