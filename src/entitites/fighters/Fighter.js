@@ -29,7 +29,7 @@ export class Fighter {
 					FighterState.JUMP_UP,
 					FighterState.JUMP_FORWARD,
 					FighterState.JUMP_BACKWARD,
-					FighterState.CROUCH_UP
+					FighterState.CROUCH_UP,
 				],
 			},
 			[FighterState.WALK_FORWARD]: {
@@ -67,8 +67,12 @@ export class Fighter {
 			},
 			[FighterState.CROUCH_DOWN]: {
 				init: () => {},
-				update: () => {},
-				validFrom: [FighterState.IDLE, FighterState.WALK_FORWARD, FighterState.WALK_BACKWARD],
+				update: this.handleCrouchDownUpdate.bind(this),
+				validFrom: [
+					FighterState.IDLE,
+					FighterState.WALK_FORWARD,
+					FighterState.WALK_BACKWARD,
+				],
 			},
 			[FighterState.CROUCH]: {
 				init: () => {},
@@ -77,7 +81,7 @@ export class Fighter {
 			},
 			[FighterState.CROUCH_UP]: {
 				init: () => {},
-				update: () => {},
+				update: this.handleCrouchUpUpdate.bind(this),
 				validFrom: [FighterState.CROUCH],
 			},
 		}),
@@ -91,8 +95,8 @@ export class Fighter {
 		) {
 			return;
 		}
-
 		this.currentState = newState;
+		console.log(this.currentState);
 		this.animationFrame = 0;
 		this.states[this.currentState].init();
 	};
@@ -105,6 +109,18 @@ export class Fighter {
 		}
 		if (this.position.x - 32 <= 0) {
 			this.position.x = WIDTH;
+		}
+	};
+
+	handleCrouchDownUpdate = () => {
+		if (this.animations[this.currentState][this.animationFrame][1] === -2) {
+			this.changeState(FighterState.CROUCH);
+		}
+	};
+
+	handleCrouchUpUpdate = () => {
+		if (this.animations[this.currentState][this.animationFrame][1] === -2) {
+			this.changeState(FighterState.IDLE);
 		}
 	};
 
