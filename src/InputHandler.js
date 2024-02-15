@@ -7,7 +7,6 @@ const handleKeyDown = (event) => {
 	event.preventDefault();
 	if (!heldKeys.has(event.code)) {
 		heldKeys.add(event.code);
-		console.log(heldKeys);
 	}
 };
 
@@ -15,7 +14,6 @@ const handleKeyUp = (event) => {
 	event.preventDefault();
 	if (heldKeys.has(event.code)) {
 		heldKeys.delete(event.code);
-		console.log(heldKeys);
 		// console.log(`Lifted ${input.code}`)
 	}
 };
@@ -29,14 +27,22 @@ export const isLeft = (id) => {
 	return heldKeys.has(controls[id].keyboard[Control.LEFT]);
 };
 
+export const isUp = (id) => {
+  return heldKeys.has(controls[id].keyboard[Control.UP]);
+};
+
 export const isRight = (id) => {
 	return heldKeys.has(controls[id].keyboard[Control.RIGHT]);
 };
 
+export const isDown = (id) => {
+  return heldKeys.has(controls[id].keyboard[Control.DOWN]);
+};
+
 export const isForward = (id, direction) => {
-	return direction === FighterDirection.RIGHT ? isRight(id) : isLeft(id);
+  return direction === FighterDirection.RIGHT ? isRight(id) : isLeft(id);
 };
 
 export const isBackward = (id, direction) => {
-  return direction === FighterDirection.LEFT ? isLeft(id) : isRight(id);
-}
+  return direction === FighterDirection.RIGHT ? isLeft(id) : isRight(id);
+};
