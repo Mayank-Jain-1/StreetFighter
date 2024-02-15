@@ -1,11 +1,13 @@
+import * as control from "../../InputHandler.js";
 import { STAGE_FLOOR } from "../../constants/Stage.js";
-import { FighterDirection, FighterState } from "../../constants/fighter.js";
+import { FighterState } from "../../constants/fighter.js";
 
 export class Fighter {
-	constructor(name, x, y, direction) {
+	constructor(name, x, y, direction, playerId) {
 		this.name = name;
 		this.position = { x, y };
 		this.direction = direction;
+		this.playerId = playerId;
 		this.velocity = {
 			x: 0,
 			y: 0,
@@ -20,7 +22,7 @@ export class Fighter {
 		(this.states = {
 			[FighterState.IDLE]: {
 				init: this.handleIdleInit.bind(this),
-				update: () => {},
+				update: this.hanldeIdleState.bind(this),
 				validFrom: [
 					undefined,
 					FighterState.IDLE,
@@ -96,7 +98,6 @@ export class Fighter {
 			return;
 		}
 		this.currentState = newState;
-		console.log(this.currentState);
 		this.animationFrame = 0;
 		this.states[this.currentState].init();
 	};
@@ -110,6 +111,13 @@ export class Fighter {
 		if (this.position.x - 32 <= 0) {
 			this.position.x = WIDTH;
 		}
+	};
+
+	hanldeIdleState = () => {
+		control.isForward(this.playerId, this.direction) &&
+			this.changeState(FighterState.WALK_BACKWARD);
+		control.isBackward(this.playerId, this.direction) &&
+			this.changeState(FighterState.WALK_FORWARD);
 	};
 
 	handleCrouchDownUpdate = () => {

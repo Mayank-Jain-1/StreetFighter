@@ -2,8 +2,8 @@ import { FighterState } from "../../constants/fighter.js";
 import { Fighter } from "./Fighter.js";
 
 export class Ken extends Fighter {
-	constructor(x, y, velocity) {
-		super("Ken", x, y, velocity);
+	constructor(x, y, direction, playerId) {
+		super("Ken", x, y, direction, playerId);
 		this.image = document.getElementById("KenImage");
 		this.frames = new Map([
 			// Idle
