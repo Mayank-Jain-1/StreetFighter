@@ -2,8 +2,13 @@ import { Control, controls } from "./constants/controls.js";
 import { FighterDirection } from "./constants/fighter.js";
 
 const heldKeys = new Set();
+const mappedKeys = controls
+	.map(({ keyboard }) => Object.values(keyboard))
+	.flat();
 
 const handleKeyDown = (event) => {
+	if(!mappedKeys.includes(event.code)) return
+
 	event.preventDefault();
 	if (!heldKeys.has(event.code)) {
 		heldKeys.add(event.code);
@@ -28,7 +33,7 @@ export const isLeft = (id) => {
 };
 
 export const isUp = (id) => {
-  return heldKeys.has(controls[id].keyboard[Control.UP]);
+	return heldKeys.has(controls[id].keyboard[Control.UP]);
 };
 
 export const isRight = (id) => {
@@ -36,13 +41,13 @@ export const isRight = (id) => {
 };
 
 export const isDown = (id) => {
-  return heldKeys.has(controls[id].keyboard[Control.DOWN]);
+	return heldKeys.has(controls[id].keyboard[Control.DOWN]);
 };
 
 export const isForward = (id, direction) => {
-  return direction === FighterDirection.RIGHT ? isRight(id) : isLeft(id);
+	return direction === FighterDirection.RIGHT ? isRight(id) : isLeft(id);
 };
 
 export const isBackward = (id, direction) => {
-  return direction === FighterDirection.RIGHT ? isLeft(id) : isRight(id);
+	return direction === FighterDirection.RIGHT ? isLeft(id) : isRight(id);
 };

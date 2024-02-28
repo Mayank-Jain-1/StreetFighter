@@ -3,6 +3,7 @@ import { STAGE_FLOOR } from "./constants/Stage.js";
 import { Ken } from "./entitites/fighters/Ken.js";
 import { Ryu } from "./entitites/fighters/Ryu.js";
 import { FpsCounter } from "./entitites/FpsCounter.js";
+import { Shadow } from "./entitites/Shadow.js";
 import { Stage } from "./entitites/Stage.js";
 import { registerKeyboardEvents } from "./InputHandler.js";
 
@@ -10,10 +11,16 @@ export class StreetFighterGame {
 	constructor() {
 		this.fighters = [
 			new Ken(180, STAGE_FLOOR, FighterDirection.RIGHT, 0),
-			new Ryu(250, STAGE_FLOOR, FighterDirection.LEFT,1),
+			new Ryu(250, STAGE_FLOOR, FighterDirection.LEFT, 1),
 		];
 
-		this.entities = [new Stage(), new FpsCounter(), ...this.fighters];
+		this.entities = [
+			new Stage(),
+			...this.fighters.map((fighter) => new Shadow(fighter)),
+			new FpsCounter(),
+			...this.fighters,
+		];
+
 
 		this.frameTime = {
 			secondsPassed: 0,
