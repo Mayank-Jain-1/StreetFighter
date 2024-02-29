@@ -32,6 +32,7 @@ export class Fighter {
 					FighterState.JUMP_FORWARD,
 					FighterState.JUMP_BACKWARD,
 					FighterState.CROUCH_UP,
+					FighterState.JUMP_LAND
 				],
 			},
 			[FighterState.WALK_FORWARD]: {
@@ -49,6 +50,24 @@ export class Fighter {
 				validFrom: [
 					FighterState.IDLE,
 					FighterState.WALK_FORWARD,
+					FighterState.JUMP_BACKWARD,
+				],
+			},
+			[FighterState.JUMP_START]: {
+				init: this.handleJumpStartInit.bind(this),
+				update: this.handleJumpStartState.bind(this),
+				validFrom: [
+					FighterState.IDLE,
+					FighterState.WALK_FORWARD,
+					FighterState.WALK_BACKWARD,
+				],
+			},
+			[FighterState.JUMP_LAND]: {
+				init: this.handleJumpLandInit.bind(this),
+				update: this.handleJumpLandState.bind(this),
+				validFrom: [
+					FighterState.JUMP_UP,
+					FighterState.JUMP_FORWARD,
 					FighterState.JUMP_BACKWARD,
 				],
 			},
@@ -134,8 +153,7 @@ export class Fighter {
 		control.isUp(this.playerId, this.direction) &&
 			this.changeState(FighterState.JUMP_UP);
 
-		control.isDown(this.playerId) && this.changeState(FighterState.CROUCH_DOWN)
-
+		control.isDown(this.playerId) && this.changeState(FighterState.CROUCH_DOWN);
 
 		control.isForward(this.playerId, this.direction) &&
 			this.changeState(FighterState.WALK_FORWARD);
@@ -144,18 +162,19 @@ export class Fighter {
 	};
 
 	handleWalkForward = () => {
-		!control.isForward(this.playerId, this.direction) && this.changeState(FighterState.IDLE);
+		!control.isForward(this.playerId, this.direction) &&
+			this.changeState(FighterState.IDLE);
 		control.isUp(this.playerId) && this.changeState(FighterState.JUMP_FORWARD);
-		
+
 		control.isDown(this.playerId) && this.changeState(FighterState.CROUCH_DOWN);
 	};
 
 	hanldeWalkBackward = () => {
-		!control.isBackward(this.playerId, this.direction) && this.changeState(FighterState.IDLE);
+		!control.isBackward(this.playerId, this.direction) &&
+			this.changeState(FighterState.IDLE);
 		control.isUp(this.playerId) && this.changeState(FighterState.JUMP_BACKWARD);
 
 		control.isDown(this.playerId) && this.changeState(FighterState.CROUCH_DOWN);
-
 	};
 
 	handleCrouchDownUpdate = () => {
@@ -166,7 +185,7 @@ export class Fighter {
 
 	handleCrouch = () => {
 		!control.isDown(this.playerId) && this.changeState(FighterState.CROUCH_UP);
-	}
+	};
 
 	handleCrouchUpUpdate = () => {
 		if (this.animations[this.currentState][this.animationFrame][1] === -2) {
@@ -178,6 +197,29 @@ export class Fighter {
 		this.velocity.x = this.initialVelocity.x[this.currentState] ?? 0;
 	};
 
+	handleJumpStartInit = () => {if (this.animations[this.currentState][this.animationFrame][1] == -2) {
+		if (control.isBackward()) this.changeState(FighterState.JUMP_BACKWARD);
+		else if (control.isForward()) this.changeState(FighterState.JUMP_FORWARD);
+		else this.changeState(FighterState.JUMP_UP)
+	}};
+
+	handleJumpStartState = () => {
+		if (this.animations[this.currentState][this.animationFrame][1] == -2) {
+			if (control.isBackward()) this.changeState(FighterState.JUMP_BACKWARD);
+			else if (control.isForward()) this.changeState(FighterState.JUMP_FORWARD);
+			else this.changeState(FighterState.JUMP_UP);
+		}
+	};
+
+	handleJumpLandInit = () => {
+		this.velocity.x = 0;
+		this.velocity.y = 0;
+	};
+
+	handleJumpLandState = () => {
+		if(this.animations[this.currentState][this.animationFrame][1] == -2) this.changeState(FighterState.IDLE)
+	};
+
 	handleJumpInit = () => {
 		this.velocity.y = this.initialVelocity.jump;
 		this.handleMoveInit();
@@ -186,7 +228,7 @@ export class Fighter {
 		this.velocity.y += time.secondsPassed * this.gravity;
 		if (this.position.y > STAGE_FLOOR) {
 			this.position.y = STAGE_FLOOR;
-			this.changeState(FighterState.IDLE);
+			this.changeState(FighterState.JUMP_LAND);
 		}
 	};
 
