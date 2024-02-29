@@ -4,12 +4,14 @@ export const FighterDirection = {
 }
 
 export const FighterState = {
-  JUMP_UP: 'jumpUp',
   IDLE: 'idle',
   WALK_FORWARD: 'walkForwards',
   WALK_BACKWARD: 'walkBackwards',
+  JUMP_START: 'jumpStart',
+  JUMP_UP: 'jumpUp',
   JUMP_FORWARD: 'jumpForwards',
   JUMP_BACKWARD: 'jumpBackwards',
+  JUMP_LAND: 'jumpLand',
   CROUCH: 'crouch',
   CROUCH_UP: 'crouchUp',
   CROUCH_DOWN: 'crouchDown',

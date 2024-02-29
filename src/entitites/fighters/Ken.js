@@ -124,8 +124,13 @@ export class Ken extends Fighter {
 				],
 			],
 
-			// Jump Up
-
+			[
+				"jump-start/land",
+				[
+					[660, 1060, 55, 85],
+					[29, 83],
+				],
+			],
 			[
 				"jump-up-1",
 				[
@@ -255,6 +260,15 @@ export class Ken extends Fighter {
 		]);
 
 		this.animations = {
+			[FighterState.JUMP_START]: [
+				["jump-start/land", 50],
+				["jump-start/land", -2],
+			],
+
+			[FighterState.JUMP_LAND]: [
+				["jump-start/land", 120],
+				["jump-start/land", -2],
+			],
 			[FighterState.JUMP_FORWARD]: [
 				["jump-roll-1", 200],
 				["jump-roll-2", 50],

@@ -15,7 +15,7 @@ export class Shadow {
 	draw = (context) => {
 		const [[x, y, width, height], [originX, originY]] = this.frame;
 
-		context.globalAlpha = 0.7;
+		context.globalAlpha = 0.8;
 		const scale = 1.2 - (200 - this.fighter.position.y) / 300;
 
 		context.scale(scale, scale);
@@ -25,8 +25,8 @@ export class Shadow {
 			y,
 			width,
 			height,
-			Math.floor((this.fighter.position.x - originX)/scale),
-			Math.floor((STAGE_FLOOR - originY)/scale),
+			Math.floor((this.fighter.position.x - originX) / scale),
+			Math.floor((STAGE_FLOOR - originY) / scale),
 			width,
 			height
 		);
