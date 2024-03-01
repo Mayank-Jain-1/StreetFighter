@@ -266,7 +266,8 @@ export class Ken extends Fighter {
 			],
 
 			[FighterState.JUMP_LAND]: [
-				["jump-start/land", 120],
+				["jump-start/land", 33],
+				["jump-start/land", 117],
 				["jump-start/land", -2],
 			],
 			[FighterState.JUMP_FORWARD]: [

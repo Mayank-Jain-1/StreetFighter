@@ -51,3 +51,5 @@ export const isForward = (id, direction) => {
 export const isBackward = (id, direction) => {
 	return direction === FighterDirection.RIGHT ? isLeft(id) : isRight(id);
 };
+
+export const isIdle = (id) =>isUp(id) || isDown(id) || isLeft(id) || isRight(id);
