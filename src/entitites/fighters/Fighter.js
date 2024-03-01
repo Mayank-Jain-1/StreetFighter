@@ -1,6 +1,6 @@
 import * as control from "../../InputHandler.js";
 import { STAGE_FLOOR } from "../../constants/Stage.js";
-import { FighterState } from "../../constants/fighter.js";
+import { FighterDirection, FighterState } from "../../constants/fighter.js";
 
 export class Fighter {
 	constructor(name, x, y, direction, playerId) {
@@ -111,7 +111,14 @@ export class Fighter {
 			},
 		}),
 			this.changeState(FighterState.IDLE);
+
+		this.opponent;
 	}
+
+	getDirection = () =>
+		this.opponent.position.x > this.position.x
+			? FighterDirection.RIGHT
+			: FighterDirection.LEFT;
 
 	changeState = (newState) => {
 		if (
@@ -245,8 +252,14 @@ export class Fighter {
 	};
 
 	update = (time, context) => {
+		console.log(this.direction);
 		this.position.x += this.velocity.x * this.direction * time.secondsPassed;
 		this.position.y += this.velocity.y * time.secondsPassed;
+
+		if([FighterState.IDLE, FighterState.WALK_BACKWARD, FighterState.WALK_BACKWARD, FighterState.JUMP_LAND, FighterState.CROUCH].includes(this.currentState)){
+			this.direction = this.getDirection();
+		}
+
 		this.states[this.currentState].update(time, context);
 		this.updateAnimation(time);
 		this.updateStageConstraints(context);
