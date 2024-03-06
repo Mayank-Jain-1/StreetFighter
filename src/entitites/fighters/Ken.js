@@ -1,4 +1,4 @@
-import { FighterState, PushBox } from "../../constants/fighter.js";
+import { FighterState, FrameDelay, PushBox } from "../../constants/fighter.js";
 import { Fighter } from "./Fighter.js";
 
 export class Ken extends Fighter {
@@ -428,13 +428,13 @@ export class Ken extends Fighter {
 		this.animations = {
 			[FighterState.JUMP_START]: [
 				["jump-start/land", 50],
-				["jump-start/land", -2],
+				["jump-start/land", FrameDelay.TRANSITION],
 			],
 
 			[FighterState.JUMP_LAND]: [
 				["jump-start/land", 33],
 				["jump-start/land", 117],
-				["jump-start/land", -2],
+				["jump-start/land", FrameDelay.TRANSITION],
 			],
 			[FighterState.JUMP_FORWARD]: [
 				["jump-roll-1", 200],
@@ -443,7 +443,7 @@ export class Ken extends Fighter {
 				["jump-roll-4", 50],
 				["jump-roll-5", 50],
 				["jump-roll-6", 50],
-				["jump-roll-7", 0],
+				["jump-roll-7", FrameDelay.FREEZE],
 			],
 			[FighterState.JUMP_BACKWARD]: [
 				["jump-roll-7", 200],
@@ -452,7 +452,7 @@ export class Ken extends Fighter {
 				["jump-roll-4", 50],
 				["jump-roll-3", 50],
 				["jump-roll-2", 50],
-				["jump-roll-1", 0],
+				["jump-roll-1", FrameDelay.FREEZE],
 			],
 			[FighterState.IDLE]: [
 				["idle-1", 68],
@@ -486,41 +486,41 @@ export class Ken extends Fighter {
 				["jump-up-3", 100],
 				["jump-up-4", 100],
 				["jump-up-5", 100],
-				["jump-up-6", -1],
+				["jump-up-6", FrameDelay.FREEZE],
 			],
 			[FighterState.CROUCH_DOWN]: [
 				["crouch-1", 30],
 				["crouch-2", 30],
 				["crouch-3", 30],
-				["crouch-3", -2],
+				["crouch-3", FrameDelay.TRANSITION],
 			],
-			[FighterState.CROUCH]: [["crouch-3", -2]],
+			[FighterState.CROUCH]: [["crouch-3", FrameDelay.TRANSITION]],
 			[FighterState.CROUCH_UP]: [
 				["crouch-3", 30],
 				["crouch-2", 30],
 				["crouch-1", 30],
-				["crouch-1", -2],
+				["crouch-1", FrameDelay.TRANSITION],
 			],
 			[FighterState.IDLE_TURN]: [
 				["idle-turn-3", 33],
 				["idle-turn-2", 33],
 				["idle-turn-1", 33],
-				["idle-turn-1", -2],
+				["idle-turn-1", FrameDelay.TRANSITION],
 			],
 			[FighterState.CROUCH_TURN]: [
 				["crouch-turn-3", 33],
 				["crouch-turn-2", 33],
 				["crouch-turn-1", 33],
-				["crouch-turn-1", -2],
+				["crouch-turn-1", FrameDelay.TRANSITION],
 			],
 		};
 
 		this.initialVelocity = {
 			x: {
-				[FighterState.WALK_FORWARD]: 200,
-				[FighterState.WALK_BACKWARD]: -150,
-				[FighterState.JUMP_FORWARD]: 170,
-				[FighterState.JUMP_BACKWARD]: -200,
+				[FighterState.WALK_FORWARD]: 3 * 60,
+				[FighterState.WALK_BACKWARD]: -(2 * 60),
+				[FighterState.JUMP_FORWARD]: 168,
+				[FighterState.JUMP_BACKWARD]: -180,
 				[FighterState.JUMP_UP]: 0,
 			},
 			jump: -420,

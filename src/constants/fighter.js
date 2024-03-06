@@ -19,9 +19,16 @@ export const FighterState = {
 	CROUCH_TURN: "crouchTurn",
 };
 
+export const FrameDelay = {
+  FREEZE: 0,
+  TRANSITION: -1
+}
+
 export const PushBox = {
 	IDLE: [-16, -80, 32, 78],
 	JUMP: [-16, -91, 32, 66],
 	BEND: [-16, -58, 32, 58],
 	CROUCH: [-16, -50, 32, 50],
 };
+
+export const PushFriction = 66
