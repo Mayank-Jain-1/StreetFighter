@@ -278,6 +278,11 @@ export class Fighter {
 		if (this.animations[this.currentState][this.animationFrame][1] === -2) {
 			this.changeState(FighterState.CROUCH);
 		}
+		if (!control.isDown(this.playerId)) {
+			this.currentState = FighterState.CROUCH_UP;
+			this.animationFrame =
+				this.animations[this.currentState].length - this.animationFrame - 1;
+		}
 	};
 
 	handleCrouch = () => {
