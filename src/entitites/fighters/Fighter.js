@@ -129,12 +129,19 @@ export class Fighter {
 		};
 		this.changeState(FighterState.CROUCH);
 		this.opponent;
+		this.pushBox = { x: 0, y: 0, width: 0, height: 0 };
 	}
 
 	getDirection = () =>
 		this.opponent.position.x > this.position.x
 			? FighterDirection.RIGHT
 			: FighterDirection.LEFT;
+
+	getPushBox = (frameKey) => {
+		const [, [x, y, width, height] = [0, 0, 0, 0]] = this.frames.get(frameKey);
+
+		return { x, y, width, height };
+	};
 
 	changeState = (newState) => {
 		if (
@@ -281,13 +288,64 @@ export class Fighter {
 		}
 	};
 
+	drawDebug = (context) => {
+		const [frameKey] = this.animations[this.currentState][this.animationFrame];
+		console.log(frameKey);
+		const pushBox = this.getPushBox(frameKey);
+		console.log(pushBox);
+		context.lineWidth = 1;
+		// Push Box
+
+		console.log(this.position.x, this.position.y, pushBox.x, pushBox.y);
+		context.beginPath();
+		context.strokeStyle = "#55ff55";
+		context.fillStyle = "#55ff5555";
+		context.fillRect(
+			Math.floor(this.position.x + pushBox.x) + 0.5,
+			Math.floor(this.position.y + pushBox.y) + 0.5,
+			pushBox.width,
+			pushBox.height
+		);
+		context.rect(
+			Math.floor(this.position.x + pushBox.x) + 0.5,
+			Math.floor(this.position.y + pushBox.y) + 0.5,
+			pushBox.width,
+			pushBox.height
+		);
+		context.stroke();
+
+		// Origin
+		context.beginPath();
+		context.strokeStyle = "white";
+		context.moveTo(
+			Math.floor(this.position.x) + 4,
+			Math.floor(this.position.y) - 0.5
+		);
+		context.lineTo(
+			Math.floor(this.position.x) - 4,
+			Math.floor(this.position.y) - 0.5
+		);
+		context.moveTo(
+			Math.floor(this.position.x) + 0.5,
+			Math.floor(this.position.y) - 5
+		);
+		context.lineTo(
+			Math.floor(this.position.x) + 0.5,
+			Math.floor(this.position.y) + 4
+		);
+		context.stroke();
+	};
+
 	updateAnimation = (time) => {
 		const animation = this.animations[this.currentState];
-		const [, frameDelay] = animation[this.animationFrame];
+		const [frameKey, frameDelay] = animation[this.animationFrame];
 		if (time.previous >= this.animationTime + frameDelay) {
 			this.animationTime = time.previous;
 
-			if (frameDelay > 0) this.animationFrame++;
+			if (frameDelay > 0) {
+				this.animationFrame++;
+				this.pushBox = this.getPushBox(frameKey);
+			}
 
 			if (this.animationFrame >= animation.length) this.animationFrame = 0;
 		}
@@ -321,5 +379,6 @@ export class Fighter {
 		);
 
 		context.setTransform(1, 0, 0, 1, 0, 0);
+		this.drawDebug(context);
 	};
 }
