@@ -15,4 +15,6 @@ export const FighterState = {
   CROUCH: 'crouch',
   CROUCH_UP: 'crouchUp',
   CROUCH_DOWN: 'crouchDown',
+  IDLE_TURN: 'idleTurn',
+  CROUCH_TURN: 'crouchTurn',
 }

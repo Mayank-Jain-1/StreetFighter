@@ -256,8 +256,18 @@ export class Fighter {
 		this.position.x += this.velocity.x * this.direction * time.secondsPassed;
 		this.position.y += this.velocity.y * time.secondsPassed;
 
-		if([FighterState.IDLE, FighterState.WALK_BACKWARD, FighterState.WALK_BACKWARD, FighterState.JUMP_LAND, FighterState.CROUCH].includes(this.currentState)){
-			this.direction = this.getDirection();
+		if (
+			[
+				FighterState.IDLE,
+				FighterState.WALK_BACKWARD,
+				FighterState.WALK_FORWARD,
+				FighterState.JUMP_LAND,
+				FighterState.CROUCH,
+			].includes(this.currentState)
+		) {
+			const newDirection = this.getDirection();
+			if(newDirection !== this.direction)this.changeState(FighterState.IDLE)
+			this.direction = newDirection;
 		}
 
 		this.states[this.currentState].update(time, context);
