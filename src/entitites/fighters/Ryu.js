@@ -380,13 +380,13 @@ export class Ryu extends Fighter {
 				["idle-turn-3", 33],
 				["idle-turn-2", 33],
 				["idle-turn-1", 33],
-				// ["idle-turn-1", AnimationFrame.TRANSITION],
+				["idle-turn-1", -2],
 			],
 			[FighterState.CROUCH_TURN]: [
 				["crouch-turn-3", 33],
 				["crouch-turn-2", 33],
 				["crouch-turn-1", 33],
-				// ["crouch-turn-1", AnimationFrame.TRANSITION],
+				["crouch-turn-1", -2],
 			],
 		};
 

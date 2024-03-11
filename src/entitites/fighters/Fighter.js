@@ -19,10 +19,11 @@ export class Fighter {
 		this.animationFrame = 0;
 		this.animationTime = 0;
 		this.animations = {};
-		(this.states = {
+		this.currentState = FighterState.IDLE;
+		this.states = {
 			[FighterState.IDLE]: {
 				init: this.handleIdleInit.bind(this),
-				update: this.hanldeIdle.bind(this),
+				update: this.handleIdle.bind(this),
 				validFrom: [
 					undefined,
 					FighterState.IDLE,
@@ -33,6 +34,7 @@ export class Fighter {
 					FighterState.JUMP_BACKWARD,
 					FighterState.CROUCH_UP,
 					FighterState.JUMP_LAND,
+					FighterState.IDLE_TURN,
 				],
 			},
 			[FighterState.WALK_FORWARD]: {
@@ -102,16 +104,30 @@ export class Fighter {
 			[FighterState.CROUCH]: {
 				init: () => {},
 				update: this.handleCrouch.bind(this),
-				validFrom: [FighterState.CROUCH_DOWN],
+				validFrom: [FighterState.CROUCH_DOWN, FighterState.CROUCH_TURN],
 			},
 			[FighterState.CROUCH_UP]: {
 				init: () => {},
 				update: this.handleCrouchUpUpdate.bind(this),
 				validFrom: [FighterState.CROUCH],
 			},
-		}),
-			this.changeState(FighterState.IDLE);
-
+			[FighterState.IDLE_TURN]: {
+				init: () => {},
+				update: this.handleIdleTurnState.bind(this),
+				validFrom: [
+					FighterState.IDLE,
+					FighterState.JUMP_LAND,
+					FighterState.WALK_FORWARD,
+					FighterState.WALK_BACKWARD,
+				],
+			},
+			[FighterState.CROUCH_TURN]: {
+				init: () => {},
+				update: this.handleCrouchTurn.bind(this),
+				validFrom: [FighterState.CROUCH],
+			},
+		};
+		this.changeState(FighterState.CROUCH);
 		this.opponent;
 	}
 
@@ -143,12 +159,20 @@ export class Fighter {
 		}
 	};
 
+	checkIdleTurn = () => {
+		const newDirection = this.getDirection();
+		if (newDirection !== this.direction) {
+			this.direction = newDirection;
+			this.changeState(FighterState.IDLE_TURN);
+		}
+	};
+
 	handleIdleInit = () => {
 		this.velocity.x = 0;
 		this.velocity.y = 0;
 	};
 
-	hanldeIdle = () => {
+	handleIdle = () => {
 		control.isUp(this.playerId, this.direction) &&
 			this.changeState(FighterState.JUMP_START);
 
@@ -158,6 +182,8 @@ export class Fighter {
 			this.changeState(FighterState.WALK_FORWARD);
 		control.isBackward(this.playerId, this.direction) &&
 			this.changeState(FighterState.WALK_BACKWARD);
+
+		this.checkIdleTurn();
 	};
 
 	handleWalkForward = () => {
@@ -166,6 +192,8 @@ export class Fighter {
 		control.isUp(this.playerId) && this.changeState(FighterState.JUMP_FORWARD);
 
 		control.isDown(this.playerId) && this.changeState(FighterState.CROUCH_DOWN);
+
+		this.checkIdleTurn()
 	};
 
 	hanldeWalkBackward = () => {
@@ -174,6 +202,8 @@ export class Fighter {
 		control.isUp(this.playerId) && this.changeState(FighterState.JUMP_BACKWARD);
 
 		control.isDown(this.playerId) && this.changeState(FighterState.CROUCH_DOWN);
+
+		this.checkIdleTurn()
 	};
 
 	handleCrouchDownUpdate = () => {
@@ -184,6 +214,12 @@ export class Fighter {
 
 	handleCrouch = () => {
 		!control.isDown(this.playerId) && this.changeState(FighterState.CROUCH_UP);
+
+		const newDirection = this.getDirection()
+		if(newDirection !== this.direction){
+			this.direction = newDirection;
+			this.changeState(FighterState.CROUCH_TURN)
+		}
 	};
 
 	handleCrouchUpUpdate = () => {
@@ -191,6 +227,12 @@ export class Fighter {
 			this.changeState(FighterState.IDLE);
 		}
 	};
+
+	handleCrouchTurn = () => {
+		if (this.animations[this.currentState][this.animationFrame][1] === -2) {
+			this.changeState(FighterState.CROUCH);
+		}
+	}
 
 	handleMoveInit = () => {
 		this.velocity.x = this.initialVelocity.x[this.currentState] ?? 0;
@@ -222,7 +264,7 @@ export class Fighter {
 
 	handleJumpLandState = () => {
 		if (this.animationFrame == 0) return;
-		this.hanldeIdle();
+		this.handleIdle();
 		if (this.animations[this.currentState][this.animationFrame][1] == -2)
 			this.changeState(FighterState.IDLE);
 	};
@@ -239,6 +281,15 @@ export class Fighter {
 		}
 	};
 
+	handleIdleTurnState = () => {
+
+		this.handleIdleInit()
+
+		if (this.animations[this.currentState][this.animationFrame][1] === -2) {
+			this.changeState(FighterState.IDLE);
+		}
+	};
+
 	updateAnimation = (time) => {
 		const animation = this.animations[this.currentState];
 		const [, frameDelay] = animation[this.animationFrame];
@@ -252,24 +303,22 @@ export class Fighter {
 	};
 
 	update = (time, context) => {
-		console.log(this.direction);
 		this.position.x += this.velocity.x * this.direction * time.secondsPassed;
 		this.position.y += this.velocity.y * time.secondsPassed;
 
-		if (
-			[
-				FighterState.IDLE,
-				FighterState.WALK_BACKWARD,
-				FighterState.WALK_FORWARD,
-				FighterState.JUMP_LAND,
-				FighterState.CROUCH,
-			].includes(this.currentState)
-		) {
-			const newDirection = this.getDirection();
-			if(newDirection !== this.direction)this.changeState(FighterState.IDLE)
-			this.direction = newDirection;
-		}
-
+		// if (
+		// 	[
+		// 		FighterState.IDLE,
+		// 		FighterState.WALK_BACKWARD,
+		// 		FighterState.WALK_FORWARD,
+		// 		FighterState.JUMP_LAND,
+		// 		FighterState.CROUCH,
+		// 	].includes(this.currentState)
+		// ) {
+		// 	const newDirection = this.getDirection();
+		// 	if (newDirection !== this.direction) this.changeState(FighterState.IDLE);
+		// 	this.direction = newDirection;
+		// }
 		this.states[this.currentState].update(time, context);
 		this.updateAnimation(time);
 		this.updateStageConstraints(context);
