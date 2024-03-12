@@ -3,6 +3,7 @@ import { STAGE_FLOOR } from "./constants/Stage.js";
 import { Ken } from "./entitites/fighters/Ken.js";
 import { Ryu } from "./entitites/fighters/Ryu.js";
 import { FpsCounter } from "./entitites/FpsCounter.js";
+import { StatusBar } from "./entitites/overlays/StatusBar.js";
 import { Shadow } from "./entitites/Shadow.js";
 import { Stage } from "./entitites/Stage.js";
 import { registerKeyboardEvents } from "./InputHandler.js";
@@ -22,6 +23,7 @@ export class StreetFighterGame {
 			...this.fighters.map((fighter) => new Shadow(fighter)),
 			new FpsCounter(),
 			...this.fighters,
+			new StatusBar(this.fighters)
 		];
 
 
