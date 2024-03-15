@@ -12,7 +12,7 @@ export class Shadow {
 
 	update = () => {};
 
-	draw = (context) => {
+	draw = (context, camera) => {
 		const [[x, y, width, height], [originX, originY]] = this.frame;
 
 		context.globalAlpha = 0.8;
@@ -25,8 +25,8 @@ export class Shadow {
 			y,
 			width,
 			height,
-			Math.floor((this.fighter.position.x - originX) / scale),
-			Math.floor((STAGE_FLOOR - originY) / scale),
+			Math.floor((this.fighter.position.x - camera.position.x - originX) / scale),
+			Math.floor((STAGE_FLOOR - originY - camera.position.y) / scale),
 			width,
 			height
 		);

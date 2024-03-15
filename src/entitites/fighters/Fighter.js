@@ -195,12 +195,45 @@ export class Fighter {
 		this.states[this.currentState].init();
 	};
 
-	updateStageConstraints = (time, context) => {
-		if (this.position.x + this.pushBox.width >= context.canvas.width) {
-			this.position.x = context.canvas.width - this.pushBox.width;
+	updateStageConstraints = (time, context, camera) => {
+		// Right Boundary
+		if (
+			this.position.x - camera.position.x + this.pushBox.width >=
+			context.canvas.width
+		) {
+			this.position.x =
+				camera.position.x + context.canvas.width - this.pushBox.width;
+			if (
+				[
+					FighterState.WALK_BACKWARD,
+					FighterState.WALK_FORWARD,
+					FighterState.JUMP_FORWARD,
+					FighterState.JUMP_BACKWARD,
+				].includes(this.currentState) &&
+				camera.position.x <= 700 &&
+				this.opponent.position.x >
+					camera.position.x + this.opponent.pushBox.width
+			) {
+				camera.position.x += camera.speed * time.secondsPassed;
+			}
 		}
-		if (this.position.x - this.pushBox.width <= 0) {
-			this.position.x = this.pushBox.width;
+
+		// Left Boundary
+		if (this.position.x - camera.position.x - this.pushBox.width <= 0) {
+			this.position.x = camera.position.x + this.pushBox.width;
+			if (
+				[
+					FighterState.WALK_BACKWARD,
+					FighterState.WALK_FORWARD,
+					FighterState.JUMP_FORWARD,
+					FighterState.JUMP_BACKWARD,
+				].includes(this.currentState) &&
+				camera.position.x > 250 &&
+				this.opponent.position.x - camera.position.x <
+					context.canvas.width - this.opponent.pushBox.width
+			) {
+				camera.position.x -= camera.speed * time.secondsPassed;
+			}
 		}
 
 		if (this.hasCollidedWithOpponent()) {
@@ -225,12 +258,8 @@ export class Fighter {
 				}
 			} else if (this.position.x >= this.opponent.position.x) {
 				this.position.x = Math.min(
-					context.canvas.width - this.pushBox.width,
-					this.opponent.position.x +
-						this.opponent.pushBox.x +
-						this.opponent.pushBox.width +
-						this.pushBox.x +
-						this.pushBox.width
+					camera.position.x + context.canvas.width - this.pushBox.width,
+					this.opponent.position.x + this.opponent.pushBox.width
 				);
 				if (
 					[
@@ -281,8 +310,6 @@ export class Fighter {
 			? this.changeState(FighterState.JUMP_FORWARD)
 			: control.isDown(this.playerId) &&
 			  this.changeState(FighterState.CROUCH_DOWN);
-
-		this.direction = this.getDirection();
 	};
 
 	hanldeWalkBackward = () => {
@@ -292,8 +319,6 @@ export class Fighter {
 			? this.changeState(FighterState.JUMP_BACKWARD)
 			: control.isDown(this.playerId) &&
 			  this.changeState(FighterState.CROUCH_DOWN);
-
-		this.direction = this.getDirection();
 	};
 
 	handleCrouchDownUpdate = () => {
@@ -369,7 +394,7 @@ export class Fighter {
 		}
 	};
 
-	drawDebug = (context) => {
+	drawDebug = (context, camera) => {
 		const [frameKey] = this.animations[this.currentState][this.animationFrame];
 		const pushBox = this.getPushBox(frameKey);
 		context.lineWidth = 1;
@@ -379,14 +404,14 @@ export class Fighter {
 		context.strokeStyle = "#55ff55";
 		context.fillStyle = "#55ff5555";
 		context.fillRect(
-			Math.floor(this.position.x + pushBox.x) + 0.5,
-			Math.floor(this.position.y + pushBox.y) + 0.5,
+			Math.floor(this.position.x - camera.position.x + pushBox.x) + 0.5,
+			Math.floor(this.position.y + pushBox.y - camera.position.y) + 0.5,
 			pushBox.width,
 			pushBox.height
 		);
 		context.rect(
-			Math.floor(this.position.x + pushBox.x) + 0.5,
-			Math.floor(this.position.y + pushBox.y) + 0.5,
+			Math.floor(this.position.x - camera.position.x + pushBox.x) + 0.5,
+			Math.floor(this.position.y + pushBox.y - camera.position.y) + 0.5,
 			pushBox.width,
 			pushBox.height
 		);
@@ -396,20 +421,20 @@ export class Fighter {
 		context.beginPath();
 		context.strokeStyle = "white";
 		context.moveTo(
-			Math.floor(this.position.x) + 5,
-			Math.floor(this.position.y) - 0.5
+			Math.floor(this.position.x - camera.position.x) + 5,
+			Math.floor(this.position.y - camera.position.y) - 0.5
 		);
 		context.lineTo(
-			Math.floor(this.position.x) - 4,
-			Math.floor(this.position.y) - 0.5
+			Math.floor(this.position.x - camera.position.x) - 4,
+			Math.floor(this.position.y - camera.position.y) - 0.5
 		);
 		context.moveTo(
-			Math.floor(this.position.x) + 0.5,
-			Math.floor(this.position.y) - 5
+			Math.floor(this.position.x - camera.position.x) + 0.5,
+			Math.floor(this.position.y - camera.position.y) - 5
 		);
 		context.lineTo(
-			Math.floor(this.position.x) + 0.5,
-			Math.floor(this.position.y) + 4
+			Math.floor(this.position.x - camera.position.x) + 0.5,
+			Math.floor(this.position.y - camera.position.y) + 4
 		);
 		context.stroke();
 	};
@@ -429,15 +454,15 @@ export class Fighter {
 		}
 	};
 
-	update = (time, context) => {
+	update = (time, context, camera) => {
 		this.position.x += this.velocity.x * this.direction * time.secondsPassed;
 		this.position.y += this.velocity.y * time.secondsPassed;
 		this.states[this.currentState].update(time, context);
 		this.updateAnimation(time);
-		this.updateStageConstraints(time, context);
+		this.updateStageConstraints(time, context, camera);
 	};
 
-	draw = (context) => {
+	draw = (context, camera) => {
 		const frameKey = this.animations[this.currentState][this.animationFrame][0];
 		const [[[x, y, width, height], [originX, originY]]] =
 			this.frames.get(frameKey);
@@ -450,13 +475,14 @@ export class Fighter {
 			y,
 			width,
 			height,
-			Math.floor(this.position.x * this.direction) - originX,
-			Math.floor(this.position.y) - originY,
+			Math.floor((this.position.x - camera.position.x) * this.direction) -
+				originX,
+			Math.floor(this.position.y - camera.position.y) - originY,
 			width,
 			height
 		);
 
 		context.setTransform(1, 0, 0, 1, 0, 0);
-		this.drawDebug(context);
+		this.drawDebug(context, camera);
 	};
 }
