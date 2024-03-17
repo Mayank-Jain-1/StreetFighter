@@ -1,5 +1,10 @@
 import * as control from "../../InputHandler.js";
-import { STAGE_FLOOR } from "../../constants/Stage.js";
+import {
+	SCENE_WIDTH,
+	STAGE_FLOOR,
+	STAGE_PADDING,
+	STAGE_WIDTH,
+} from "../../constants/Stage.js";
 import {
 	FighterDirection,
 	FighterState,
@@ -199,18 +204,19 @@ export class Fighter {
 		// Right Boundary
 		if (
 			this.position.x - camera.position.x + this.pushBox.width >=
-			context.canvas.width
+			SCENE_WIDTH
 		) {
 			this.position.x =
 				camera.position.x + context.canvas.width - this.pushBox.width;
 			if (
 				[
+					// FighterState.IDLE,
 					FighterState.WALK_BACKWARD,
 					FighterState.WALK_FORWARD,
 					FighterState.JUMP_FORWARD,
 					FighterState.JUMP_BACKWARD,
 				].includes(this.currentState) &&
-				camera.position.x <= 700 &&
+				camera.position.x <= 700  &&
 				this.opponent.position.x >
 					camera.position.x + this.opponent.pushBox.width
 			) {
@@ -223,12 +229,13 @@ export class Fighter {
 			this.position.x = camera.position.x + this.pushBox.width;
 			if (
 				[
+					// FighterState.IDLE,
 					FighterState.WALK_BACKWARD,
 					FighterState.WALK_FORWARD,
 					FighterState.JUMP_FORWARD,
 					FighterState.JUMP_BACKWARD,
 				].includes(this.currentState) &&
-				camera.position.x > 250 &&
+				camera.position.x > STAGE_PADDING &&
 				this.opponent.position.x - camera.position.x <
 					context.canvas.width - this.opponent.pushBox.width
 			) {

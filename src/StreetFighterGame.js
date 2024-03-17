@@ -1,6 +1,15 @@
 import { Camera } from "./Camera.js";
-import { FighterDirection } from "./constants/fighter.js";
-import { STAGE_FLOOR } from "./constants/Stage.js";
+import {
+	FIGHTER_START_DISTANCE,
+	FighterDirection,
+} from "./constants/fighter.js";
+import {
+	SCENE_WIDTH,
+	STAGE_FLOOR,
+	STAGE_MID_POINT,
+	STAGE_PADDING,
+	STAGE_WIDTH,
+} from "./constants/Stage.js";
 import { Ken } from "./entitites/fighters/Ken.js";
 import { Ryu } from "./entitites/fighters/Ryu.js";
 import { FpsCounter } from "./entitites/FpsCounter.js";
@@ -11,15 +20,30 @@ import { registerKeyboardEvents } from "./InputHandler.js";
 
 export class StreetFighterGame {
 	constructor() {
+		console.log(STAGE_MID_POINT);
 		this.fighters = [
-			new Ken(480 , STAGE_FLOOR, FighterDirection.RIGHT, 0),
-			new Ryu(560, STAGE_FLOOR, FighterDirection.LEFT, 1),
+			new Ken(
+				STAGE_MID_POINT + STAGE_PADDING - FIGHTER_START_DISTANCE,
+				STAGE_FLOOR,
+				FighterDirection.RIGHT,
+				0
+			),
+			new Ryu(
+				STAGE_MID_POINT + STAGE_PADDING + FIGHTER_START_DISTANCE,
+				STAGE_FLOOR,
+				FighterDirection.LEFT,
+				1
+			),
 		];
 
 		this.fighters[0].opponent = this.fighters[1];
 		this.fighters[1].opponent = this.fighters[0];
 
-		this.camera = new Camera(400, 16, this.fighters);
+		this.camera = new Camera(
+			STAGE_PADDING + STAGE_MID_POINT - SCENE_WIDTH / 2,
+			16,
+			this.fighters
+		);
 
 		this.entities = [
 			new Stage(),
@@ -45,7 +69,7 @@ export class StreetFighterGame {
 	};
 
 	update = () => {
-		this.camera.update(this.frameTime, this.context)
+		this.camera.update(this.frameTime, this.context);
 
 		for (const entity of this.entities) {
 			entity.update(this.frameTime, this.context, this.camera);

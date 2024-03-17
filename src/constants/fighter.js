@@ -1,3 +1,5 @@
+export const FIGHTER_START_DISTANCE = 88
+
 export const FighterDirection = {
 	LEFT: -1,
 	RIGHT: 1,
