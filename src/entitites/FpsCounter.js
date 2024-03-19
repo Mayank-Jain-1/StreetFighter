@@ -9,6 +9,6 @@ export class FpsCounter {
   draw(context){
     context.font = "10px Arial";
     context.fillStyle = "yellow";
-    context.fillText(`FPS: ${this.fps}`, 10, 10);
+    context.fillText(`FPS: ${this.fps}`, 10, 222);
   }
 }
