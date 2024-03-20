@@ -2,8 +2,8 @@ import { FighterState, FrameDelay, PushBox } from "../../constants/fighter.js";
 import { Fighter } from "./Fighter.js";
 
 export class Ken extends Fighter {
-	constructor(x, y, direction, playerId) {
-		super("Ken", x, y, direction, playerId);
+	constructor(playerId) {
+		super("Ken", playerId);
 		this.image = document.getElementById("KenImage");
 		this.frames = new Map([
 			// Idle

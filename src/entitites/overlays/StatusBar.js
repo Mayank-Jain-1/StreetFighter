@@ -3,6 +3,7 @@ import {
 	TIME_FLASH_DELAY,
 	TIME_FRAME_KEYS,
 } from "../../constants/battle.js";
+import { drawFrame } from "../../utils/context.js";
 
 export class StatusBar {
 	constructor(fighters) {
@@ -13,6 +14,12 @@ export class StatusBar {
 
 		this.timeFlashTimer = 0;
 		this.useFlashFrames = false;
+		[{ name: this.name1 }, { name: this.name2 }] = this.fighters;
+
+		this.nameTags = [
+			`tag-${this.name1.toLowerCase()}`,
+			`tag-${this.name2.toLowerCase()}`,
+		];
 
 		this.frames = new Map([
 			["health-bar", [16, 18, 145, 11]],
@@ -48,23 +55,7 @@ export class StatusBar {
 	}
 
 	drawFrame(context, frameKey, x, y, direction = 1) {
-		const [sourceX, sourceY, sourceWidth, sourceHeight] =
-			this.frames.get(frameKey);
-
-		context.scale(direction, 1);
-		context.drawImage(
-			this.image,
-			sourceX,
-			sourceY,
-			sourceWidth,
-			sourceHeight,
-			x * direction,
-			y,
-			sourceWidth,
-			sourceHeight
-		);
-
-		context.setTransform(1, 0, 0, 1, 0, 0);
+		drawFrame(context, this.image, this.frames.get(frameKey), x, y, direction);
 	}
 
 	drawHealthBar(context) {
@@ -83,9 +74,8 @@ export class StatusBar {
 	}
 
 	drawNames(context) {
-		const [{ name: name1 }, { name: name2 }] = this.fighters;
-		this.drawFrame(context, `tag-${name1.toLowerCase()}`, 32, 33);
-		this.drawFrame(context, `tag-${name2.toLowerCase()}`, 322, 33);
+		this.drawFrame(context, this.nameTags[0], 32, 33);
+		this.drawFrame(context, this.nameTags[1], 322, 33);
 	}
 
 	updateTime(time) {

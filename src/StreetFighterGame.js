@@ -1,14 +1,8 @@
 import { Camera } from "./Camera.js";
 import {
-	FIGHTER_START_DISTANCE,
-	FighterDirection,
-} from "./constants/fighter.js";
-import {
 	SCENE_WIDTH,
-	STAGE_FLOOR,
 	STAGE_MID_POINT,
 	STAGE_PADDING,
-	STAGE_WIDTH,
 } from "./constants/Stage.js";
 import { Ken } from "./entitites/fighters/Ken.js";
 import { Ryu } from "./entitites/fighters/Ryu.js";
@@ -17,24 +11,11 @@ import { StatusBar } from "./entitites/overlays/StatusBar.js";
 import { Shadow } from "./entitites/Shadow.js";
 import { Stage } from "./entitites/Stage.js";
 import { registerKeyboardEvents } from "./InputHandler.js";
+import { getContext } from "./utils/context.js";
 
 export class StreetFighterGame {
 	constructor() {
-		console.log(STAGE_MID_POINT);
-		this.fighters = [
-			new Ken(
-				STAGE_MID_POINT + STAGE_PADDING - FIGHTER_START_DISTANCE,
-				STAGE_FLOOR,
-				FighterDirection.RIGHT,
-				0
-			),
-			new Ryu(
-				STAGE_MID_POINT + STAGE_PADDING + FIGHTER_START_DISTANCE,
-				STAGE_FLOOR,
-				FighterDirection.LEFT,
-				1
-			),
-		];
+		this.fighters = [new Ken(0), new Ryu(1)];
 
 		this.fighters[0].opponent = this.fighters[1];
 		this.fighters[1].opponent = this.fighters[0];
@@ -58,15 +39,8 @@ export class StreetFighterGame {
 			previous: 0,
 		};
 
-		this.context = this.getContext();
+		this.context = getContext();
 	}
-
-	getContext = () => {
-		const canvasEL = document.querySelector("canvas");
-		const context = canvasEL.getContext("2d");
-		context.imageSmoothingEnabled = false;
-		return context;
-	};
 
 	update = () => {
 		this.camera.update(this.frameTime, this.context);

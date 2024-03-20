@@ -2,10 +2,12 @@ import * as control from "../../InputHandler.js";
 import {
 	SCENE_WIDTH,
 	STAGE_FLOOR,
+	STAGE_MID_POINT,
 	STAGE_PADDING,
 	STAGE_WIDTH,
 } from "../../constants/Stage.js";
 import {
+	FIGHTER_START_DISTANCE,
 	FighterDirection,
 	FighterState,
 	FrameDelay,
@@ -14,10 +16,18 @@ import {
 import { rectsOverlap } from "../../utils/collisions.js";
 
 export class Fighter {
-	constructor(name, x, y, direction, playerId) {
+	constructor(name, playerId) {
 		this.name = name;
-		this.position = { x, y };
-		this.direction = direction;
+		this.position = {
+			x:
+				STAGE_MID_POINT +
+				STAGE_PADDING +
+				(playerId === 0 ? 1 : -1) * FIGHTER_START_DISTANCE,
+			STAGE_FLOOR,
+			y: STAGE_FLOOR,
+		};
+		this.direction =
+			playerId === 0 ? FighterDirection.RIGHT : FighterDirection.LEFT;
 		this.playerId = playerId;
 		this.velocity = {
 			x: 0,
@@ -208,39 +218,39 @@ export class Fighter {
 		) {
 			this.position.x =
 				camera.position.x + context.canvas.width - this.pushBox.width;
-			if (
-				[
-					// FighterState.IDLE,
-					FighterState.WALK_BACKWARD,
-					FighterState.WALK_FORWARD,
-					FighterState.JUMP_FORWARD,
-					FighterState.JUMP_BACKWARD,
-				].includes(this.currentState) &&
-				camera.position.x <= 700  &&
-				this.opponent.position.x >
-					camera.position.x + this.opponent.pushBox.width
-			) {
-				camera.position.x += camera.speed * time.secondsPassed;
-			}
+			// if (
+			// 	[
+			// 		// FighterState.IDLE,
+			// 		FighterState.WALK_BACKWARD,
+			// 		FighterState.WALK_FORWARD,
+			// 		FighterState.JUMP_FORWARD,
+			// 		FighterState.JUMP_BACKWARD,
+			// 	].includes(this.currentState) &&
+			// 	camera.position.x <= 700  &&
+			// 	this.opponent.position.x >
+			// 		camera.position.x + this.opponent.pushBox.width
+			// ) {
+			// 	camera.position.x += camera.speed * time.secondsPassed;
+			// }
 		}
 
 		// Left Boundary
 		if (this.position.x - camera.position.x - this.pushBox.width <= 0) {
 			this.position.x = camera.position.x + this.pushBox.width;
-			if (
-				[
-					// FighterState.IDLE,
-					FighterState.WALK_BACKWARD,
-					FighterState.WALK_FORWARD,
-					FighterState.JUMP_FORWARD,
-					FighterState.JUMP_BACKWARD,
-				].includes(this.currentState) &&
-				camera.position.x > STAGE_PADDING &&
-				this.opponent.position.x - camera.position.x <
-					context.canvas.width - this.opponent.pushBox.width
-			) {
-				camera.position.x -= camera.speed * time.secondsPassed;
-			}
+			// if (
+			// 	[
+			// 		// FighterState.IDLE,
+			// 		FighterState.WALK_BACKWARD,
+			// 		FighterState.WALK_FORWARD,
+			// 		FighterState.JUMP_FORWARD,
+			// 		FighterState.JUMP_BACKWARD,
+			// 	].includes(this.currentState) &&
+			// 	camera.position.x > STAGE_PADDING &&
+			// 	this.opponent.position.x - camera.position.x <
+			// 		context.canvas.width - this.opponent.pushBox.width
+			// ) {
+			// 	camera.position.x -= camera.speed * time.secondsPassed;
+			// }
 		}
 
 		if (this.hasCollidedWithOpponent()) {
