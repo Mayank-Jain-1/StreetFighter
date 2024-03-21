@@ -22,7 +22,7 @@ export class Fighter {
 			x:
 				STAGE_MID_POINT +
 				STAGE_PADDING +
-				(playerId === 0 ? 1 : -1) * FIGHTER_START_DISTANCE,
+				(playerId === 0 ? -1 : 1) * FIGHTER_START_DISTANCE,
 			STAGE_FLOOR,
 			y: STAGE_FLOOR,
 		};

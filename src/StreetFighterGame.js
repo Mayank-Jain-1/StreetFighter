@@ -9,7 +9,7 @@ import { Ryu } from "./entitites/fighters/Ryu.js";
 import { FpsCounter } from "./entitites/FpsCounter.js";
 import { StatusBar } from "./entitites/overlays/StatusBar.js";
 import { Shadow } from "./entitites/Shadow.js";
-import { Stage } from "./entitites/Stage.js";
+import { Stage } from "./entitites/stage/Stage.js";
 import { registerKeyboardEvents } from "./InputHandler.js";
 import { getContext } from "./utils/context.js";
 
