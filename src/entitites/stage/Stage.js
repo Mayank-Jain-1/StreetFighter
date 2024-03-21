@@ -1,6 +1,8 @@
+import { STAGE_MID_POINT, STAGE_PADDING } from "../../constants/Stage.js";
 import { FRAME_TIME } from "../../constants/game.js";
 import { drawFrame } from "../../utils/context.js";
 import { BackgroundAnimation } from "./shared/BackgroundAnimation.js";
+import { SkewedFloor } from "./shared/SkewedFloor.js";
 
 export class Stage {
 	constructor() {
@@ -8,8 +10,14 @@ export class Stage {
 		this.frames = new Map([
 			["stage-background", [72, 208, 768, 176]],
 			["stage-boat", [8, 16, 521, 180]],
-			["stage-floor", [8, 392, 896, 72]],
+			["stage-floor-bottom", [8, 448, 896, 16]],
+
+			// Ballard type
+			["ballard-small", [800, 184, 21, 16]],
+			["ballard-large", [760, 176, 31, 24]],
 		]);
+
+		this.floor = new SkewedFloor(this.image, [8, 392, 896, 56]);
 
 		this.boat = {
 			position: {
@@ -31,10 +39,9 @@ export class Stage {
 				["flag-3", [848, 304, 40, 40]],
 			],
 			[
-				["flag-1", 166],
-				["flag-2", 166],
-				["flag-3", 166],
-				["flag-2", 166],
+				["flag-1", 133],
+				["flag-2", 133],
+				["flag-3", 133],
 			],
 			0
 		);
@@ -214,19 +221,7 @@ export class Stage {
 		}
 	};
 
-	updateBoatPersons(time, context, camera) {
-		Object.keys(this.backgroundPeople).forEach((name) => {
-			this.backgroundPeople[name][0].update(time, camera);
-		});
-	}
-
-	update = (time, context, camera) => {
-		this.updateBoat(time, context);
-		this.updateBoatPersons(time, context);
-		this.flag.update(time, camera);
-	};
-
-	draw = (context, camera) => {
+	drawSkyOcean = (context, camera) => {
 		this.drawFrame(
 			context,
 			"stage-background",
@@ -239,9 +234,15 @@ export class Stage {
 			Math.floor(576 - camera.position.x / 2.157303),
 			48
 		);
+	};
 
-		this.drawBoat(context, camera);
+	updateBoatPersons(time, context, camera) {
+		Object.keys(this.backgroundPeople).forEach((name) => {
+			this.backgroundPeople[name][0].update(time);
+		});
+	}
 
+	drawPeople = (context, camera) => {
 		Object.keys(this.backgroundPeople).forEach((name) => {
 			this.backgroundPeople[name][0].draw(
 				context,
@@ -253,12 +254,35 @@ export class Stage {
 					this.boat.animation[this.boat.animationFrame]
 			);
 		});
+	};
+
+	drawFloor = (context, camera) => {
+		this.floor.draw(context, camera, 176);
 
 		this.drawFrame(
 			context,
-			"stage-floor",
-			Math.floor(192 - camera.position.x),
-			176 - camera.position.y
+			"stage-floor-bottom",
+			STAGE_PADDING - camera.position.x * 1.1,
+			232 - camera.position.y
 		);
+	};
+
+	drawBallard = (context, camera) => {
+		const cameraXOffset = camera.position.x / 1.54;
+		this.drawFrame(context, "ballard-small", 400,180);
+	};
+
+	update = (time, context, camera) => {
+		this.updateBoat(time, context);
+		this.updateBoatPersons(time, context);
+		this.flag.update(time);
+	};
+
+	draw = (context, camera) => {
+		this.drawSkyOcean(context, camera);
+		this.drawBoat(context, camera);
+		this.drawPeople(context, camera);
+		this.drawFloor(context, camera);
+		this.drawBallard(context, camera);
 	};
 }

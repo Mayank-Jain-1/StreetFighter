@@ -11,8 +11,7 @@ export class BackgroundAnimation {
 		this.frameDelay = animation[this.animationFrame][1];
 	}
 
-	update = (time, camera) => {
-		if (this.name === "Flag") console.log("updaing ");
+	update = (time) => {
 		if (time.previous > this.animationTimer + this.frameDelay) {
 			this.animationFrame++;
 			if (this.animationFrame >= this.animation.length) {
