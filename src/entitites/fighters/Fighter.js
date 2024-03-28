@@ -1,4 +1,4 @@
-import * as control from "../../InputHandler.js";
+import * as control from "../../engine/InputHandler.js";
 import {
 	SCENE_WIDTH,
 	STAGE_FLOOR,
@@ -500,6 +500,6 @@ export class Fighter {
 		);
 
 		context.setTransform(1, 0, 0, 1, 0, 0);
-		this.drawDebug(context, camera);
+		// this.drawDebug(context, camera);
 	};
 }

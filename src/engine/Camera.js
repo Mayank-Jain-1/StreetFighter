@@ -5,7 +5,7 @@ import {
 	STAGE_HEIGHT,
 	STAGE_PADDING,
 	STAGE_WIDTH,
-} from "./constants/Stage.js";
+} from "../constants/Stage.js";
 
 export class Camera {
 	constructor(x, y, fighters) {

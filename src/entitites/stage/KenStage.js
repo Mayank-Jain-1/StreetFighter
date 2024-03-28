@@ -1,10 +1,15 @@
-import { STAGE_MID_POINT, STAGE_PADDING } from "../../constants/Stage.js";
+import {
+	SCENE_WIDTH,
+	STAGE_MID_POINT,
+	STAGE_PADDING,
+	STAGE_WIDTH,
+} from "../../constants/Stage.js";
 import { FRAME_TIME } from "../../constants/game.js";
 import { drawFrame } from "../../utils/context.js";
 import { BackgroundAnimation } from "./shared/BackgroundAnimation.js";
 import { SkewedFloor } from "./shared/SkewedFloor.js";
 
-export class Stage {
+export class KenStage {
 	constructor() {
 		this.image = document.getElementById("KenStage");
 		this.frames = new Map([
@@ -15,6 +20,10 @@ export class Stage {
 			// Ballard type
 			["ballard-small", [800, 184, 21, 16]],
 			["ballard-large", [760, 176, 31, 24]],
+
+			// Barrels
+
+			["side-barrels", [560, 472, 151, 96]],
 		]);
 
 		this.floor = new SkewedFloor(this.image, [8, 392, 896, 56]);
@@ -267,9 +276,45 @@ export class Stage {
 		);
 	};
 
-	drawBallard = (context, camera) => {
+	drawSmallBallards = (context, camera) => {
 		const cameraXOffset = camera.position.x / 1.54;
-		this.drawFrame(context, "ballard-small", 400,180);
+		this.drawFrame(
+			context,
+			"ballard-small",
+			468 - 92 - cameraXOffset,
+			166 - camera.position.y
+		);
+		this.drawFrame(
+			context,
+			"ballard-small",
+			468 + 92 - cameraXOffset,
+			166 - camera.position.y
+		);
+	};
+
+	drawBarrels = (context, camera) => {
+		this.drawFrame(
+			context,
+			"side-barrels",
+			STAGE_PADDING + STAGE_WIDTH - 152 - camera.position.x,
+			120 - camera.position.y
+		);
+	};
+
+	drawLargeBallard = (context, camera) => {
+		const cameraXOffset = camera.position.x / 0.958;
+		this.drawFrame(
+			context,
+			"ballard-large",
+			STAGE_MID_POINT + STAGE_PADDING - 147 - cameraXOffset,
+			200 - camera.position.y
+		);
+		this.drawFrame(
+			context,
+			"ballard-large",
+			STAGE_MID_POINT + STAGE_PADDING + 147 - cameraXOffset,
+			200 - camera.position.y
+		);
 	};
 
 	update = (time, context, camera) => {
@@ -278,11 +323,21 @@ export class Stage {
 		this.flag.update(time);
 	};
 
-	draw = (context, camera) => {
+	drawBackground = (context, camera) => {
 		this.drawSkyOcean(context, camera);
 		this.drawBoat(context, camera);
 		this.drawPeople(context, camera);
 		this.drawFloor(context, camera);
-		this.drawBallard(context, camera);
+		this.drawSmallBallards(context, camera);
+		this.drawBarrels(context, camera);
+	};
+
+	drawForeground = (context, camera) => {
+		this.drawLargeBallard(context, camera);
+	};
+
+	draw = (context, camera) => {
+		this.drawBackground(context, camera);
+		this.drawForeground(context, camera);
 	};
 }

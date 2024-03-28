@@ -1,4 +1,4 @@
-import { Camera } from "./Camera.js";
+import { Camera } from "./engine/Camera.js";
 import {
 	SCENE_WIDTH,
 	STAGE_MID_POINT,
@@ -6,11 +6,11 @@ import {
 } from "./constants/Stage.js";
 import { Ken } from "./entitites/fighters/Ken.js";
 import { Ryu } from "./entitites/fighters/Ryu.js";
-import { FpsCounter } from "./entitites/FpsCounter.js";
+import { FpsCounter } from "./entitites/overlays/FpsCounter.js";
 import { StatusBar } from "./entitites/overlays/StatusBar.js";
 import { Shadow } from "./entitites/Shadow.js";
-import { Stage } from "./entitites/stage/Stage.js";
-import { registerKeyboardEvents } from "./InputHandler.js";
+import { KenStage } from "./entitites/stage/KenStage.js";
+import { registerKeyboardEvents } from "./engine/InputHandler.js";
 import { getContext } from "./utils/context.js";
 
 export class StreetFighterGame {
@@ -26,9 +26,11 @@ export class StreetFighterGame {
 			this.fighters
 		);
 
-		this.entities = [
-			new Stage(),
-			...this.fighters.map((fighter) => new Shadow(fighter)),
+		this.stage = new KenStage();
+
+		this.entities = [...this.fighters.map((fighter) => new Shadow(fighter))];
+
+		this.overlays = [
 			new FpsCounter(),
 			...this.fighters,
 			new StatusBar(this.fighters),
@@ -44,15 +46,24 @@ export class StreetFighterGame {
 
 	update = () => {
 		this.camera.update(this.frameTime, this.context);
+		this.stage.update(this.frameTime, this.context, this.camera);
 
 		for (const entity of this.entities) {
 			entity.update(this.frameTime, this.context, this.camera);
 		}
+		for (const overlay of this.overlays) {
+			overlay.update(this.frameTime, this.context, this.camera);
+		}
 	};
 
 	draw = () => {
+		this.stage.drawBackground(this.context, this.camera);
 		for (const entity of this.entities) {
 			entity.draw(this.context, this.camera);
+		}
+		this.stage.drawForeground(this.context, this.camera);
+		for (const overlay of this.overlays) {
+			overlay.draw(this.context, this.camera);
 		}
 	};
 
