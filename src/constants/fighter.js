@@ -1,4 +1,4 @@
-export const FIGHTER_START_DISTANCE = 88
+export const FIGHTER_START_DISTANCE = 88;
 
 export const FighterDirection = {
 	LEFT: -1,
@@ -19,12 +19,18 @@ export const FighterState = {
 	CROUCH_DOWN: "crouchDown",
 	IDLE_TURN: "idleTurn",
 	CROUCH_TURN: "crouchTurn",
+	LIGHT_PUNCH: "lightPunch",
+	MEDIUM_PUNCH: "mediumPunch",
+	HEAVY_PUNCH: "heavyPunch",
+	LIGHT_KICK: "lightKick",
+	MEDIUM_KICK: "mediumKick",
+  HEAVY_KICK: "heavyKick",
 };
 
 export const FrameDelay = {
-  FREEZE: 0,
-  TRANSITION: -1
-}
+	FREEZE: 0,
+	TRANSITION: -1,
+};
 
 export const PushBox = {
 	IDLE: [-16, -80, 32, 78],
@@ -33,4 +39,4 @@ export const PushBox = {
 	CROUCH: [-16, -50, 32, 50],
 };
 
-export const PushFriction = 66
+export const PushFriction = 66;

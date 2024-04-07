@@ -7,7 +7,16 @@ export class Ken extends Fighter {
 		this.image = document.getElementById("KenImage");
 		this.frames = new Map([
 			// Idle
-
+			// [
+			// 	[Frames, origin],
+			// 	pushbox = [originX from Origin, originY from Origin, Width, Height],
+			// 	[
+			// 		HurtHead = [originX from Origin, originY from Origin, Width, Height], HurtTorso,
+			// 		HurtFeet
+			// 	],
+			// 	Hitbox = [originX from Origin, originY from Origin, Width, Height
+			// 	]
+			// ]
 			[
 				"idle-1",
 				[
@@ -16,6 +25,11 @@ export class Ken extends Fighter {
 						[34, 86],
 					],
 					PushBox.IDLE,
+					[
+						[-8, 88, 24, 16],
+						[-26, -74, 40, 42],
+						[-26, -31, 40, 32],
+					],
 				],
 			],
 			[
@@ -27,6 +41,11 @@ export class Ken extends Fighter {
 					],
 					PushBox.IDLE,
 				],
+				[
+					[-8, 88, 24, 16],
+					[-26, -74, 40, 42],
+					[-26, -31, 40, 32],
+				],
 			],
 			[
 				"idle-3",
@@ -36,6 +55,11 @@ export class Ken extends Fighter {
 						[32, 89],
 					],
 					PushBox.IDLE,
+					[
+						[-8, 88, 24, 16],
+						[-26, -74, 40, 42],
+						[-26, -31, 40, 32],
+					],
 				],
 			],
 			[
@@ -46,6 +70,11 @@ export class Ken extends Fighter {
 						[31, 90],
 					],
 					PushBox.IDLE,
+					[
+						[-8, 88, 24, 16],
+						[-26, -74, 40, 42],
+						[-26, -31, 40, 32],
+					],
 				],
 			],
 
@@ -423,6 +452,155 @@ export class Ken extends Fighter {
 					PushBox.CROUCH,
 				],
 			],
+
+			// Light Punch
+			[
+				"light-punch-1",
+				[
+					[
+						[3, 1152, 64, 91],
+						[32, 88],
+					],
+					PushBox.IDLE,
+				],
+			],
+			[
+				"light-punch-2",
+				[
+					[
+						[72, 1152, 92, 91],
+						[32, 88],
+					],
+					PushBox.IDLE,
+				],
+			],
+
+			// Medium/Heavy Punch
+			[
+				"med-punch-1",
+				[
+					[
+						[517, 1149, 60, 94],
+						[28, 91],
+					],
+					PushBox.IDLE,
+				],
+			],
+			[
+				"med-punch-2",
+				[
+					[
+						[650, 1148, 74, 95],
+						[29, 92],
+					],
+					PushBox.IDLE,
+				],
+			],
+			[
+				"med-punch-3",
+				[
+					[
+						[736, 1148, 108, 94],
+						[24, 92],
+					],
+					PushBox.IDLE,
+				],
+			],
+			// Heavy Punch
+			[
+				"heavy-punch-1",
+				[
+					[
+						[736, 1148, 108, 94],
+						[24, 92],
+					],
+					PushBox.IDLE,
+				],
+			],
+
+			// Light/Medium Kick
+			[
+				"light-kick-1",
+				[
+					[
+						[62, 1565, 66, 92],
+						[46, 93],
+					],
+					PushBox.IDLE,
+				],
+			],
+			[
+				"light-kick-2",
+				[
+					[
+						[143, 1565, 114, 92],
+						[68, 93],
+					],
+					PushBox.IDLE,
+				],
+			],
+			// Medium Kick
+			[
+				"med-kick-1",
+				[
+					[
+						[143, 1565, 114, 92],
+						[68, 93],
+					],
+					PushBox.IDLE,
+				],
+			],
+			// Heavy Kick
+			[
+				"heavy-kick-1",
+				[
+					[
+						[683, 1571, 61, 90],
+						[37, 87],
+					],
+					PushBox.IDLE,
+				],
+			],
+			[
+				"heavy-kick-2",
+				[
+					[
+						[763, 1567, 95, 94],
+						[45, 91],
+					],
+					PushBox.IDLE,
+				],
+			],
+			[
+				"heavy-kick-3",
+				[
+					[
+						[870, 1567, 120, 94],
+						[42, 91],
+					],
+					PushBox.IDLE,
+				],
+			],
+			[
+				"heavy-kick-4",
+				[
+					[
+						[1005, 1584, 101, 77],
+						[39, 74],
+					],
+					PushBox.IDLE,
+				],
+			],
+			[
+				"heavy-kick-5",
+				[
+					[
+						[1147, 1580, 64, 81],
+						[38, 78],
+					],
+					PushBox.IDLE,
+				],
+			],
 		]);
 
 		this.animations = {
@@ -512,6 +690,53 @@ export class Ken extends Fighter {
 				["crouch-turn-2", 33],
 				["crouch-turn-1", 33],
 				["crouch-turn-1", FrameDelay.TRANSITION],
+			],
+			[FighterState.LIGHT_PUNCH]: [
+				["light-punch-1", 33],
+				["light-punch-2", 66],
+				["light-punch-1", 66],
+				["light-punch-1", FrameDelay.TRANSITION],
+			],
+
+			[FighterState.MEDIUM_PUNCH]: [
+				["med-punch-1", 16],
+				["med-punch-2", 33],
+				["med-punch-3", 66],
+				["med-punch-2", 50],
+				["med-punch-1", 50],
+				["med-punch-1", FrameDelay.TRANSITION],
+			],
+			[FighterState.HEAVY_PUNCH]: [
+				["med-punch-1", 50],
+				["med-punch-2", 33],
+				["heavy-punch-1", 100],
+				["med-punch-2", 166],
+				["med-punch-1", 199],
+				["med-punch-1", FrameDelay.TRANSITION],
+			],
+
+			[FighterState.LIGHT_KICK]: [
+				["med-punch-1", 50],
+				["light-kick-1", 50],
+				["light-kick-2", 133],
+				["light-kick-1", 66],
+				["med-punch-1", 16],
+				["med-punch-1", FrameDelay.TRANSITION],
+			],
+			[FighterState.MEDIUM_KICK]: [
+				["med-punch-1", 83],
+				["light-kick-1", 100],
+				["med-kick-1", 199],
+				["light-kick-1", 116],
+				["light-kick-1", FrameDelay.TRANSITION],
+			],
+			[FighterState.HEAVY_KICK]: [
+				["heavy-kick-1", 33],
+				["heavy-kick-2", 66],
+				["heavy-kick-3", 133],
+				["heavy-kick-4", 166],
+				["heavy-kick-5", 116],
+				["heavy-kick-5", FrameDelay.TRANSITION],
 			],
 		};
 

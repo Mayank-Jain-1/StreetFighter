@@ -2,13 +2,22 @@ import { Control, controls } from "../constants/controls.js";
 import { FighterDirection } from "../constants/fighter.js";
 
 const heldKeys = new Set();
+const pressedKeys = new Set();
 const mappedKeys = controls
 	.map(({ keyboard }) => Object.values(keyboard))
 	.flat();
 
-const handleKeyDown = (event) => {
-	if (!mappedKeys.includes(event.code)) return;
+const isPressed = (code) => {
+	if (heldKeys.has(code) && !pressedKeys.has(code)) {
+		pressedKeys.add(code);
+		return true;
+	}
+	return false;
+};
 
+const handleKeyDown = (event) => {
+	// console.log(event.code);
+	if (!mappedKeys.includes(event.code)) return;
 	event.preventDefault();
 	if (!heldKeys.has(event.code)) {
 		heldKeys.add(event.code);
@@ -19,7 +28,7 @@ const handleKeyUp = (event) => {
 	event.preventDefault();
 	if (heldKeys.has(event.code)) {
 		heldKeys.delete(event.code);
-		// console.log(`Lifted ${input.code}`)
+		pressedKeys.delete(event.code);
 	}
 };
 
@@ -54,3 +63,26 @@ export const isBackward = (id, direction) => {
 
 export const isIdle = (id) =>
 	isUp(id) || isDown(id) || isLeft(id) || isRight(id);
+
+export const isKeyPressed = (id, code) =>
+	isPressed(controls[id].keyboard[code]);
+
+export const isLightPunch = (id) => {
+	return isKeyPressed(id, Control.LIGHT_PUNCH);
+};
+export const isMediumPunch = (id) => {
+	return isKeyPressed(id, Control.MEDIUM_PUNCH);
+};
+export const isHeavyPunch = (id) => {
+	return isKeyPressed(id, Control.HEAVY_PUNCH);
+};
+
+export const isLightKick = (id) => {
+	return isKeyPressed(id, Control.LIGHT_KICK);
+};
+export const isMediumKick = (id) => {
+	return isKeyPressed(id, Control.MEDIUM_KICK);
+};
+export const isHeavyKick = (id) => {
+	return isKeyPressed(id, Control.HEAVY_KICK);
+};

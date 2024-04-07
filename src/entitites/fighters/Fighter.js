@@ -56,6 +56,12 @@ export class Fighter {
 					FighterState.CROUCH_UP,
 					FighterState.JUMP_LAND,
 					FighterState.IDLE_TURN,
+					FighterState.LIGHT_PUNCH,
+					FighterState.MEDIUM_PUNCH,
+					FighterState.HEAVY_PUNCH,
+					FighterState.LIGHT_KICK,
+					FighterState.MEDIUM_KICK,
+					FighterState.HEAVY_KICK,
 				],
 			},
 			[FighterState.WALK_FORWARD]: {
@@ -147,37 +153,93 @@ export class Fighter {
 				update: this.handleCrouchTurn.bind(this),
 				validFrom: [FighterState.CROUCH],
 			},
+			[FighterState.LIGHT_PUNCH]: {
+				init: this.resetVelocities,
+				update: this.handleLightKick.bind(this),
+				validFrom: [
+					FighterState.IDLE,
+					FighterState.WALK_FORWARD,
+					FighterState.WALK_BACKWARD,
+				],
+			},
+			[FighterState.MEDIUM_PUNCH]: {
+				init: this.resetVelocities,
+				update: this.handleMedKick.bind(this),
+				validFrom: [
+					FighterState.IDLE,
+					FighterState.WALK_FORWARD,
+					FighterState.WALK_BACKWARD,
+				],
+			},
+			[FighterState.HEAVY_PUNCH]: {
+				init: this.resetVelocities,
+				update: this.handleHeavyKick.bind(this),
+				validFrom: [
+					FighterState.IDLE,
+					FighterState.WALK_FORWARD,
+					FighterState.WALK_BACKWARD,
+				],
+			},
+			[FighterState.LIGHT_KICK]: {
+				init: this.resetVelocities,
+				update: this.handleLightPunch.bind(this),
+				validFrom: [
+					FighterState.IDLE,
+					FighterState.WALK_FORWARD,
+					FighterState.WALK_BACKWARD,
+				],
+			},
+			[FighterState.MEDIUM_KICK]: {
+				init: this.resetVelocities,
+				update: this.handleMedPunch.bind(this),
+				validFrom: [
+					FighterState.IDLE,
+					FighterState.WALK_FORWARD,
+					FighterState.WALK_BACKWARD,
+				],
+			},
+			[FighterState.HEAVY_KICK]: {
+				init: this.resetVelocities,
+				update: this.handleHeavyPunch.bind(this),
+				validFrom: [
+					FighterState.IDLE,
+					FighterState.WALK_FORWARD,
+					FighterState.WALK_BACKWARD,
+				],
+			},
 		};
 		this.changeState(FighterState.CROUCH);
 		this.opponent;
-		this.pushBox = { x: 0, y: 0, width: 0, height: 0 };
+		this.boxes = {
+			push: { x: 0, y: 0, width: 0, height: 0 },
+		};
 	}
 
 	hasCollidedWithOpponent = () =>
 		rectsOverlap(
-			this.position.x + this.pushBox.x,
-			this.position.y + this.pushBox.y,
-			this.pushBox.width,
-			this.pushBox.height,
-			this.opponent.position.x + this.opponent.pushBox.x,
-			this.opponent.position.y + this.opponent.pushBox.y,
-			this.opponent.pushBox.width,
-			this.opponent.pushBox.height
+			this.position.x + this.boxes.push.x,
+			this.position.y + this.boxes.push.y,
+			this.boxes.push.width,
+			this.boxes.push.height,
+			this.opponent.position.x + this.opponent.boxes.push.x,
+			this.opponent.position.y + this.opponent.boxes.push.y,
+			this.opponent.boxes.push.width,
+			this.opponent.boxes.push.height
 		);
 
 	getDirection = () => {
 		if (
-			this.position.x + this.pushBox.x + this.pushBox.width >=
+			this.position.x + this.boxes.push.x + this.boxes.push.width >=
 			this.opponent.position.x +
-				this.opponent.pushBox.x +
-				this.opponent.pushBox.width
+				this.opponent.boxes.push.x +
+				this.opponent.boxes.push.width
 		) {
 			return FighterDirection.LEFT;
 		} else if (
-			this.position.x + this.pushBox.x <=
+			this.position.x + this.boxes.push.x <=
 			this.opponent.position.x +
-				this.opponent.pushBox.x +
-				this.opponent.pushBox.width
+				this.opponent.boxes.push.x +
+				this.opponent.boxes.push.width
 		) {
 			return FighterDirection.RIGHT;
 		}
@@ -185,7 +247,7 @@ export class Fighter {
 		return this.direction;
 	};
 
-	getPushBox = (frameKey) => {
+	getpush = (frameKey) => {
 		const [, [x, y, width, height] = [0, 0, 0, 0]] = this.frames.get(frameKey);
 
 		return { x, y, width, height };
@@ -213,11 +275,11 @@ export class Fighter {
 	updateStageConstraints = (time, context, camera) => {
 		// Right Boundary
 		if (
-			this.position.x - camera.position.x + this.pushBox.width >=
+			this.position.x - camera.position.x + this.boxes.push.width >=
 			SCENE_WIDTH
 		) {
 			this.position.x =
-				camera.position.x + context.canvas.width - this.pushBox.width;
+				camera.position.x + context.canvas.width - this.boxes.push.width;
 			// if (
 			// 	[
 			// 		// FighterState.IDLE,
@@ -228,15 +290,15 @@ export class Fighter {
 			// 	].includes(this.currentState) &&
 			// 	camera.position.x <= 700  &&
 			// 	this.opponent.position.x >
-			// 		camera.position.x + this.opponent.pushBox.width
+			// 		camera.position.x + this.opponent.boxes.push.width
 			// ) {
 			// 	camera.position.x += camera.speed * time.secondsPassed;
 			// }
 		}
 
 		// Left Boundary
-		if (this.position.x - camera.position.x - this.pushBox.width <= 0) {
-			this.position.x = camera.position.x + this.pushBox.width;
+		if (this.position.x - camera.position.x - this.boxes.push.width <= 0) {
+			this.position.x = camera.position.x + this.boxes.push.width + 1;
 			// if (
 			// 	[
 			// 		// FighterState.IDLE,
@@ -247,7 +309,7 @@ export class Fighter {
 			// 	].includes(this.currentState) &&
 			// 	camera.position.x > STAGE_PADDING &&
 			// 	this.opponent.position.x - camera.position.x <
-			// 		context.canvas.width - this.opponent.pushBox.width
+			// 		context.canvas.width - this.opponent.boxes.push.width
 			// ) {
 			// 	camera.position.x -= camera.speed * time.secondsPassed;
 			// }
@@ -257,9 +319,9 @@ export class Fighter {
 			if (this.position.x <= this.opponent.position.x) {
 				this.position.x = Math.max(
 					this.opponent.position.x +
-						this.opponent.pushBox.x -
-						(this.pushBox.x + this.pushBox.width),
-					this.pushBox.width - 1
+						this.opponent.boxes.push.x -
+						(this.boxes.push.x + this.boxes.push.width),
+					this.boxes.push.width - 1
 				);
 
 				if (
@@ -275,8 +337,8 @@ export class Fighter {
 				}
 			} else if (this.position.x >= this.opponent.position.x) {
 				this.position.x = Math.min(
-					camera.position.x + context.canvas.width - this.pushBox.width,
-					this.opponent.position.x + this.opponent.pushBox.width
+					camera.position.x + context.canvas.width - this.boxes.push.width,
+					this.opponent.position.x + this.opponent.boxes.push.width
 				);
 				if (
 					[
@@ -304,14 +366,26 @@ export class Fighter {
 	};
 
 	handleIdle = () => {
-		control.isUp(this.playerId, this.direction)
-			? this.changeState(FighterState.JUMP_START)
-			: control.isDown(this.playerId)
-			? this.changeState(FighterState.CROUCH_DOWN)
-			: control.isForward(this.playerId, this.direction)
-			? this.changeState(FighterState.WALK_FORWARD)
-			: control.isBackward(this.playerId, this.direction) &&
-			  this.changeState(FighterState.WALK_BACKWARD);
+		if (control.isUp(this.playerId, this.direction))
+			this.changeState(FighterState.JUMP_START);
+		else if (control.isDown(this.playerId))
+			this.changeState(FighterState.CROUCH_DOWN);
+		else if (control.isForward(this.playerId, this.direction))
+			this.changeState(FighterState.WALK_FORWARD);
+		else if (control.isBackward(this.playerId, this.direction))
+			this.changeState(FighterState.WALK_BACKWARD);
+		else if (control.isLightPunch(this.playerId))
+			this.changeState(FighterState.LIGHT_PUNCH);
+		else if (control.isMediumPunch(this.playerId))
+			this.changeState(FighterState.MEDIUM_PUNCH);
+		else if (control.isHeavyPunch(this.playerId))
+			this.changeState(FighterState.HEAVY_PUNCH);
+		else if (control.isLightKick(this.playerId))
+			this.changeState(FighterState.LIGHT_KICK);
+		else if (control.isMediumKick(this.playerId))
+			this.changeState(FighterState.MEDIUM_KICK);
+		else if (control.isHeavyKick(this.playerId))
+			this.changeState(FighterState.HEAVY_KICK);
 
 		const newDirection = this.getDirection();
 		if (newDirection !== this.direction) {
@@ -321,21 +395,45 @@ export class Fighter {
 	};
 
 	handleWalkForward = () => {
-		!control.isForward(this.playerId, this.direction)
-			? this.changeState(FighterState.IDLE)
-			: control.isUp(this.playerId)
-			? this.changeState(FighterState.JUMP_FORWARD)
-			: control.isDown(this.playerId) &&
-			  this.changeState(FighterState.CROUCH_DOWN);
+		if (!control.isForward(this.playerId, this.direction))
+			this.changeState(FighterState.IDLE);
+		else if (control.isUp(this.playerId))
+			this.changeState(FighterState.JUMP_FORWARD);
+		else if (control.isDown(this.playerId))
+			this.changeState(FighterState.CROUCH_DOWN);
+		else if (control.isLightPunch(this.playerId))
+			this.changeState(FighterState.LIGHT_PUNCH);
+		else if (control.isMediumPunch(this.playerId))
+			this.changeState(FighterState.MEDIUM_PUNCH);
+		else if (control.isHeavyPunch(this.playerId))
+			this.changeState(FighterState.HEAVY_PUNCH);
+		else if (control.isLightKick(this.playerId))
+			this.changeState(FighterState.LIGHT_KICK);
+		else if (control.isMediumKick(this.playerId))
+			this.changeState(FighterState.MEDIUM_KICK);
+		else if (control.isHeavyKick(this.playerId))
+			this.changeState(FighterState.HEAVY_KICK);
 	};
 
 	hanldeWalkBackward = () => {
-		!control.isBackward(this.playerId, this.direction)
-			? this.changeState(FighterState.IDLE)
-			: control.isUp(this.playerId)
-			? this.changeState(FighterState.JUMP_BACKWARD)
-			: control.isDown(this.playerId) &&
-			  this.changeState(FighterState.CROUCH_DOWN);
+		if (!control.isBackward(this.playerId, this.direction))
+			this.changeState(FighterState.IDLE);
+		else if (control.isUp(this.playerId))
+			this.changeState(FighterState.JUMP_BACKWARD);
+		else if (control.isDown(this.playerId))
+			this.changeState(FighterState.CROUCH_DOWN);
+		else if (control.isLightPunch(this.playerId))
+			this.changeState(FighterState.LIGHT_PUNCH);
+		else if (control.isMediumPunch(this.playerId))
+			this.changeState(FighterState.MEDIUM_PUNCH);
+		else if (control.isHeavyPunch(this.playerId))
+			this.changeState(FighterState.HEAVY_PUNCH);
+		else if (control.isLightKick(this.playerId))
+			this.changeState(FighterState.LIGHT_KICK);
+		else if (control.isMediumKick(this.playerId))
+			this.changeState(FighterState.MEDIUM_KICK);
+		else if (control.isHeavyKick(this.playerId))
+			this.changeState(FighterState.HEAVY_KICK);
 	};
 
 	handleCrouchDownUpdate = () => {
@@ -411,9 +509,53 @@ export class Fighter {
 		}
 	};
 
+	handleLightPunch = () => {
+		if (this.animationFrame < 2) return;
+		if (control.isLightPunch(this.playerId)) {
+			this.animationFrame = 0;
+		}
+		if (this.isAnimationCompleted()) {
+			this.changeState(FighterState.IDLE);
+		}
+	};
+
+	handleMedPunch = () => {
+		if (this.isAnimationCompleted()) {
+			this.changeState(FighterState.IDLE);
+		}
+	};
+
+	handleHeavyPunch = () => {
+		if (this.isAnimationCompleted()) {
+			this.changeState(FighterState.IDLE);
+		}
+	};
+
+	handleLightKick = () => {
+		if (this.animationFrame < 2) return;
+		if (control.isLightKick(this.playerId)) {
+			this.animationFrame = 0;
+		}
+		if (this.isAnimationCompleted()) {
+			this.changeState(FighterState.IDLE);
+		}
+	};
+
+	handleMedKick = () => {
+		if (this.isAnimationCompleted()) {
+			this.changeState(FighterState.IDLE);
+		}
+	};
+
+	handleHeavyKick = () => {
+		if (this.isAnimationCompleted()) {
+			this.changeState(FighterState.IDLE);
+		}
+	};
+
 	drawDebug = (context, camera) => {
 		const [frameKey] = this.animations[this.currentState][this.animationFrame];
-		const pushBox = this.getPushBox(frameKey);
+		const push = this.getpush(frameKey);
 		context.lineWidth = 1;
 		// Push Box
 
@@ -421,16 +563,16 @@ export class Fighter {
 		context.strokeStyle = "#55ff55";
 		context.fillStyle = "#55ff5555";
 		context.fillRect(
-			Math.floor(this.position.x - camera.position.x + pushBox.x) + 0.5,
-			Math.floor(this.position.y + pushBox.y - camera.position.y) + 0.5,
-			pushBox.width,
-			pushBox.height
+			Math.floor(this.position.x - camera.position.x + push.x) + 0.5,
+			Math.floor(this.position.y + push.y - camera.position.y) + 0.5,
+			push.width,
+			push.height
 		);
 		context.rect(
-			Math.floor(this.position.x - camera.position.x + pushBox.x) + 0.5,
-			Math.floor(this.position.y + pushBox.y - camera.position.y) + 0.5,
-			pushBox.width,
-			pushBox.height
+			Math.floor(this.position.x - camera.position.x + push.x) + 0.5,
+			Math.floor(this.position.y + push.y - camera.position.y) + 0.5,
+			push.width,
+			push.height
 		);
 		context.stroke();
 
@@ -464,7 +606,7 @@ export class Fighter {
 
 			if (frameDelay > FrameDelay.FREEZE) {
 				this.animationFrame++;
-				this.pushBox = this.getPushBox(frameKey);
+				this.boxes.push = this.getpush(frameKey);
 			}
 
 			if (this.animationFrame >= animation.length) this.animationFrame = 0;

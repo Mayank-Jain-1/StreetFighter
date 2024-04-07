@@ -28,13 +28,12 @@ export class StreetFighterGame {
 
 		this.stage = new KenStage();
 
-		this.entities = [...this.fighters.map((fighter) => new Shadow(fighter))];
-
-		this.overlays = [
-			new FpsCounter(),
+		this.entities = [
+			...this.fighters.map((fighter) => new Shadow(fighter)),
 			...this.fighters,
-			new StatusBar(this.fighters),
 		];
+
+		this.overlays = [new FpsCounter(), new StatusBar(this.fighters)];
 
 		this.frameTime = {
 			secondsPassed: 0,
