@@ -211,35 +211,41 @@ export class Fighter {
 		this.changeState(FighterState.CROUCH);
 		this.opponent;
 		this.boxes = {
-			push: { x: 0, y: 0, width: 0, height: 0 },
+			push: { pushX: 0, pushY: 0, pushWidth: 0, pushHeight: 0 },
+			hurt: [
+				[0, 0, 0, 0],
+				[0, 0, 0, 0],
+				[0, 0, 0, 0],
+			],
+			hit: { x: 0, y: 0, width: 0, height: 0 },
 		};
 	}
 
 	hasCollidedWithOpponent = () =>
 		rectsOverlap(
-			this.position.x + this.boxes.push.x,
-			this.position.y + this.boxes.push.y,
-			this.boxes.push.width,
-			this.boxes.push.height,
-			this.opponent.position.x + this.opponent.boxes.push.x,
-			this.opponent.position.y + this.opponent.boxes.push.y,
-			this.opponent.boxes.push.width,
-			this.opponent.boxes.push.height
+			this.position.x + this.boxes.push.pushX,
+			this.position.y + this.boxes.push.pushY,
+			this.boxes.push.pushWidth,
+			this.boxes.push.pushHeight,
+			this.opponent.position.x + this.opponent.boxes.push.pushX,
+			this.opponent.position.y + this.opponent.boxes.push.pushY,
+			this.opponent.boxes.push.pushWidth,
+			this.opponent.boxes.push.pushHeight
 		);
 
 	getDirection = () => {
 		if (
-			this.position.x + this.boxes.push.x + this.boxes.push.width >=
+			this.position.x + this.boxes.push.pushX + this.boxes.push.pushWidth >=
 			this.opponent.position.x +
-				this.opponent.boxes.push.x +
-				this.opponent.boxes.push.width
+				this.opponent.boxes.push.pushX +
+				this.opponent.boxes.push.pushWidth
 		) {
 			return FighterDirection.LEFT;
 		} else if (
-			this.position.x + this.boxes.push.x <=
+			this.position.x + this.boxes.push.pushX <=
 			this.opponent.position.x +
-				this.opponent.boxes.push.x +
-				this.opponent.boxes.push.width
+				this.opponent.boxes.push.pushX +
+				this.opponent.boxes.push.pushWidth
 		) {
 			return FighterDirection.RIGHT;
 		}
@@ -247,12 +253,24 @@ export class Fighter {
 		return this.direction;
 	};
 
-	getpush = (frameKey) => {
-		const [, [x, y, width, height] = [0, 0, 0, 0]] = this.frames.get(frameKey);
+	getBoxes = (frameKey) => {
+		const [
+			,
+			[pushX, pushY, pushWidth, pushHeight] = [0, 0, 0, 0],
+			[head, body, legs] = [
+				[0, 0, 0, 0],
+				[0, 0, 0, 0],
+				[0, 0, 0, 0],
+			],
+			[hitX, hitY, hitWidth, hitHeight] = [0, 0, 0, 0],
+		] = this.frames.get(frameKey);
 
-		return { x, y, width, height };
+		return {
+			push: { pushX, pushY, pushWidth, pushHeight },
+			hurt: [head, body, legs],
+			hit: { hitX, hitY, hitWidth, hitHeight },
+		};
 	};
-
 	isAnimationCompleted = () => {
 		return (
 			this.animations[this.currentState][this.animationFrame][1] ===
@@ -274,12 +292,13 @@ export class Fighter {
 
 	updateStageConstraints = (time, context, camera) => {
 		// Right Boundary
+		if (this.name === "Ryu") console.log(this.boxes.push.pushWidth);
 		if (
-			this.position.x - camera.position.x + this.boxes.push.width >=
+			this.position.x - camera.position.x + this.boxes.push.pushWidth >=
 			SCENE_WIDTH
 		) {
 			this.position.x =
-				camera.position.x + context.canvas.width - this.boxes.push.width;
+				camera.position.x + context.canvas.width - this.boxes.push.pushWidth;
 			// if (
 			// 	[
 			// 		// FighterState.IDLE,
@@ -290,15 +309,15 @@ export class Fighter {
 			// 	].includes(this.currentState) &&
 			// 	camera.position.x <= 700  &&
 			// 	this.opponent.position.x >
-			// 		camera.position.x + this.opponent.boxes.push.width
+			// 		camera.position.x + this.opponent.boxes.push.pushWidth
 			// ) {
 			// 	camera.position.x += camera.speed * time.secondsPassed;
 			// }
 		}
 
 		// Left Boundary
-		if (this.position.x - camera.position.x - this.boxes.push.width <= 0) {
-			this.position.x = camera.position.x + this.boxes.push.width + 1;
+		if (this.position.x - camera.position.x - this.boxes.push.pushWidth <= 0) {
+			this.position.x = camera.position.x + this.boxes.push.pushWidth + 1;
 			// if (
 			// 	[
 			// 		// FighterState.IDLE,
@@ -309,7 +328,7 @@ export class Fighter {
 			// 	].includes(this.currentState) &&
 			// 	camera.position.x > STAGE_PADDING &&
 			// 	this.opponent.position.x - camera.position.x <
-			// 		context.canvas.width - this.opponent.boxes.push.width
+			// 		context.canvas.width - this.opponent.boxes.push.pushWidth
 			// ) {
 			// 	camera.position.x -= camera.speed * time.secondsPassed;
 			// }
@@ -319,9 +338,9 @@ export class Fighter {
 			if (this.position.x <= this.opponent.position.x) {
 				this.position.x = Math.max(
 					this.opponent.position.x +
-						this.opponent.boxes.push.x -
-						(this.boxes.push.x + this.boxes.push.width),
-					this.boxes.push.width - 1
+						this.opponent.boxes.push.pushX -
+						(this.boxes.push.pushX + this.boxes.push.pushWidth),
+					this.boxes.push.pushWidth - 1
 				);
 
 				if (
@@ -337,8 +356,8 @@ export class Fighter {
 				}
 			} else if (this.position.x >= this.opponent.position.x) {
 				this.position.x = Math.min(
-					camera.position.x + context.canvas.width - this.boxes.push.width,
-					this.opponent.position.x + this.opponent.boxes.push.width
+					camera.position.x + context.canvas.width - this.boxes.push.pushWidth,
+					this.opponent.position.x + this.opponent.boxes.push.pushWidth
 				);
 				if (
 					[
@@ -388,7 +407,9 @@ export class Fighter {
 			this.changeState(FighterState.HEAVY_KICK);
 
 		const newDirection = this.getDirection();
+
 		if (newDirection !== this.direction) {
+			console.log(12);
 			this.direction = newDirection;
 			this.changeState(FighterState.IDLE_TURN);
 		}
@@ -553,28 +574,57 @@ export class Fighter {
 		}
 	};
 
-	drawDebug = (context, camera) => {
-		const [frameKey] = this.animations[this.currentState][this.animationFrame];
-		const push = this.getpush(frameKey);
+	drawDebugBox = (context, camera, dimensions, color) => {
+		if (!Array.isArray(dimensions)) return;
+		const [x, y, width, height] = dimensions;
 		context.lineWidth = 1;
-		// Push Box
-
 		context.beginPath();
-		context.strokeStyle = "#55ff55";
-		context.fillStyle = "#55ff5555";
+		context.strokeStyle = color;
+		context.fillStyle = color + "55";
 		context.fillRect(
-			Math.floor(this.position.x - camera.position.x + push.x) + 0.5,
-			Math.floor(this.position.y + push.y - camera.position.y) + 0.5,
-			push.width,
-			push.height
+			Math.floor(this.position.x - camera.position.x + x * this.direction) +
+				0.5,
+			Math.floor(this.position.y + y - camera.position.y) + 0.5,
+			width * this.direction,
+			height
 		);
 		context.rect(
-			Math.floor(this.position.x - camera.position.x + push.x) + 0.5,
-			Math.floor(this.position.y + push.y - camera.position.y) + 0.5,
-			push.width,
-			push.height
+			Math.floor(this.position.x - camera.position.x + x * this.direction) +
+				0.5,
+			Math.floor(this.position.y + y - camera.position.y) + 0.5,
+			width * this.direction,
+			height
 		);
 		context.stroke();
+	};
+
+	drawDebug = (context, camera) => {
+		const [frameKey] = this.animations[this.currentState][this.animationFrame];
+		const { pushX, pushY, pushWidth, pushHeight } =
+			this.getBoxes(frameKey).push;
+		const { hitX, hitY, hitWidth, hitHeight } = this.getBoxes(frameKey).hit;
+		const hurt = this.getBoxes(frameKey).hurt;
+
+		// Hurt Box
+		hurt.map((box) => {
+			this.drawDebugBox(context, camera, box, "#5555ff");
+		});
+
+		// Push Box
+		this.drawDebugBox(
+			context,
+			camera,
+			[pushX, pushY, pushWidth, pushHeight],
+			"#55ff55"
+		);
+
+		// Hit Box
+		this.drawDebugBox(
+			context,
+			camera,
+			[hitX, hitY, hitWidth, hitHeight],
+			"#ff5555"
+		);
 
 		// Origin
 		context.beginPath();
@@ -600,17 +650,16 @@ export class Fighter {
 
 	updateAnimation = (time) => {
 		const animation = this.animations[this.currentState];
-		const [frameKey, frameDelay] = animation[this.animationFrame];
-		if (time.previous >= this.animationTime + frameDelay) {
-			this.animationTime = time.previous;
+		const [, frameDelay] = animation[this.animationFrame];
+		if (time.previous <= this.animationTime + frameDelay) return;
+		this.animationTime = time.previous;
 
-			if (frameDelay > FrameDelay.FREEZE) {
-				this.animationFrame++;
-				this.boxes.push = this.getpush(frameKey);
-			}
+		if (frameDelay <= FrameDelay.FREEZE) return;
 
-			if (this.animationFrame >= animation.length) this.animationFrame = 0;
-		}
+		this.animationFrame++;
+		if (this.animationFrame >= animation.length) this.animationFrame = 0;
+
+		this.boxes = this.getBoxes(animation[this.animationFrame][0]);
 	};
 
 	update = (time, context, camera) => {
@@ -642,6 +691,6 @@ export class Fighter {
 		);
 
 		context.setTransform(1, 0, 0, 1, 0, 0);
-		// this.drawDebug(context, camera);
+		this.drawDebug(context, camera);
 	};
 }

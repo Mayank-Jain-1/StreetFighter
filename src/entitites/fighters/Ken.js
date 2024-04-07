@@ -1,4 +1,9 @@
-import { FighterState, FrameDelay, PushBox } from "../../constants/fighter.js";
+import {
+	FighterState,
+	FrameDelay,
+	HurtBox,
+	PushBox,
+} from "../../constants/fighter.js";
 import { Fighter } from "./Fighter.js";
 
 export class Ken extends Fighter {
@@ -25,11 +30,7 @@ export class Ken extends Fighter {
 						[34, 86],
 					],
 					PushBox.IDLE,
-					[
-						[-8, 88, 24, 16],
-						[-26, -74, 40, 42],
-						[-26, -31, 40, 32],
-					],
+					HurtBox.IDLE,
 				],
 			],
 			[
@@ -40,11 +41,7 @@ export class Ken extends Fighter {
 						[33, 87],
 					],
 					PushBox.IDLE,
-				],
-				[
-					[-8, 88, 24, 16],
-					[-26, -74, 40, 42],
-					[-26, -31, 40, 32],
+					HurtBox.IDLE,
 				],
 			],
 			[
@@ -55,11 +52,7 @@ export class Ken extends Fighter {
 						[32, 89],
 					],
 					PushBox.IDLE,
-					[
-						[-8, 88, 24, 16],
-						[-26, -74, 40, 42],
-						[-26, -31, 40, 32],
-					],
+					HurtBox.IDLE,
 				],
 			],
 			[
@@ -70,11 +63,7 @@ export class Ken extends Fighter {
 						[31, 90],
 					],
 					PushBox.IDLE,
-					[
-						[-8, 88, 24, 16],
-						[-26, -74, 40, 42],
-						[-26, -31, 40, 32],
-					],
+					HurtBox.IDLE,
 				],
 			],
 
@@ -87,6 +76,7 @@ export class Ken extends Fighter {
 						[27, 82],
 					],
 					PushBox.IDLE,
+					HurtBox.FORWARD,
 				],
 			],
 			[
@@ -97,6 +87,7 @@ export class Ken extends Fighter {
 						[35, 86],
 					],
 					PushBox.IDLE,
+					HurtBox.FORWARD,
 				],
 			],
 			[
@@ -107,6 +98,7 @@ export class Ken extends Fighter {
 						[35, 87],
 					],
 					PushBox.IDLE,
+					HurtBox.FORWARD,
 				],
 			],
 			[
@@ -117,6 +109,7 @@ export class Ken extends Fighter {
 						[29, 88],
 					],
 					PushBox.IDLE,
+					HurtBox.FORWARD,
 				],
 			],
 			[
@@ -127,6 +120,7 @@ export class Ken extends Fighter {
 						[25, 87],
 					],
 					PushBox.IDLE,
+					HurtBox.FORWARD,
 				],
 			],
 			[
@@ -137,6 +131,7 @@ export class Ken extends Fighter {
 						[25, 86],
 					],
 					PushBox.IDLE,
+					HurtBox.FORWARD,
 				],
 			],
 
@@ -149,6 +144,7 @@ export class Ken extends Fighter {
 						[35, 85],
 					],
 					PushBox.IDLE,
+					HurtBox.BACKWARD,
 				],
 			],
 			[
@@ -159,6 +155,7 @@ export class Ken extends Fighter {
 						[36, 87],
 					],
 					PushBox.IDLE,
+					HurtBox.BACKWARD,
 				],
 			],
 			[
@@ -169,6 +166,7 @@ export class Ken extends Fighter {
 						[36, 88],
 					],
 					PushBox.IDLE,
+					HurtBox.BACKWARD,
 				],
 			],
 			[
@@ -179,6 +177,7 @@ export class Ken extends Fighter {
 						[38, 89],
 					],
 					PushBox.IDLE,
+					HurtBox.BACKWARD,
 				],
 			],
 			[
@@ -189,6 +188,7 @@ export class Ken extends Fighter {
 						[36, 88],
 					],
 					PushBox.IDLE,
+					HurtBox.BACKWARD,
 				],
 			],
 			[
@@ -199,6 +199,7 @@ export class Ken extends Fighter {
 						[36, 87],
 					],
 					PushBox.IDLE,
+					HurtBox.BACKWARD,
 				],
 			],
 
@@ -210,6 +211,7 @@ export class Ken extends Fighter {
 						[29, 83],
 					],
 					PushBox.IDLE,
+					HurtBox.IDLE,
 				],
 			],
 			[
@@ -220,6 +222,7 @@ export class Ken extends Fighter {
 						[32, 107],
 					],
 					PushBox.JUMP,
+					HurtBox.JUMP,
 				],
 			],
 			[
@@ -230,6 +233,7 @@ export class Ken extends Fighter {
 						[25, 103],
 					],
 					PushBox.JUMP,
+					HurtBox.JUMP,
 				],
 			],
 			[
@@ -240,6 +244,7 @@ export class Ken extends Fighter {
 						[25, 103],
 					],
 					PushBox.JUMP,
+					HurtBox.JUMP,
 				],
 			],
 			[
@@ -250,6 +255,7 @@ export class Ken extends Fighter {
 						[28, 101],
 					],
 					PushBox.JUMP,
+					HurtBox.JUMP,
 				],
 			],
 			[
@@ -260,6 +266,7 @@ export class Ken extends Fighter {
 						[25, 103],
 					],
 					PushBox.JUMP,
+					HurtBox.JUMP,
 				],
 			],
 			[
@@ -270,18 +277,7 @@ export class Ken extends Fighter {
 						[32, 107],
 					],
 					PushBox.JUMP,
-				],
-			],
-
-			// Landing frame
-			[
-				"jump-up-7",
-				[
-					[
-						[660, 1060, 55, 85],
-						[32, 107],
-					],
-					PushBox.JUMP,
+					HurtBox.JUMP,
 				],
 			],
 
@@ -294,6 +290,11 @@ export class Ken extends Fighter {
 						[25, 106],
 					],
 					PushBox.JUMP,
+					[
+						[-11, -106, 24, 16],
+						[-26, -90, 40, 42],
+						[-26, -31, 40, 32],
+					],
 				],
 			],
 			[
@@ -304,6 +305,11 @@ export class Ken extends Fighter {
 						[22, 90],
 					],
 					PushBox.JUMP,
+					[
+						[17, -90, 24, 16],
+						[-14, -91, 40, 42],
+						[-22, -66, 38, 18],
+					],
 				],
 			],
 			[
@@ -314,6 +320,11 @@ export class Ken extends Fighter {
 						[61, 76],
 					],
 					PushBox.JUMP,
+					[
+						[22, -51, 24, 16],
+						[-14, -81, 40, 42],
+						[-22, -66, 38, 18],
+					],
 				],
 			],
 			[
@@ -324,6 +335,11 @@ export class Ken extends Fighter {
 						[42, 111],
 					],
 					PushBox.JUMP,
+					[
+						[-39, -46, 24, 16],
+						[-30, -88, 40, 42],
+						[-34, -118, 44, 48],
+					],
 				],
 			],
 			[
@@ -334,6 +350,11 @@ export class Ken extends Fighter {
 						[71, 81],
 					],
 					PushBox.JUMP,
+					[
+						[-72, -56, 24, 16],
+						[-54, -77, 52, 40],
+						[-14, -82, 48, 34],
+					],
 				],
 			],
 			[
@@ -344,6 +365,11 @@ export class Ken extends Fighter {
 						[53, 98],
 					],
 					PushBox.JUMP,
+					[
+						[-55, -100, 24, 16],
+						[-48, -87, 44, 38],
+						[-22, -66, 38, 18],
+					],
 				],
 			],
 			[
@@ -354,6 +380,11 @@ export class Ken extends Fighter {
 						[32, 107],
 					],
 					PushBox.JUMP,
+					[
+						[-11, -106, 24, 16],
+						[-26, -90, 40, 42],
+						[-26, -31, 40, 32],
+					],
 				],
 			],
 
@@ -367,6 +398,7 @@ export class Ken extends Fighter {
 						[27, 81],
 					],
 					PushBox.IDLE,
+					HurtBox.IDLE,
 				],
 			],
 			[
@@ -377,6 +409,7 @@ export class Ken extends Fighter {
 						[25, 66],
 					],
 					PushBox.BEND,
+					HurtBox.BEND,
 				],
 			],
 			[
@@ -387,18 +420,25 @@ export class Ken extends Fighter {
 						[25, 58],
 					],
 					PushBox.CROUCH,
+					HurtBox.CROUCH,
 				],
 			],
 
 			// Stand Turn
 			[
 				"idle-turn-1",
+
 				[
 					[
 						[420, 682, 54, 95],
 						[29, 92],
 					],
 					PushBox.IDLE,
+					[
+						[-10, -89, 28, 18],
+						[-14, -74, 40, 42],
+						[-14, -31, 40, 32],
+					],
 				],
 			],
 			[
@@ -409,6 +449,11 @@ export class Ken extends Fighter {
 						[30, 95],
 					],
 					PushBox.IDLE,
+					[
+						[-16, -96, 28, 18],
+						[-14, -74, 40, 42],
+						[-14, -31, 40, 32],
+					],
 				],
 			],
 			[
@@ -419,6 +464,11 @@ export class Ken extends Fighter {
 						[27, 90],
 					],
 					PushBox.IDLE,
+					[
+						[-16, -96, 28, 18],
+						[-14, -74, 40, 42],
+						[-14, -31, 40, 32],
+					],
 				],
 			],
 			// Crouch Turn
@@ -430,6 +480,11 @@ export class Ken extends Fighter {
 						[26, 58],
 					],
 					PushBox.CROUCH,
+					[
+						[-7, -60, 24, 18],
+						[-28, -46, 44, 24],
+						[-28, -24, 44, 24],
+					],
 				],
 			],
 			[
@@ -440,6 +495,11 @@ export class Ken extends Fighter {
 						[27, 58],
 					],
 					PushBox.CROUCH,
+					[
+						[-7, -60, 24, 18],
+						[-28, -46, 44, 24],
+						[-28, -24, 44, 24],
+					],
 				],
 			],
 			[
@@ -450,6 +510,11 @@ export class Ken extends Fighter {
 						[29, 58],
 					],
 					PushBox.CROUCH,
+					[
+						[-26, -61, 24, 18],
+						[-28, -46, 44, 24],
+						[-28, -24, 44, 24],
+					],
 				],
 			],
 
@@ -462,6 +527,7 @@ export class Ken extends Fighter {
 						[32, 88],
 					],
 					PushBox.IDLE,
+					HurtBox.IDLE,
 				],
 			],
 			[
@@ -472,6 +538,8 @@ export class Ken extends Fighter {
 						[32, 88],
 					],
 					PushBox.IDLE,
+					HurtBox.IDLE,
+					[11, -85, 50, 18],
 				],
 			],
 
@@ -484,6 +552,7 @@ export class Ken extends Fighter {
 						[28, 91],
 					],
 					PushBox.IDLE,
+					HurtBox.IDLE,
 				],
 			],
 			[
@@ -494,6 +563,7 @@ export class Ken extends Fighter {
 						[29, 92],
 					],
 					PushBox.IDLE,
+					HurtBox.PUNCH,
 				],
 			],
 			[
@@ -504,6 +574,8 @@ export class Ken extends Fighter {
 						[24, 92],
 					],
 					PushBox.IDLE,
+					HurtBox.PUNCH,
+					[17, -85, 68, 14],
 				],
 			],
 			// Heavy Punch
@@ -515,10 +587,12 @@ export class Ken extends Fighter {
 						[24, 92],
 					],
 					PushBox.IDLE,
+					HurtBox.PUNCH,
+					[17, -85, 76, 14],
 				],
 			],
 
-			// Light/Medium Kick
+			// Light Kick
 			[
 				"light-kick-1",
 				[
@@ -527,6 +601,11 @@ export class Ken extends Fighter {
 						[46, 93],
 					],
 					PushBox.IDLE,
+					[
+						[-33, -96, 30, 18],
+						[-41, -79, 42, 38],
+						[-32, -52, 44, 50],
+					],
 				],
 			],
 			[
@@ -537,6 +616,12 @@ export class Ken extends Fighter {
 						[68, 93],
 					],
 					PushBox.IDLE,
+					[
+						[-65, -96, 30, 18],
+						[-57, -79, 42, 38],
+						[-32, -52, 44, 50],
+					],
+					[-17, -98, 66, 28],
 				],
 			],
 			// Medium Kick
@@ -548,6 +633,12 @@ export class Ken extends Fighter {
 						[68, 93],
 					],
 					PushBox.IDLE,
+					[
+						[-65, -96, 30, 18],
+						[-57, -79, 42, 38],
+						[-32, -52, 44, 50],
+					],
+					[-18, -98, 80, 28],
 				],
 			],
 			// Heavy Kick
@@ -559,6 +650,11 @@ export class Ken extends Fighter {
 						[37, 87],
 					],
 					PushBox.IDLE,
+					[
+						[-41, -78, 20, 20],
+						[-25, -78, 42, 42],
+						[-11, -50, 42, 50],
+					],
 				],
 			],
 			[
@@ -569,6 +665,12 @@ export class Ken extends Fighter {
 						[45, 91],
 					],
 					PushBox.IDLE,
+					[
+						[12, -90, 34, 34],
+						[-25, -78, 42, 42],
+						[-11, -50, 42, 50],
+					],
+					[15, -99, 40, 32],
 				],
 			],
 			[
@@ -579,6 +681,12 @@ export class Ken extends Fighter {
 						[42, 91],
 					],
 					PushBox.IDLE,
+					[
+						[13, -91, 62, 34],
+						[-25, -78, 42, 42],
+						[-11, -50, 42, 50],
+					],
+					[21, -97, 62, 24],
 				],
 			],
 			[
@@ -589,6 +697,11 @@ export class Ken extends Fighter {
 						[39, 74],
 					],
 					PushBox.IDLE,
+					[
+						[-41, -78, 20, 20],
+						[-25, -78, 42, 42],
+						[-11, -50, 42, 50],
+					],
 				],
 			],
 			[
@@ -599,6 +712,11 @@ export class Ken extends Fighter {
 						[38, 78],
 					],
 					PushBox.IDLE,
+					[
+						[-41, -78, 20, 20],
+						[-25, -78, 42, 42],
+						[-11, -50, 42, 50],
+					],
 				],
 			],
 		]);
