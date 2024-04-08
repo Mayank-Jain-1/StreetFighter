@@ -1,17 +1,17 @@
-import { Camera } from "./engine/Camera.js";
+import { Camera } from './engine/Camera.js';
 import {
 	SCENE_WIDTH,
 	STAGE_MID_POINT,
 	STAGE_PADDING,
-} from "./constants/Stage.js";
-import { Ken } from "./entitites/fighters/Ken.js";
-import { Ryu } from "./entitites/fighters/Ryu.js";
-import { FpsCounter } from "./entitites/overlays/FpsCounter.js";
-import { StatusBar } from "./entitites/overlays/StatusBar.js";
-import { Shadow } from "./entitites/Shadow.js";
-import { KenStage } from "./entitites/stage/KenStage.js";
-import { registerKeyboardEvents } from "./engine/InputHandler.js";
-import { getContext } from "./utils/context.js";
+} from './constants/Stage.js';
+import { Ken } from './entitites/fighters/Ken.js';
+import { Ryu } from './entitites/fighters/Ryu.js';
+import { FpsCounter } from './entitites/overlays/FpsCounter.js';
+import { StatusBar } from './entitites/overlays/StatusBar.js';
+import { Shadow } from './entitites/Shadow.js';
+import { KenStage } from './entitites/stage/KenStage.js';
+import { registerKeyboardEvents } from './engine/InputHandler.js';
+import { getContext } from './utils/context.js';
 
 export class StreetFighterGame {
 	constructor() {

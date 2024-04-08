@@ -1,5 +1,6 @@
-import { Control, controls } from "../constants/controls.js";
-import { FighterDirection } from "../constants/fighter.js";
+import { controls } from '../config/controls.js';
+import { Control } from '../constants/controls.js';
+import { FighterDirection } from '../constants/fighter.js';
 
 const heldKeys = new Set();
 const pressedKeys = new Set();
@@ -16,7 +17,6 @@ const isPressed = (code) => {
 };
 
 const handleKeyDown = (event) => {
-	// console.log(event.code);
 	if (!mappedKeys.includes(event.code)) return;
 	event.preventDefault();
 	if (!heldKeys.has(event.code)) {
@@ -33,8 +33,8 @@ const handleKeyUp = (event) => {
 };
 
 export const registerKeyboardEvents = () => {
-	window.addEventListener("keydown", handleKeyDown);
-	window.addEventListener("keyup", handleKeyUp);
+	window.addEventListener('keydown', handleKeyDown);
+	window.addEventListener('keyup', handleKeyUp);
 };
 
 export const isLeft = (id) => {
