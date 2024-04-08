@@ -32,6 +32,11 @@ export const FrameDelay = {
 	TRANSITION: -1,
 };
 
+export const FighterId = {
+	KEN: 'Ken',
+	RYU: 'Ryu',
+};
+
 export const PushBox = {
 	IDLE: [-16, -80, 32, 78],
 	JUMP: [-16, -91, 32, 66],

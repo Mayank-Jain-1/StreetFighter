@@ -1,4 +1,5 @@
 import {
+	FighterId,
 	FighterState,
 	FrameDelay,
 	HurtBox,
@@ -8,7 +9,7 @@ import { Fighter } from './Fighter.js';
 
 export class Ken extends Fighter {
 	constructor(playerId) {
-		super('Ken', playerId);
+		super(playerId);
 		this.image = document.getElementById('KenImage');
 		this.frames = new Map([
 			// Idle

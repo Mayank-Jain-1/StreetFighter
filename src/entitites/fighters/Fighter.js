@@ -24,8 +24,7 @@ import { FRAME_TIME } from '../../constants/game.js';
 // TODO Convert hurt: [[], [], []] to {head:[], body:[], legs:[],}
 
 export class Fighter {
-	constructor(name, playerId) {
-		this.name = name;
+	constructor(playerId) {
 		this.position = {
 			x:
 				STAGE_MID_POINT +
@@ -312,7 +311,7 @@ export class Fighter {
 			SCENE_WIDTH
 		) {
 			this.position.x =
-				camera.position.x + context.canvas.width - this.boxes.push.pushWidth;
+				camera.position.x + SCENE_WIDTH - this.boxes.push.pushWidth;
 			// if (
 			// 	[
 			// 		// FighterState.IDLE,
@@ -370,7 +369,7 @@ export class Fighter {
 				}
 			} else if (this.position.x >= this.opponent.position.x) {
 				this.position.x = Math.min(
-					camera.position.x + context.canvas.width - this.boxes.push.pushWidth,
+					camera.position.x + SCENE_WIDTH - this.boxes.push.pushWidth,
 					this.opponent.position.x + this.opponent.boxes.push.pushWidth
 				);
 				if (
@@ -640,7 +639,7 @@ export class Fighter {
 			context,
 			camera,
 			[hitX, hitY, hitWidth, hitHeight],
-			'#ff5555'
+			'#ff0000'
 		);
 
 		// Origin

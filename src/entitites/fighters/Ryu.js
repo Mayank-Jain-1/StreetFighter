@@ -1,4 +1,5 @@
 import {
+	FighterId,
 	FighterState,
 	FrameDelay,
 	HurtBox,
@@ -8,7 +9,7 @@ import { Fighter } from './Fighter.js';
 
 export class Ryu extends Fighter {
 	constructor(playerId) {
-		super('Ryu', playerId);
+		super(playerId);
 		this.image = document.getElementById('RyuImage');
 		this.frames = new Map([
 			// IDLE
@@ -719,7 +720,7 @@ export class Ryu extends Fighter {
 				['jump-start/land', 3],
 				['jump-start/land', FrameDelay.TRANSITION],
 			],
-		
+
 			[FighterState.JUMP_LAND]: [
 				['jump-start/land', 2],
 				['jump-start/land', 5],
@@ -751,7 +752,7 @@ export class Ryu extends Fighter {
 				['idle-3', 4],
 				['idle-2', 4],
 			],
-		
+
 			[FighterState.WALK_FORWARD]: [
 				['forwards-1', 3],
 				['forwards-2', 6],
@@ -760,7 +761,7 @@ export class Ryu extends Fighter {
 				['forwards-5', 4],
 				['forwards-6', 6],
 			],
-		
+
 			[FighterState.WALK_BACKWARD]: [
 				['backwards-1', 3],
 				['backwards-2', 6],
@@ -808,7 +809,7 @@ export class Ryu extends Fighter {
 				['light-punch-1', 4],
 				['light-punch-1', FrameDelay.TRANSITION],
 			],
-		
+
 			[FighterState.MEDIUM_PUNCH]: [
 				['med-punch-1', 1],
 				['med-punch-2', 2],
@@ -825,7 +826,7 @@ export class Ryu extends Fighter {
 				['med-punch-1', 12],
 				['med-punch-1', FrameDelay.TRANSITION],
 			],
-		
+
 			[FighterState.LIGHT_KICK]: [
 				['med-punch-1', 3],
 				['light-kick-1', 3],
