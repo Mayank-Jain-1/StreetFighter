@@ -7,12 +7,14 @@ import {
 	STAGE_WIDTH,
 } from '../../constants/Stage.js';
 import {
-	AttackType,
+	FighterAttackType,
 	FIGHTER_START_DISTANCE,
 	FighterDirection,
 	FighterState,
 	FrameDelay,
 	PushFriction,
+	FighterAttackBaseData,
+	FighterAttackStrength,
 } from '../../constants/fighter.js';
 import {
 	boxOverlap,
@@ -20,6 +22,7 @@ import {
 	rectsOverlap,
 } from '../../utils/collisions.js';
 import { FRAME_TIME } from '../../constants/game.js';
+import { gameState } from '../../states/gameState.js';
 
 // TODO Convert hurt: [[], [], []] to {head:[], body:[], legs:[],}
 
@@ -161,7 +164,8 @@ export class Fighter {
 				validFrom: [FighterState.CROUCH],
 			},
 			[FighterState.LIGHT_PUNCH]: {
-				attackType: AttackType.PUNCH,
+				attackType: FighterAttackType.PUNCH,
+				attackStrength: FighterAttackStrength.LIGHT,
 				init: this.resetVelocities,
 				update: this.handleLightKick.bind(this),
 				validFrom: [
@@ -171,7 +175,8 @@ export class Fighter {
 				],
 			},
 			[FighterState.MEDIUM_PUNCH]: {
-				attackType: AttackType.PUNCH,
+				attackType: FighterAttackType.PUNCH,
+				attackStrength: FighterAttackStrength.MEDIUM,
 				init: this.resetVelocities,
 				update: this.handleMedKick.bind(this),
 				validFrom: [
@@ -181,7 +186,8 @@ export class Fighter {
 				],
 			},
 			[FighterState.HEAVY_PUNCH]: {
-				attackType: AttackType.PUNCH,
+				attackType: FighterAttackType.PUNCH,
+				attackStrength: FighterAttackStrength.HEAVY,
 				init: this.resetVelocities,
 				update: this.handleHeavyKick.bind(this),
 				validFrom: [
@@ -191,8 +197,8 @@ export class Fighter {
 				],
 			},
 			[FighterState.LIGHT_KICK]: {
-				attackType: AttackType.KICK,
-				attackType: AttackType.KICK,
+				attackType: FighterAttackType.KICK,
+				attackStrength: FighterAttackStrength.LIGHT,
 				init: this.resetVelocities,
 				update: this.handleLightPunch.bind(this),
 				validFrom: [
@@ -202,7 +208,8 @@ export class Fighter {
 				],
 			},
 			[FighterState.MEDIUM_KICK]: {
-				attackType: AttackType.KICK,
+				attackType: FighterAttackType.KICK,
+				attackStrength: FighterAttackStrength.MEDIUM,
 				init: this.resetVelocities,
 				update: this.handleMedPunch.bind(this),
 				validFrom: [
@@ -212,7 +219,8 @@ export class Fighter {
 				],
 			},
 			[FighterState.HEAVY_KICK]: {
-				attackType: AttackType.KICK,
+				attackType: FighterAttackType.KICK,
+				attackStrength: FighterAttackStrength.HEAVY,
 				init: this.resetVelocities,
 				update: this.handleHeavyPunch.bind(this),
 				validFrom: [
@@ -232,6 +240,8 @@ export class Fighter {
 			],
 			hit: { x: 0, y: 0, width: 0, height: 0 },
 		};
+
+		this.attackStruck = false;
 	}
 
 	hasCollidedWithOpponent = () =>
@@ -302,6 +312,7 @@ export class Fighter {
 		this.currentState = newState;
 		this.animationFrame = 0;
 		this.states[this.currentState].init();
+		this.attackStruck = false;
 	};
 
 	updateStageConstraints = (time, context, camera) => {
@@ -393,7 +404,6 @@ export class Fighter {
 
 	handleIdleInit = () => {
 		this.resetVelocities();
-		this.handleIdleInit;
 	};
 
 	handleIdle = () => {
@@ -679,7 +689,7 @@ export class Fighter {
 	};
 
 	updateAttackBoxCollided = (time) => {
-		if (!this.states[this.currentState].attackType) return;
+		if (!this.states[this.currentState].attackType || this.attackStruck) return;
 
 		const actualHitBox = getActualBoxDimensions(
 			this.position,
@@ -687,6 +697,7 @@ export class Fighter {
 			this.boxes.hit
 		);
 		this.opponent.boxes.hurt.map((hurt, index) => {
+			if (this.attackStruck) return;
 			const [x, y, width, height] = hurt;
 			const actualOpponentHurtBox = getActualBoxDimensions(
 				this.opponent.position,
@@ -694,9 +705,18 @@ export class Fighter {
 				{ x, y, width, height }
 			);
 
-			const hurtName = ['head', 'body', 'foot'];
-
 			if (!boxOverlap(actualHitBox, actualOpponentHurtBox)) return;
+
+			const attackStrength = this.states[this.currentState].attackStrength;
+
+			
+			gameState.fighters[this.playerId].score +=
+				FighterAttackBaseData[attackStrength].score;
+
+			gameState.fighters[this.opponent.playerId].hitPoints -=
+				FighterAttackBaseData[attackStrength].damage;
+
+			this.attackStruck = true;
 		});
 	};
 
@@ -730,6 +750,6 @@ export class Fighter {
 		);
 
 		context.setTransform(1, 0, 0, 1, 0, 0);
-		this.drawDebug(context, camera);
+		// this.drawDebug(context, camera);
 	};
 }

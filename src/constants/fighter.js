@@ -84,7 +84,28 @@ export const HurtBox = {
 
 export const PushFriction = 66;
 
-export const AttackType = {
+export const FighterAttackType = {
 	PUNCH: 'punch',
 	KICK: 'kick',
+};
+
+export const FighterAttackStrength = {
+	LIGHT: 'light',
+	MEDIUM: 'medium',
+	HEAVY: 'heavy',
+};
+
+export const FighterAttackBaseData = {
+	[FighterAttackStrength.LIGHT]: {
+		score: 100,
+		damage: 12,
+	},
+	[FighterAttackStrength.MEDIUM]: {
+		score: 300,
+		damage: 20,
+	},
+	[FighterAttackStrength.HEAVY]: {
+		score: 100,
+		damage: 28,
+	},
 };

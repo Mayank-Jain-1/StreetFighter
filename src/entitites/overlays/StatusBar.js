@@ -1,9 +1,12 @@
 import {
+	HEALTH_DAMAGE_COLOR,
+	HEALTH_MAX_HIT_POINTS,
 	TIME_DELAY,
 	TIME_FLASH_DELAY,
 	TIME_FRAME_KEYS,
 } from '../../constants/battle.js';
 import { FighterId } from '../../constants/fighter.js';
+import { FPS } from '../../constants/game.js';
 import { gameState } from '../../states/gameState.js';
 import { drawFrame } from '../../utils/context.js';
 
@@ -20,6 +23,17 @@ export class StatusBar {
 			({ id }) => `tag-${id.toLowerCase()}`
 		);
 
+		this.healthBars = [
+			{
+				timer: 0,
+				hitPoints: 0, //HEALTH_MAX_HIT_POINTS,
+			},
+			{
+				timer: 0,
+				hitPoints: 0, //HEALTH_MAX_HIT_POINTS,
+			},
+		];
+		this.startingHealthRollUpDone = false;
 		this.frames = new Map([
 			['health-bar', [16, 18, 145, 11]],
 			['ko-white', [161, 16, 32, 14]],
@@ -98,10 +112,51 @@ export class StatusBar {
 		drawFrame(context, this.image, this.frames.get(frameKey), x, y, direction);
 	}
 
+	updateHealthBarRollUp = (time, hitPoints, index) => {
+		if (hitPoints === gameState.fighters[index].hitPoints)
+			this.startingHealthRollUpDone = true;
+
+		this.healthBars[index].hitPoints = Math.min(
+			gameState.fighters[index].hitPoints,
+			this.healthBars[index].hitPoints + 2 * FPS * time.secondsPassed
+		);
+	};
+
+	updateHealthBars = (time) => {
+		this.healthBars.map(({ hitPoints }, index) => {
+			if (
+				!this.startingHealthRollUpDone &&
+				hitPoints < gameState.fighters[index].hitPoints
+			)
+				this.updateHealthBarRollUp(time, hitPoints, index);
+
+			if (hitPoints > gameState.fighters[index].hitPoints) {
+				this.healthBars[index].hitPoints = Math.max(
+					0,
+					this.healthBars[index].hitPoints - FPS * time.secondsPassed
+				);
+			}
+		});
+	};
+
 	drawHealthBar(context) {
 		this.drawFrame(context, 'health-bar', 31, 20);
 		this.drawFrame(context, 'ko-white', 176, 18);
 		this.drawFrame(context, 'health-bar', 353, 20, -1);
+
+		context.fillStyle = HEALTH_DAMAGE_COLOR;
+		context.fillRect(
+			32,
+			21,
+			HEALTH_MAX_HIT_POINTS - Math.floor(this.healthBars[0].hitPoints),
+			9
+		);
+		context.fillRect(
+			208 + Math.floor(this.healthBars[1].hitPoints),
+			21,
+			Math.floor(HEALTH_MAX_HIT_POINTS - this.healthBars[1].hitPoints),
+			9
+		);
 	}
 
 	drawTime(context) {
@@ -136,6 +191,7 @@ export class StatusBar {
 
 	update(time) {
 		this.updateTime(time);
+		this.updateHealthBars(time);
 	}
 
 	drawScoreLabel(context, label, x) {

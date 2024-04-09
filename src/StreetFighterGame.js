@@ -24,7 +24,7 @@ export class StreetFighterGame {
 
 		this.scene.update(this.frameTime);
 		this.scene.draw(this.context);
-		
+
 	};
 
 	start() {
