@@ -1,9 +1,9 @@
-import { STAGE_FLOOR } from "../constants/Stage.js";
+import { STAGE_FLOOR } from '../../../constants/Stage.js';
 
 export class Shadow {
 	constructor(fighter) {
 		this.fighter = fighter;
-		this.image = document.getElementById("ShadowImage");
+		this.image = document.getElementById('ShadowImage');
 		this.frame = [
 			[0, 0, 43, 9],
 			[21, 7],
@@ -25,7 +25,9 @@ export class Shadow {
 			y,
 			width,
 			height,
-			Math.floor((this.fighter.position.x - camera.position.x - originX) / scale),
+			Math.floor(
+				(this.fighter.position.x - camera.position.x - originX) / scale
+			),
 			Math.floor((STAGE_FLOOR - originY - camera.position.y) / scale),
 			width,
 			height

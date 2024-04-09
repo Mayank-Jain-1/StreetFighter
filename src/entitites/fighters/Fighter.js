@@ -23,11 +23,12 @@ import {
 } from '../../utils/collisions.js';
 import { FRAME_TIME } from '../../constants/game.js';
 import { gameState } from '../../states/gameState.js';
+import { HIT_SPLASH_RANDOMNESS } from '../../constants/battle.js';
 
 // TODO Convert hurt: [[], [], []] to {head:[], body:[], legs:[],}
 
 export class Fighter {
-	constructor(playerId) {
+	constructor(playerId, handleAttackHit) {
 		this.position = {
 			x:
 				STAGE_MID_POINT +
@@ -36,6 +37,7 @@ export class Fighter {
 			STAGE_FLOOR,
 			y: STAGE_FLOOR,
 		};
+		this.handleAttackHit = handleAttackHit;
 		this.direction =
 			playerId === 0 ? FighterDirection.RIGHT : FighterDirection.LEFT;
 		this.playerId = playerId;
@@ -436,7 +438,7 @@ export class Fighter {
 		}
 	};
 
-	handleWalkForward = () => {
+	handleWalkForward = () =>{
 		if (!control.isForward(this.playerId, this.direction))
 			this.changeState(FighterState.IDLE);
 		else if (control.isUp(this.playerId))
@@ -708,14 +710,32 @@ export class Fighter {
 			if (!boxOverlap(actualHitBox, actualOpponentHurtBox)) return;
 
 			const attackStrength = this.states[this.currentState].attackStrength;
-
-			gameState.fighters[this.playerId].score +=
-				FighterAttackBaseData[attackStrength].score;
-
-			gameState.fighters[this.opponent.playerId].hitPoints -=
-				FighterAttackBaseData[attackStrength].damage;
-
 			this.attackStruck = true;
+
+			const hitPosition = {
+				x:
+					(actualHitBox.x +
+						actualHitBox.width / 2 +
+						actualOpponentHurtBox.x +
+						actualOpponentHurtBox.width / 2) /
+					2,
+				y:
+					(actualHitBox.y +
+						actualOpponentHurtBox.y +
+						actualHitBox.height / 2 +
+						actualOpponentHurtBox.width / 2) /
+					2,
+			};
+
+			hitPosition.x += 4 - Math.random() * HIT_SPLASH_RANDOMNESS;
+			hitPosition.y += 4 - Math.random() * HIT_SPLASH_RANDOMNESS;
+
+			this.handleAttackHit(
+				this.playerId,
+				this.opponent.playerId,
+				hitPosition,
+				attackStrength
+			);
 		});
 	};
 

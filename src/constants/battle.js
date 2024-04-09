@@ -11,5 +11,7 @@ export const HEALTH_MAX_HIT_POINTS = 144;
 
 export const HEALTH_CRITICAL_HIT_POINTS = 45;
 
-export const HEALTH_COLOR = '#f3f300';
+export const HEALTH_COLOR = '#f3f300'; //Not being used
 export const HEALTH_DAMAGE_COLOR = '#f30000';
+
+export const HIT_SPLASH_RANDOMNESS = 10;

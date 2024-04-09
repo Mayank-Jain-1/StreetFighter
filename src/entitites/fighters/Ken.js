@@ -7,8 +7,8 @@ import {
 import { Fighter } from './Fighter.js';
 
 export class Ken extends Fighter {
-	constructor(playerId) {
-		super(playerId);
+	constructor(playerId, handleAttackHit) {
+		super(playerId, handleAttackHit);
 		this.image = document.getElementById('KenImage');
 		this.frames = new Map([
 			// Idle

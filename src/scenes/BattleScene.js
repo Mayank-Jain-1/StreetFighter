@@ -3,11 +3,20 @@ import {
 	STAGE_MID_POINT,
 	STAGE_PADDING,
 } from '../constants/Stage.js';
-import { FighterId } from '../constants/fighter.js';
+import {
+	FighterAttackBaseData,
+	FighterAttackStrength,
+	FighterId,
+} from '../constants/fighter.js';
 import { Camera } from '../engine/Camera.js';
-import { Shadow } from '../entitites/Shadow.js';
+import { Shadow } from '../entitites/fighters/shared/Shadow.js';
 import { Ken } from '../entitites/fighters/Ken.js';
 import { Ryu } from '../entitites/fighters/Ryu.js';
+import {
+	HeavyHitSplash,
+	LightHitSplash,
+	MediumHitSplash,
+} from '../entitites/fighters/shared/index.js';
 import { FpsCounter } from '../entitites/overlays/FpsCounter.js';
 import { StatusBar } from '../entitites/overlays/StatusBar.js';
 import { KenStage } from '../entitites/stage/KenStage.js';
@@ -21,17 +30,8 @@ export class BattleScene {
 
 	constructor() {
 		this.stage = new KenStage();
-
-		this.fighters = this.getFighterEntities();
-		this.camera = new Camera(
-			STAGE_PADDING + STAGE_MID_POINT - SCENE_WIDTH / 2,
-			16,
-			this.fighters
-		);
-
-		this.shadows = this.fighters.map((fighter) => new Shadow(fighter));
-
 		this.overlays = [new StatusBar(this.fighters), new FpsCounter()];
+		this.startRound();
 	}
 
 	getFighterClass = (id) => {
@@ -47,7 +47,7 @@ export class BattleScene {
 
 	getFighterEntitiy = (id, index) => {
 		const FighterClass = this.getFighterClass(id);
-		return new FighterClass(index);
+		return new FighterClass(index, this.handleAttackHit.bind(this));
 	};
 
 	getFighterEntities = () => {
@@ -65,12 +65,60 @@ export class BattleScene {
 		this.fighters.map((fighter) => fighter.update(time, context, this.camera));
 	};
 
+	getHitSplashClass = (strength) => {
+		switch (strength) {
+			case FighterAttackStrength.LIGHT:
+				return LightHitSplash;
+			case FighterAttackStrength.MEDIUM:
+				return MediumHitSplash;
+			case FighterAttackStrength.HEAVY:
+				return HeavyHitSplash;
+			default:
+				return new Error('Invalid Strength Splash requested');
+		}
+	};
+
+	handleAttackHit = (playerId, opponentId, position, strength) => {
+		gameState.fighters[playerId].score += FighterAttackBaseData[strength].score;
+
+		gameState.fighters[opponentId].hitPoints -=
+			FighterAttackBaseData[strength].damage;
+
+		const HitSplashClass = this.getHitSplashClass(strength);
+
+		this.addEntity(HitSplashClass, position.x, position.y, playerId);
+	};
+
 	updateShadows = (time, context) => {
 		this.shadows.map((shadow) => shadow.update(time, context));
 	};
 
+	startRound = () => {
+		this.fighters = this.getFighterEntities();
+		this.camera = new Camera(
+			STAGE_PADDING + STAGE_MID_POINT - SCENE_WIDTH / 2,
+			16,
+			this.fighters
+		);
+
+		this.shadows = this.fighters.map((fighter) => new Shadow(fighter));
+	};
+
+	addEntity = (EntityClass, ...args) => {
+		this.entities.push(new EntityClass(...args, this.removeEntity));
+	};
+
+	// Either use arrow function as i keeps the 'this' reference of parent always and doesnt have own 'this'
+	// Or use normal function and use this.removeEntity.bind(this)
+
+	removeEntity = (entity) => {
+		this.entities = this.entities.filter((thisEntity) => thisEntity !== entity);
+	};
+
 	updateEntities = (time, context) => {
-		this.entities.map((entity) => entity.update(time, context));
+		for (const entity of this.entities) {
+			entity.update(time, context);
+		}
 	};
 
 	updateOverlays = (time, context) => {

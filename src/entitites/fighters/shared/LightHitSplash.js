@@ -1,8 +1,8 @@
-import { HitSplash } from './HitSplash';
+import { HitSplash } from './HitSplash.js';
 
-export class HeavyHitSplash extends HitSplash {
-	constructor(x, y, playerId) {
-		super(x, y, playerId);
+export class LightHitSplash extends HitSplash {
+	constructor(x, y, playerId, removeSplash) {
+		super(x, y, playerId, removeSplash);
 
 		this.frames = [
 			//Plauer id =  1
@@ -46,11 +46,11 @@ export class HeavyHitSplash extends HitSplash {
 		];
 	}
 
-	update = (time) => {
-		super.update(time);
-	};
+	update() {
+		super.update();
+	}
 
-	draw = (context, camera) => {
-		super.draw(context, camera);
-	};
+	draw() {
+		super.draw();
+	}
 }

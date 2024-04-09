@@ -1,26 +1,24 @@
-import { FighterDirection } from '../../../constants/fighter';
-import { FRAME_TIME } from '../../../constants/game';
-import { drawFrame } from '../../../utils/context';
+import { FRAME_TIME } from '../../../constants/game.js';
 
 export class HitSplash {
-	constructor(x, y, playerId) {
+	constructor(x, y, playerId, removeSplash) {
+		this.removeSplash = removeSplash;
 		this.position = { x, y };
 		this.playerId = playerId;
-		this.image = document.getElementById(Decals);
+		this.image = document.getElementById('Decals');
 
 		this.frames = new Map();
-		this.animationFrame = -1;
+		this.animationFrame = 0;
 		this.animationTimer = 0;
+		this.hasSplashEnded = false;
 	}
-
 
 	update = (time) => {
 		if (this.animationTimer + FRAME_TIME * 4 > time.previous) return;
 		this.animationTimer = time.previous;
 		this.animationFrame++;
-		if (this.animationFrame >= this.frames.size) {
-			this.animationFrame = 0;
-		}
+		if (this.animationFrame >= this.frames[this.playerId].length)
+			this.removeSplash(this);
 	};
 
 	draw = (context, camera) => {
@@ -28,8 +26,7 @@ export class HitSplash {
 			this.frames[this.playerId][this.animationFrame];
 
 		context.drawImage(
-			this,
-			image,
+			this.image,
 			sourceX,
 			sourceY,
 			sourceWidth,

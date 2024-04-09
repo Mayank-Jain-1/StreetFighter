@@ -1,6 +1,6 @@
 import { HitSplash } from './HitSplash.js';
 
-export class MediumHitSplash extends HitSplash {
+export class HeavyHitSplash extends HitSplash {
 	constructor(x, y, playerId, removeSplash) {
 		super(x, y, playerId, removeSplash);
 
@@ -8,44 +8,43 @@ export class MediumHitSplash extends HitSplash {
 			//Plauer id =  1
 			[
 				[
-					[13, 41, 14, 15],
-					[7, 7],
+					[14, 68, 15, 21],
+					[7, 10],
 				],
 				[
-					[34, 39, 21, 19],
-					[10, 9],
+					[38, 70, 27, 23],
+					[13, 11],
 				],
 				[
-					[64, 39, 21, 19],
-					[10, 9],
+					[73, 70, 27, 23],
+					[13, 11],
 				],
 				[
-					[90, 35, 27, 25],
-					[13, 12],
+					[106, 66, 32, 31],
+					[16, 15],
 				],
 			],
 			// Player 2
 			[
 				[
-					[159, 41, 14, 15],
-					[7, 7],
+					[160, 68, 15, 21],
+					[7, 10],
 				],
 				[
-					[182, 39, 21, 19],
-					[10, 9],
+					[185, 70, 27, 23],
+					[13, 11],
 				],
 				[
-					[211, 39, 21, 19],
-					[10, 9],
+					[222, 70, 27, 23],
+					[13, 11],
 				],
 				[
-					[239, 35, 27, 25],
-					[13, 12],
+					[255, 66, 32, 31],
+					[16, 15],
 				],
 			],
 		];
 	}
-
 	update() {
 		super.update();
 	}
