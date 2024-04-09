@@ -9,13 +9,12 @@ import {
 	FighterId,
 } from '../constants/fighter.js';
 import { Camera } from '../engine/Camera.js';
-import { Shadow } from '../entitites/fighters/shared/Shadow.js';
-import { Ken } from '../entitites/fighters/Ken.js';
-import { Ryu } from '../entitites/fighters/Ryu.js';
+import { Ken, Ryu } from '../entitites/fighters/index.js';
 import {
 	HeavyHitSplash,
 	LightHitSplash,
 	MediumHitSplash,
+	Shadow,
 } from '../entitites/fighters/shared/index.js';
 import { FpsCounter } from '../entitites/overlays/FpsCounter.js';
 import { StatusBar } from '../entitites/overlays/StatusBar.js';
