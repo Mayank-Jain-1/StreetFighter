@@ -18,8 +18,8 @@ export const drawFrame = (context, image, dimensions, x, y, direction = 1) => {
 };
 
 export const getContext = () => {
-	const canvasEL = document.querySelector("canvas");
-	const context = canvasEL.getContext("2d");
+	const canvasEL = document.querySelector('canvas');
+	const context = canvasEL.getContext('2d');
 	context.imageSmoothingEnabled = false;
 	return context;
 };

@@ -1,6 +1,9 @@
 import {
+	HEALTH_CRITICAL_HIT_POINTS,
 	HEALTH_DAMAGE_COLOR,
 	HEALTH_MAX_HIT_POINTS,
+	KO_FLASH_DELAY,
+	KO_FLASH_KEYS,
 	TIME_DELAY,
 	TIME_FLASH_DELAY,
 	TIME_FRAME_KEYS,
@@ -18,6 +21,9 @@ export class StatusBar {
 
 		this.timeFlashTimer = 0;
 		this.useFlashFrames = false;
+
+		this.koFlashTimer = 0;
+		this.koFrame = 0;
 
 		this.nameTags = gameState.fighters.map(
 			({ id }) => `tag-${id.toLowerCase()}`
@@ -37,6 +43,7 @@ export class StatusBar {
 		this.frames = new Map([
 			['health-bar', [16, 18, 145, 11]],
 			['ko-white', [161, 16, 32, 14]],
+			['ko-black', [161, 1, 32, 14]],
 			//Time
 			[`${TIME_FRAME_KEYS[0]}-0`, [16, 32, 14, 16]],
 			[`${TIME_FRAME_KEYS[0]}-1`, [32, 32, 14, 16]],
@@ -113,8 +120,9 @@ export class StatusBar {
 	}
 
 	updateHealthBarRollUp = (time, hitPoints, index) => {
-		if (hitPoints === gameState.fighters[index].hitPoints)
+		if (hitPoints >= gameState.fighters[index].hitPoints) {
 			this.startingHealthRollUpDone = true;
+		}
 
 		this.healthBars[index].hitPoints = Math.min(
 			gameState.fighters[index].hitPoints,
@@ -126,7 +134,7 @@ export class StatusBar {
 		this.healthBars.map(({ hitPoints }, index) => {
 			if (
 				!this.startingHealthRollUpDone &&
-				hitPoints < gameState.fighters[index].hitPoints
+				hitPoints <= gameState.fighters[index].hitPoints
 			)
 				this.updateHealthBarRollUp(time, hitPoints, index);
 
@@ -139,9 +147,29 @@ export class StatusBar {
 		});
 	};
 
+	updateKo = (time) => {
+		if (
+			!this.startingHealthRollUpDone ||
+			this.healthBars.every(
+				({ hitPoints }) => hitPoints > HEALTH_CRITICAL_HIT_POINTS
+			)
+		)
+			return;
+
+		if (this.koFlashTimer + KO_FLASH_DELAY[this.koFrame] > time.previous)
+			return;
+
+		this.koFlashTimer = time.previous;
+		this.koFrame = 1 - this.koFrame;
+	};
+
+	drawKo = (context) => {
+		const frameKey = KO_FLASH_KEYS[this.koFrame];
+		this.drawFrame(context, frameKey, 176, 18 - this.koFrame);
+	};
+
 	drawHealthBar(context) {
 		this.drawFrame(context, 'health-bar', 31, 20);
-		this.drawFrame(context, 'ko-white', 176, 18);
 		this.drawFrame(context, 'health-bar', 353, 20, -1);
 
 		context.fillStyle = HEALTH_DAMAGE_COLOR;
@@ -191,6 +219,7 @@ export class StatusBar {
 
 	update(time) {
 		this.updateTime(time);
+		this.updateKo(time);
 		this.updateHealthBars(time);
 	}
 
@@ -231,6 +260,7 @@ export class StatusBar {
 
 	draw(context) {
 		this.drawScores(context);
+		this.drawKo(context);
 		this.drawHealthBar(context);
 		this.drawTime(context);
 		this.drawNames(context);

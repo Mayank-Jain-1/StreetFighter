@@ -312,7 +312,6 @@ export class Fighter {
 		this.currentState = newState;
 		this.animationFrame = 0;
 		this.states[this.currentState].init();
-		this.attackStruck = false;
 	};
 
 	updateStageConstraints = (time, context, camera) => {
@@ -404,6 +403,7 @@ export class Fighter {
 
 	handleIdleInit = () => {
 		this.resetVelocities();
+		this.attackStruck = false;
 	};
 
 	handleIdle = () => {
@@ -709,7 +709,6 @@ export class Fighter {
 
 			const attackStrength = this.states[this.currentState].attackStrength;
 
-			
 			gameState.fighters[this.playerId].score +=
 				FighterAttackBaseData[attackStrength].score;
 
@@ -750,6 +749,6 @@ export class Fighter {
 		);
 
 		context.setTransform(1, 0, 0, 1, 0, 0);
-		// this.drawDebug(context, camera);
+		this.drawDebug(context, camera);
 	};
 }

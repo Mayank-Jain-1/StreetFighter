@@ -1,5 +1,4 @@
 import {
-	FighterId,
 	FighterState,
 	FrameDelay,
 	HurtBox,
