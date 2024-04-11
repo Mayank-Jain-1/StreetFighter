@@ -47,7 +47,7 @@ export class Fighter {
 	image = new Image();
 	frames = new Map();
 	animationFrame = 0;
-	animationTime = 0;
+	animationTimer = 0;
 	animations = {};
 
 	slideVelocity = 0;
@@ -407,7 +407,7 @@ export class Fighter {
 			return;
 		}
 		this.currentState = newState;
-		this.animationFrame = 0;
+		this.setAnimationFrame(0, time);
 		this.states[this.currentState].init(time);
 	};
 
@@ -472,7 +472,7 @@ export class Fighter {
 		this.velocity = { x: 0, y: 0 };
 	};
 
-	handleIdleInit = (time) => {
+	handleIdleInit = () => {
 		this.resetVelocities();
 		this.attackStruck = false;
 	};
@@ -555,8 +555,10 @@ export class Fighter {
 		}
 		if (!control.isDown(this.playerId)) {
 			this.currentState = FighterState.CROUCH_UP;
-			this.animationFrame =
-				this.animations[this.currentState].length - this.animationFrame - 1;
+			this.setAnimationFrame(
+				this.animations[this.currentState].length - this.animationFrame - 1,
+				time
+			);
 		}
 	};
 
@@ -631,15 +633,15 @@ export class Fighter {
 		playSound(this.soundAttacks[this.states[this.currentState].attackStrength]);
 	};
 
-	handleLightAttackReset = () => {
-		this.animationFrame = 0;
+	handleLightAttackReset = (time) => {
+		this.setAnimationFrame(0, time);
 		this.attackStruck = false;
 		this.handleAttackInit();
 	};
 
 	handleLightPunch = (time) => {
 		if (this.animationFrame < 2) return;
-		if (control.isLightPunch(this.playerId)) this.handleLightAttackReset();
+		if (control.isLightPunch(this.playerId)) this.handleLightAttackReset(time);
 		if (!this.isAnimationCompleted()) return;
 		this.changeState(FighterState.IDLE, time);
 	};
@@ -717,7 +719,7 @@ export class Fighter {
 
 	handleLightKick = (time) => {
 		if (this.animationFrame < 2) return;
-		if (control.isLightKick(this.playerId)) this.handleLightAttackReset();
+		if (control.isLightKick(this.playerId)) this.handleLightAttackReset(time);
 		if (!this.isAnimationCompleted()) return;
 		this.changeState(FighterState.IDLE, time);
 	};
@@ -734,18 +736,24 @@ export class Fighter {
 		}
 	};
 
-	updateAnimation = (time) => {
+	setAnimationFrame = (animationFrame, time) => {
 		const animation = this.animations[this.currentState];
-		const [, frameDelay] = animation[this.animationFrame];
-		if (time.previous <= this.animationTime + frameDelay * FRAME_TIME) return;
-		this.animationTime = time.previous;
-
-		if (frameDelay <= FrameDelay.FREEZE) return;
-
-		this.animationFrame++;
+		this.animationFrame = animationFrame;
 		if (this.animationFrame >= animation.length) this.animationFrame = 0;
 
-		this.boxes = this.getBoxes(animation[this.animationFrame][0]);
+		const [frameKey, frameDelay] = animation[this.animationFrame];
+		this.boxes = this.getBoxes(frameKey);
+		this.animationTimer = time.previous + frameDelay * FRAME_TIME;
+	};
+
+	updateAnimation = (time) => {
+		const animation = this.animations[this.currentState];
+		if (
+			animation[this.animationFrame][1] <= FrameDelay.FREEZE ||
+			time.previous <= this.animationTimer
+		)
+			return;
+		this.setAnimationFrame(this.animationFrame + 1, time);
 	};
 
 	updateAttackBoxCollided = (time) => {
