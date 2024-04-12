@@ -572,10 +572,12 @@ export class Fighter {
 	};
 
 	handleJumpLandState = () => {
-		if (this.animationFrame == 0) return;
+		if (this.animationFrame == 0) {
+			playSound(this.soundLand);
+			return;
+		}
 		this.handleIdle();
 		if (this.isAnimationCompleted()) this.changeState(FighterState.IDLE);
-		playSound(this.soundLand);
 	};
 
 	handleJumpInit = () => {
