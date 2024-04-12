@@ -10,15 +10,28 @@ export class Shadow {
 		];
 	}
 
+	getScale = () => {
+		if (this.fighter.position.y < STAGE_FLOOR) {
+			const scale = 1.2 - (200 - this.fighter.position.y) / 300;
+			return [scale, scale, 0, 0];
+		} else if (this.fighter.states[this.fighter.currentState].shadow) {
+			const [scaleX, scaleY, offsetX, offsetY] =
+				this.fighter.states[this.fighter.currentState].shadow;
+			return [scaleX, scaleY, offsetX * this.fighter.direction * -1, offsetY];
+		}
+		return [1.2, 1.2, 0, 0];
+	};
+
 	update = () => {};
 
 	draw = (context, camera) => {
 		const [[x, y, width, height], [originX, originY]] = this.frame;
 
-		context.globalAlpha = 0.6;
-		const scale = 1.2 - (200 - this.fighter.position.y) / 300;
+		const [scaleX, scaleY, offsetX, offsetY] = this.getScale() || [
+			1.2, 1.2, 0, 0,
+		];
 
-		context.scale(scale, scale);
+		context.globalAlpha = 0.5;
 		context.drawImage(
 			this.image,
 			x,
@@ -26,11 +39,11 @@ export class Shadow {
 			width,
 			height,
 			Math.floor(
-				(this.fighter.position.x - camera.position.x - originX) / scale
+				this.fighter.position.x - camera.position.x - originX * scaleX - offsetX
 			),
-			Math.floor((STAGE_FLOOR - originY - camera.position.y) / scale),
-			width,
-			height
+			Math.floor(STAGE_FLOOR - camera.position.y - originY * scaleY - offsetY),
+			Math.floor(width * scaleX),
+			Math.floor(height * scaleY)
 		);
 		context.globalAlpha = 1;
 		context.setTransform(1, 0, 0, 1, 0, 0);

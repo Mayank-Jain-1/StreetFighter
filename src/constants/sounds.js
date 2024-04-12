@@ -1,7 +1,14 @@
+import { FighterId } from './fighter.js';
+
 export const soundAttackIds = {
 	LIGHT: 'sound-fighter-light-attack',
 	MEDIUM: 'sound-fighter-medium-attack',
 	HEAVY: 'sound-fighter-heavy-attack',
+};
+
+export const soundHadoukenId = {
+	[FighterId.KEN]: 'sound-ken-hadouken',
+	[FighterId.RYU]: 'sound-ryu-hadouken',
 };
 
 export const soundLandId = 'sound-fighter-land';

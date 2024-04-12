@@ -16,5 +16,5 @@ export const HEALTH_DAMAGE_COLOR = '#f30000';
 
 export const HIT_SPLASH_RANDOMNESS = 10;
 
-// export const DRAW_DEBUG = true;
-export const DRAW_DEBUG = false;
+export const DRAW_DEBUG = true;
+// export const DRAW_DEBUG = false;

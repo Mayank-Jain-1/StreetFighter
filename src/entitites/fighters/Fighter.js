@@ -30,6 +30,7 @@ import { DRAW_DEBUG, HIT_SPLASH_RANDOMNESS } from '../../constants/battle.js';
 import { DEBUG_drawCollisionInfo } from '../../utils/fighterDebug.js';
 import {
 	soundAttackIds,
+	soundHadoukenId,
 	soundHitIds,
 	soundLandId,
 } from '../../constants/sounds.js';
@@ -125,7 +126,7 @@ export class Fighter {
 
 		this.states = {
 			[FighterState.IDLE]: {
-				init: this.handleIdleInit,
+				init: this.handleHadoukenInit,
 				update: this.handleIdle,
 				validFrom: [
 					undefined,
@@ -472,7 +473,7 @@ export class Fighter {
 		this.velocity = { x: 0, y: 0 };
 	};
 
-	handleIdleInit = () => {
+	handleHadoukenInit = () => {
 		this.resetVelocities();
 		this.attackStruck = false;
 	};
@@ -487,7 +488,7 @@ export class Fighter {
 		else if (control.isBackward(this.playerId, this.direction))
 			this.changeState(FighterState.WALK_BACKWARD, time);
 		else if (control.isLightPunch(this.playerId))
-			this.changeState(FighterState.LIGHT_PUNCH, time);
+			this.changeState(FighterState.SPECIAL_1, time);
 		else if (control.isMediumPunch(this.playerId))
 			this.changeState(FighterState.MEDIUM_PUNCH, time);
 		else if (control.isHeavyPunch(this.playerId))
@@ -556,7 +557,11 @@ export class Fighter {
 		if (!control.isDown(this.playerId)) {
 			this.currentState = FighterState.CROUCH_UP;
 			this.setAnimationFrame(
-				this.animations[this.currentState].length - this.animationFrame - 1,
+				Math.max(
+					0,
+					this.animations[FighterState.CROUCH_UP][this.animationFrame].length -
+						this.animationFrame
+				),
 				time
 			);
 		}
@@ -621,7 +626,7 @@ export class Fighter {
 	};
 
 	handleIdleTurnState = (time) => {
-		this.handleIdleInit();
+		this.handleHadoukenInit();
 
 		if (this.isAnimationCompleted()) {
 			this.changeState(FighterState.IDLE, time);
@@ -838,7 +843,10 @@ export class Fighter {
 	};
 
 	updateHurtShake = (time, delay) => {
-		if (this.hurtShakeTimer + FRAME_TIME < time.previous) {
+		if (
+			this.hurtShakeTimer + FRAME_TIME < time.previous &&
+			!this.attackStruck
+		) {
 			const shakeAmount =
 				delay - time.previous >= (FighterStruckDelay * FRAME_TIME) / 2 ? 2 : 1;
 			this.hurtShake = shakeAmount - this.hurtShake;

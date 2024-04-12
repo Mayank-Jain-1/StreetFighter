@@ -35,6 +35,7 @@ export const FighterState = {
 	HURT_BODY_LIGHT: 'hurtBodyLight',
 	HURT_BODY_MEDIUM: 'hurtBodyMedium',
 	HURT_BODY_HEAVY: 'hurtBodyHeavy',
+	SPECIAL_1: 'special1',
 };
 
 export const FighterStruckDelay = 15;
@@ -159,4 +160,5 @@ export const FighterHurtStates = [
 	FighterState.HURT_BODY_LIGHT,
 	FighterState.HURT_BODY_MEDIUM,
 	FighterState.HURT_BODY_HEAVY,
+	FighterState.SPECIAL_1,
 ];

@@ -5,7 +5,7 @@ import {
 	STAGE_HEIGHT,
 	STAGE_PADDING,
 	STAGE_WIDTH,
-} from "../constants/Stage.js";
+} from '../constants/Stage.js';
 
 export class Camera {
 	constructor(x, y, fighters) {
@@ -39,15 +39,13 @@ export class Camera {
 			this.position.x = lowX + midPoint - SCENE_WIDTH / 2;
 		} else {
 			for (const fighter of this.fighters) {
-				if (
-					(fighter.position.x < this.position.x + SCROLL_BOUNDARY &&
-						fighter.velocity.x * fighter.direction < 0) ||
-					(fighter.position.x >
-						this.position.x + SCENE_WIDTH - SCROLL_BOUNDARY &&
-						fighter.velocity.x * fighter.direction > 0)
+				if (fighter.position.x < this.position.x + SCROLL_BOUNDARY) {
+					this.position.x = fighter.position.x - SCROLL_BOUNDARY;
+				} else if (
+					fighter.position.x >
+					this.position.x + SCENE_WIDTH - SCROLL_BOUNDARY
 				) {
-					this.position.x +=
-						fighter.velocity.x * fighter.direction * time.secondsPassed;
+					this.position.x = fighter.position.x + SCROLL_BOUNDARY - SCENE_WIDTH;
 				}
 			}
 		}

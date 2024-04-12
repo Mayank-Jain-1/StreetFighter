@@ -1,6 +1,7 @@
 import { registerKeyboardEvents } from './engine/InputHandler.js';
 import { getContext } from './utils/context.js';
 import { BattleScene } from './scenes/BattleScene.js';
+import { GAME_SPEED } from './constants/game.js';
 
 export class StreetFighterGame {
 	context = getContext();
@@ -23,6 +24,7 @@ export class StreetFighterGame {
 			this.timeStarted = time;
 		}
 		time -= this.timeStarted;
+		time = time * GAME_SPEED;
 
 		this.frameTime = {
 			secondsPassed: (time - this.frameTime.previous) / 1000,
