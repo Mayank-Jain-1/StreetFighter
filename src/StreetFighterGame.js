@@ -10,12 +10,19 @@ export class StreetFighterGame {
 		previous: 0,
 	};
 
+	timeStarted = 0;
+
 	constructor() {
 		this.scene = new BattleScene();
 	}
 
 	frame = (time) => {
 		window.requestAnimationFrame(this.frame.bind(this));
+
+		if (this.timeStarted === 0) {
+			this.timeStarted = time;
+		}
+		time -= this.timeStarted;
 
 		this.frameTime = {
 			secondsPassed: (time - this.frameTime.previous) / 1000,
@@ -24,7 +31,6 @@ export class StreetFighterGame {
 
 		this.scene.update(this.frameTime);
 		this.scene.draw(this.context);
-
 	};
 
 	start() {

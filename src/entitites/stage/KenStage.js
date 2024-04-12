@@ -3,199 +3,203 @@ import {
 	STAGE_MID_POINT,
 	STAGE_PADDING,
 	STAGE_WIDTH,
-} from "../../constants/Stage.js";
-import { FRAME_TIME } from "../../constants/game.js";
-import { drawFrame } from "../../utils/context.js";
-import { BackgroundAnimation } from "./shared/BackgroundAnimation.js";
-import { SkewedFloor } from "./shared/SkewedFloor.js";
+} from '../../constants/Stage.js';
+import { FRAME_TIME } from '../../constants/game.js';
+import { playSound } from '../../engine/SoundHandler.js';
+import { drawFrame } from '../../utils/context.js';
+import { BackgroundAnimation } from './shared/BackgroundAnimation.js';
+import { SkewedFloor } from './shared/SkewedFloor.js';
 
 export class KenStage {
+	image = document.getElementById('KenStage');
+	backgroundMusic = document.getElementById('kensTheme');
+	frames = new Map([
+		['stage-background', [72, 208, 768, 176]],
+		['stage-boat', [8, 16, 521, 180]],
+		['stage-floor-bottom', [8, 448, 896, 16]],
+
+		// Ballard type
+		['ballard-small', [800, 184, 21, 16]],
+		['ballard-large', [760, 176, 31, 24]],
+
+		// Barrels
+
+		['side-barrels', [560, 472, 151, 96]],
+	]);
+
+	floor = new SkewedFloor(this.image, [8, 392, 896, 56]);
+
+	boat = {
+		position: {
+			x: 0,
+			y: 0,
+		},
+		animationFrame: 0,
+		animationDelay: 22,
+		animationTimer: 0,
+		animation: [0, -1, -2, -3, -4, -3, -2, -1],
+	};
+
+	flag = new BackgroundAnimation(
+		'Flag',
+		this.image,
+		[
+			['flag-1', [848, 208, 40, 40]],
+			['flag-2', [848, 256, 40, 40]],
+			['flag-3', [848, 304, 40, 40]],
+		],
+		[
+			['flag-1', 133],
+			['flag-2', 133],
+			['flag-3', 133],
+		],
+		0
+	);
+
+	backgroundPeople = {
+		shineGuy: [
+			new BackgroundAnimation(
+				'shineGuy',
+				this.image,
+				[
+					['shiny-guy-1', [552, 8, 40, 64]],
+					['shiny-guy-2', [552, 80, 40, 56]],
+					['shiny-guy-3', [552, 144, 40, 56]],
+				],
+				[
+					['shiny-guy-1', 100],
+					['shiny-guy-2', 133],
+					['shiny-guy-3', 664],
+					['shiny-guy-2', 133],
+				],
+				0
+			),
+			[278, 157],
+		],
+		hatGuy: [
+			new BackgroundAnimation(
+				'HatGuy',
+				this.image,
+				[
+					['hat-guy-1', [600, 24, 16, 48]],
+					['hat-guy-2', [600, 88, 16, 48]],
+				],
+				[
+					['hat-guy-1', 1000],
+					['hat-guy-2', 1000],
+				],
+				0
+			),
+			[318, 157],
+		],
+		girl: [
+			new BackgroundAnimation(
+				'girl',
+				this.image,
+				[
+					['girl-1', [624, 16, 32, 56]],
+					['girl-2', [624, 80, 32, 56]],
+					['girl-3', [624, 144, 32, 56]],
+				],
+				[
+					['girl-1', 216],
+					['girl-2', 216],
+					['girl-3', 216],
+					['girl-2', 216],
+				],
+				0
+			),
+			[342, 157],
+		],
+		greenGuy: [
+			new BackgroundAnimation(
+				'greenGuy',
+				this.image,
+				[
+					['green-guy-1', [664, 16, 32, 56]],
+					['green-guy-2', [664, 80, 32, 56]],
+				],
+				[
+					['green-guy-1', 664],
+					['green-guy-2', 498],
+					['green-guy-1', 133],
+					['green-guy-2', 133],
+				],
+				0
+			),
+			[374, 157],
+		],
+		blueCoatGuy: [
+			new BackgroundAnimation(
+				'blueCoatGuy',
+				this.image,
+				[
+					['blue-coat-1', [704, 16, 48, 56]],
+					['blue-coat-2', [704, 80, 48, 56]],
+					['blue-coat-3', [704, 144, 48, 56]],
+				],
+				[
+					['blue-coat-1', 996],
+					['blue-coat-2', 133],
+					['blue-coat-3', 100],
+					['blue-coat-2', 133],
+					['blue-coat-1', 249],
+					['blue-coat-2', 133],
+					['blue-coat-3', 100],
+					['blue-coat-2', 133],
+				],
+				0
+			),
+			[438, 149],
+		],
+		brownCoatGuy: [
+			new BackgroundAnimation(
+				'brownCoatGuy',
+				this.image,
+				[
+					['brown-coat-1', [760, 16, 40, 40]],
+					['brown-coat-2', [760, 64, 40, 40]],
+					['brown-coat-3', [760, 112, 40, 40]],
+				],
+				[
+					['brown-coat-1', 133],
+					['brown-coat-2', 133],
+					['brown-coat-3', 133],
+					['brown-coat-2', 133],
+				],
+				0
+			),
+			[238, 61],
+		],
+		pinkCoatGuy: [
+			new BackgroundAnimation(
+				'pinkCoatGuy',
+				this.image,
+				[
+					['pink-coat-1', [808, 24, 48, 32]],
+					['pink-coat-2', [808, 72, 48, 32]],
+					['pink-coat-3', [808, 120, 48, 32]],
+				],
+				[
+					['pink-coat-1', 1992],
+					['pink-coat-2', 166],
+					['pink-coat-3', 166],
+					['pink-coat-2', 166],
+					['pink-coat-1', 664],
+					['pink-coat-2', 166],
+					['pink-coat-3', 166],
+					['pink-coat-2', 166],
+					['pink-coat-3', 166],
+					['pink-coat-2', 166],
+				],
+				0
+			),
+			[278, 53],
+		],
+	};
+
 	constructor() {
-		this.image = document.getElementById("KenStage");
-		this.frames = new Map([
-			["stage-background", [72, 208, 768, 176]],
-			["stage-boat", [8, 16, 521, 180]],
-			["stage-floor-bottom", [8, 448, 896, 16]],
-
-			// Ballard type
-			["ballard-small", [800, 184, 21, 16]],
-			["ballard-large", [760, 176, 31, 24]],
-
-			// Barrels
-
-			["side-barrels", [560, 472, 151, 96]],
-		]);
-
-		this.floor = new SkewedFloor(this.image, [8, 392, 896, 56]);
-
-		this.boat = {
-			position: {
-				x: 0,
-				y: 0,
-			},
-			animationFrame: 0,
-			animationDelay: 22,
-			animationTimer: 0,
-			animation: [0, -1, -2, -3, -4, -3, -2, -1],
-		};
-
-		this.flag = new BackgroundAnimation(
-			"Flag",
-			this.image,
-			[
-				["flag-1", [848, 208, 40, 40]],
-				["flag-2", [848, 256, 40, 40]],
-				["flag-3", [848, 304, 40, 40]],
-			],
-			[
-				["flag-1", 133],
-				["flag-2", 133],
-				["flag-3", 133],
-			],
-			0
-		);
-
-		this.backgroundPeople = {
-			shineGuy: [
-				new BackgroundAnimation(
-					"shineGuy",
-					this.image,
-					[
-						["shiny-guy-1", [552, 8, 40, 64]],
-						["shiny-guy-2", [552, 80, 40, 56]],
-						["shiny-guy-3", [552, 144, 40, 56]],
-					],
-					[
-						["shiny-guy-1", 100],
-						["shiny-guy-2", 133],
-						["shiny-guy-3", 664],
-						["shiny-guy-2", 133],
-					],
-					0
-				),
-				[278, 157],
-			],
-			hatGuy: [
-				new BackgroundAnimation(
-					"HatGuy",
-					this.image,
-					[
-						["hat-guy-1", [600, 24, 16, 48]],
-						["hat-guy-2", [600, 88, 16, 48]],
-					],
-					[
-						["hat-guy-1", 1000],
-						["hat-guy-2", 1000],
-					],
-					0
-				),
-				[318, 157],
-			],
-			girl: [
-				new BackgroundAnimation(
-					"girl",
-					this.image,
-					[
-						["girl-1", [624, 16, 32, 56]],
-						["girl-2", [624, 80, 32, 56]],
-						["girl-3", [624, 144, 32, 56]],
-					],
-					[
-						["girl-1", 216],
-						["girl-2", 216],
-						["girl-3", 216],
-						["girl-2", 216],
-					],
-					0
-				),
-				[342, 157],
-			],
-			greenGuy: [
-				new BackgroundAnimation(
-					"greenGuy",
-					this.image,
-					[
-						["green-guy-1", [664, 16, 32, 56]],
-						["green-guy-2", [664, 80, 32, 56]],
-					],
-					[
-						["green-guy-1", 664],
-						["green-guy-2", 498],
-						["green-guy-1", 133],
-						["green-guy-2", 133],
-					],
-					0
-				),
-				[374, 157],
-			],
-			blueCoatGuy: [
-				new BackgroundAnimation(
-					"blueCoatGuy",
-					this.image,
-					[
-						["blue-coat-1", [704, 16, 48, 56]],
-						["blue-coat-2", [704, 80, 48, 56]],
-						["blue-coat-3", [704, 144, 48, 56]],
-					],
-					[
-						["blue-coat-1", 996],
-						["blue-coat-2", 133],
-						["blue-coat-3", 100],
-						["blue-coat-2", 133],
-						["blue-coat-1", 249],
-						["blue-coat-2", 133],
-						["blue-coat-3", 100],
-						["blue-coat-2", 133],
-					],
-					0
-				),
-				[438, 149],
-			],
-			brownCoatGuy: [
-				new BackgroundAnimation(
-					"brownCoatGuy",
-					this.image,
-					[
-						["brown-coat-1", [760, 16, 40, 40]],
-						["brown-coat-2", [760, 64, 40, 40]],
-						["brown-coat-3", [760, 112, 40, 40]],
-					],
-					[
-						["brown-coat-1", 133],
-						["brown-coat-2", 133],
-						["brown-coat-3", 133],
-						["brown-coat-2", 133],
-					],
-					0
-				),
-				[238, 61],
-			],
-			pinkCoatGuy: [
-				new BackgroundAnimation(
-					"pinkCoatGuy",
-					this.image,
-					[
-						["pink-coat-1", [808, 24, 48, 32]],
-						["pink-coat-2", [808, 72, 48, 32]],
-						["pink-coat-3", [808, 120, 48, 32]],
-					],
-					[
-						["pink-coat-1", 1992],
-						["pink-coat-2", 166],
-						["pink-coat-3", 166],
-						["pink-coat-2", 166],
-						["pink-coat-1", 664],
-						["pink-coat-2", 166],
-						["pink-coat-3", 166],
-						["pink-coat-2", 166],
-						["pink-coat-3", 166],
-						["pink-coat-2", 166],
-					],
-					0
-				),
-				[278, 53],
-			],
-		};
+		playSound(this.backgroundMusic, 0.2)
 	}
 
 	drawFrame = (context, frameKey, x, y, direction = 1) => {
@@ -209,7 +213,7 @@ export class KenStage {
 		};
 		this.drawFrame(
 			context,
-			"stage-boat",
+			'stage-boat',
 			this.boat.position.x,
 			this.boat.position.y
 		);
@@ -233,7 +237,7 @@ export class KenStage {
 	drawSkyOcean = (context, camera) => {
 		this.drawFrame(
 			context,
-			"stage-background",
+			'stage-background',
 			Math.floor(16 - camera.position.x / 2.157303),
 			-camera.position.y
 		);
@@ -270,7 +274,7 @@ export class KenStage {
 
 		this.drawFrame(
 			context,
-			"stage-floor-bottom",
+			'stage-floor-bottom',
 			STAGE_PADDING - camera.position.x * 1.1,
 			232 - camera.position.y
 		);
@@ -280,13 +284,13 @@ export class KenStage {
 		const cameraXOffset = camera.position.x / 1.54;
 		this.drawFrame(
 			context,
-			"ballard-small",
+			'ballard-small',
 			468 - 92 - cameraXOffset,
 			166 - camera.position.y
 		);
 		this.drawFrame(
 			context,
-			"ballard-small",
+			'ballard-small',
 			468 + 92 - cameraXOffset,
 			166 - camera.position.y
 		);
@@ -295,7 +299,7 @@ export class KenStage {
 	drawBarrels = (context, camera) => {
 		this.drawFrame(
 			context,
-			"side-barrels",
+			'side-barrels',
 			STAGE_PADDING + STAGE_WIDTH - 152 - camera.position.x,
 			120 - camera.position.y
 		);
@@ -305,13 +309,13 @@ export class KenStage {
 		const cameraXOffset = camera.position.x / 0.958;
 		this.drawFrame(
 			context,
-			"ballard-large",
+			'ballard-large',
 			STAGE_MID_POINT + STAGE_PADDING - 147 - cameraXOffset,
 			200 - camera.position.y
 		);
 		this.drawFrame(
 			context,
-			"ballard-large",
+			'ballard-large',
 			STAGE_MID_POINT + STAGE_PADDING + 147 - cameraXOffset,
 			200 - camera.position.y
 		);

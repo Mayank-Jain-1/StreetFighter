@@ -22,9 +22,14 @@ import {
 	rectsOverlap,
 } from '../../utils/collisions.js';
 import { FRAME_TIME } from '../../constants/game.js';
-import { gameState } from '../../states/gameState.js';
 import { DRAW_DEBUG, HIT_SPLASH_RANDOMNESS } from '../../constants/battle.js';
 import { DEBUG_drawCollisionInfo } from '../../utils/fighterDebug.js';
+import {
+	soundAttackIds,
+	soundHitIds,
+	soundLandId,
+} from '../../constants/sounds.js';
+import { playSound, stopSound } from '../../engine/SoundHandler.js';
 
 // TODO Convert hurt: [[], [], []] to {head:[], body:[], legs:[],}
 
@@ -52,6 +57,42 @@ export class Fighter {
 		hit: { x: 0, y: 0, width: 0, height: 0 },
 	};
 	attackStruck = false;
+	soundAttacks = {
+		[FighterAttackStrength.LIGHT]: document.getElementById(
+			soundAttackIds.LIGHT
+		),
+		[FighterAttackStrength.MEDIUM]: document.getElementById(
+			soundAttackIds.MEDIUM
+		),
+		[FighterAttackStrength.HEAVY]: document.getElementById(
+			soundAttackIds.HEAVY
+		),
+	};
+
+	soundHits = {
+		[FighterAttackStrength.LIGHT]: {
+			[FighterAttackType.PUNCH]: document.getElementById(
+				soundHitIds.LIGHT.PUNCH
+			),
+			[FighterAttackType.KICK]: document.getElementById(soundHitIds.LIGHT.KICK),
+		},
+		[FighterAttackStrength.MEDIUM]: {
+			[FighterAttackType.PUNCH]: document.getElementById(
+				soundHitIds.MEDIUM.PUNCH
+			),
+			[FighterAttackType.KICK]: document.getElementById(
+				soundHitIds.MEDIUM.KICK
+			),
+		},
+		[FighterAttackStrength.HEAVY]: {
+			[FighterAttackType.PUNCH]: document.getElementById(
+				soundHitIds.HEAVY.PUNCH
+			),
+			[FighterAttackType.KICK]: document.getElementById(soundHitIds.HEAVY.KICK),
+		},
+	};
+
+	soundLand = document.getElementById(soundLandId);
 
 	constructor(playerId, handleAttackHit) {
 		this.playerId = playerId;
@@ -182,7 +223,7 @@ export class Fighter {
 			[FighterState.LIGHT_PUNCH]: {
 				attackType: FighterAttackType.PUNCH,
 				attackStrength: FighterAttackStrength.LIGHT,
-				init: this.resetVelocities,
+				init: this.handleAttackInit,
 				update: this.handleLightKick,
 				validFrom: [
 					FighterState.IDLE,
@@ -193,7 +234,7 @@ export class Fighter {
 			[FighterState.MEDIUM_PUNCH]: {
 				attackType: FighterAttackType.PUNCH,
 				attackStrength: FighterAttackStrength.MEDIUM,
-				init: this.resetVelocities,
+				init: this.handleAttackInit,
 				update: this.handleMedKick,
 				validFrom: [
 					FighterState.IDLE,
@@ -204,7 +245,7 @@ export class Fighter {
 			[FighterState.HEAVY_PUNCH]: {
 				attackType: FighterAttackType.PUNCH,
 				attackStrength: FighterAttackStrength.HEAVY,
-				init: this.resetVelocities,
+				init: this.handleAttackInit,
 				update: this.handleHeavyKick,
 				validFrom: [
 					FighterState.IDLE,
@@ -215,7 +256,7 @@ export class Fighter {
 			[FighterState.LIGHT_KICK]: {
 				attackType: FighterAttackType.KICK,
 				attackStrength: FighterAttackStrength.LIGHT,
-				init: this.resetVelocities,
+				init: this.handleAttackInit,
 				update: this.handleLightPunch,
 				validFrom: [
 					FighterState.IDLE,
@@ -226,7 +267,7 @@ export class Fighter {
 			[FighterState.MEDIUM_KICK]: {
 				attackType: FighterAttackType.KICK,
 				attackStrength: FighterAttackStrength.MEDIUM,
-				init: this.resetVelocities,
+				init: this.handleAttackInit,
 				update: this.handleMedPunch,
 				validFrom: [
 					FighterState.IDLE,
@@ -237,7 +278,7 @@ export class Fighter {
 			[FighterState.HEAVY_KICK]: {
 				attackType: FighterAttackType.KICK,
 				attackStrength: FighterAttackStrength.HEAVY,
-				init: this.resetVelocities,
+				init: this.handleAttackInit,
 				update: this.handleHeavyPunch,
 				validFrom: [
 					FighterState.IDLE,
@@ -534,6 +575,7 @@ export class Fighter {
 		if (this.animationFrame == 0) return;
 		this.handleIdle();
 		if (this.isAnimationCompleted()) this.changeState(FighterState.IDLE);
+		playSound(this.soundLand);
 	};
 
 	handleJumpInit = () => {
@@ -556,14 +598,22 @@ export class Fighter {
 		}
 	};
 
+	handleAttackInit = () => {
+		this.resetVelocities();
+		playSound(this.soundAttacks[this.states[this.currentState].attackStrength]);
+	};
+
+	handleLightAttackReset = () => {
+		this.animationFrame = 0;
+		this.attackStruck = false;
+		this.handleAttackInit();
+	};
+
 	handleLightPunch = () => {
 		if (this.animationFrame < 2) return;
-		if (control.isLightPunch(this.playerId)) {
-			this.animationFrame = 0;
-		}
-		if (this.isAnimationCompleted()) {
-			this.changeState(FighterState.IDLE);
-		}
+		if (control.isLightPunch(this.playerId)) this.handleLightAttackReset();
+		if (!this.isAnimationCompleted()) return;
+		this.changeState(FighterState.IDLE);
 	};
 
 	handleMedPunch = () => {
@@ -580,12 +630,9 @@ export class Fighter {
 
 	handleLightKick = () => {
 		if (this.animationFrame < 2) return;
-		if (control.isLightKick(this.playerId)) {
-			this.animationFrame = 0;
-		}
-		if (this.isAnimationCompleted()) {
-			this.changeState(FighterState.IDLE);
-		}
+		if (control.isLightKick(this.playerId)) this.handleLightAttackReset();
+		if (!this.isAnimationCompleted()) return;
+		this.changeState(FighterState.IDLE);
 	};
 
 	handleMedKick = () => {
@@ -622,6 +669,7 @@ export class Fighter {
 			this.direction,
 			this.boxes.hit
 		);
+
 		this.opponent.boxes.hurt.map((hurt, index) => {
 			if (this.attackStruck) return;
 			const [x, y, width, height] = hurt;
@@ -633,8 +681,11 @@ export class Fighter {
 
 			if (!boxOverlap(actualHitBox, actualOpponentHurtBox)) return;
 
-			const attackStrength = this.states[this.currentState].attackStrength;
+			const { attackStrength, attackType } = this.states[this.currentState];
 			this.attackStruck = true;
+
+			stopSound(this.soundAttacks[attackStrength]);
+			playSound(this.soundHits[attackStrength][attackType]);
 
 			const hitPosition = {
 				x:

@@ -1,6 +1,12 @@
-import { StreetFighterGame } from "./StreetFighterGame.js";
+import { StreetFighterGame } from './StreetFighterGame.js';
 
 window.onload = () => {
-	const game = new StreetFighterGame();
-	game.start();
+	// new StreetFighterGame().start();
+	window.addEventListener(
+		'click',
+		() => {
+			new StreetFighterGame().start();
+		},
+		{ once: true }
+	);
 };

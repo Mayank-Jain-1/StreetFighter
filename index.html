@@ -1,24 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Street Fighter by Mayank Jain</title>
-  <link rel="stylesheet" href="src/style.css">
-  <script type="module" src="src/index.js"></script>
-</head>
- 
-<body>
-  <main>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Street Fighter by Mayank Jain</title>
+		<link rel="stylesheet" href="src/style.css" />
+		<script type="module" src="src/index.js"></script>
+	</head>
 
-    <canvas width="382px" height="224px"></canvas>
-  </main>
-  <img id= "KenStage"src="assets/kenstage.png" alt="kenstage">
-  <img id = "hud" src="assets/hud.png" alt="HUD">
-  <img id="KenImage" src="./assets/ken.png">
-  <img id="RyuImage" src="assets/Ryu.png">
-  <img id="ShadowImage" src="./assets/shadow.png">
-  <img id="Decals" src="./assets/decals.png">
-</body>
+	<body>
+		<main>
+			<canvas width="382px" height="224px"></canvas>
+		</main>
+		<audio
+			id="kensTheme"
+			src="./assets/sounds/kens-theme.mp3"
+			preload="auto"
+			loop
+		></audio>
+		<audio
+			id="sound-fighter-land"
+			src="./assets/sounds/land.wav"
+			preload="auto"
+		></audio>
+		<audio
+			id="sound-fighter-light-kick-hit"
+			src="./assets/sounds/light-kick-hit.wav"
+			preload="auto"
+		></audio>
+		<audio
+			id="sound-fighter-medium-kick-hit"
+			src="./assets/sounds/medium-kick-hit.wav"
+			preload="auto"
+		></audio>
+		<audio
+			id="sound-fighter-heavy-kick-hit"
+			src="./assets/sounds/heavy-kick-hit.wav"
+			preload="auto"
+		></audio>
+		<audio
+			id="sound-fighter-light-attack"
+			src="./assets/sounds/light-attack.wav"
+			preload="auto"
+		></audio>
+		<audio
+			id="sound-fighter-medium-attack"
+			src="./assets/sounds/medium-attack.wav"
+			preload="auto"
+		></audio>
+		<audio
+			id="sound-fighter-heavy-attack"
+			src="./assets/sounds/heavy-attack.wav"
+			preload="auto"
+		></audio>
+		<audio
+			id="sound-fighter-light-punch-hit"
+			src="./assets/sounds/light-punch-hit.wav"
+			preload="auto"
+		></audio>
+		<audio
+			id="sound-fighter-medium-punch-hit"
+			src="./assets/sounds/medium-punch-hit.wav"
+			preload="auto"
+		></audio>
+		<audio
+			id="sound-fighter-heavy-punch-hit"
+			src="./assets/sounds/heavy-punch-hit.wav"
+			preload="auto"
+		></audio>
 
+		<img id="KenStage" src="assets/images/kenstage.png" alt="kenstage" />
+		<img id="hud" src="assets/images/hud.png" alt="HUD" />
+		<img id="KenImage" src="./assets/images/ken.png" />
+		<img id="RyuImage" src="assets/images/Ryu.png" />
+		<img id="ShadowImage" src="./assets/images/shadow.png" />
+		<img id="Decals" src="./assets/images/decals.png" />
+	</body>
 </html>
