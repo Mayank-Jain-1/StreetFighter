@@ -9,12 +9,12 @@ export const KO_FLASH_KEYS = ['ko-white', 'ko-black'];
 
 export const HEALTH_MAX_HIT_POINTS = 144;
 
-export const HEALTH_CRITICAL_HIT_POINTS = 45;
+export const HEALTH_CRITICAL_HIT_POINTS = 30;
 
 export const HEALTH_COLOR = '#f3f300'; //Not being used
 export const HEALTH_DAMAGE_COLOR = '#f30000';
 
 export const HIT_SPLASH_RANDOMNESS = 10;
 
-// export const DRAW_DEBUG = true;
-export const DRAW_DEBUG = false;
+export const DRAW_DEBUG = true;
+// export const DRAW_DEBUG = false;

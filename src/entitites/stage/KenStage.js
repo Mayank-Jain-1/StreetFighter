@@ -199,7 +199,7 @@ export class KenStage {
 	};
 
 	constructor() {
-		playSound(this.backgroundMusic, 0.2)
+		playSound(this.backgroundMusic);
 	}
 
 	drawFrame = (context, frameKey, x, y, direction = 1) => {

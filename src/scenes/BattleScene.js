@@ -7,7 +7,9 @@ import {
 	FighterAttackBaseData,
 	FighterAttackStrength,
 	FighterId,
+	FighterStruckDelay,
 } from '../constants/fighter.js';
+import { FRAME_TIME } from '../constants/game.js';
 import { Camera } from '../engine/Camera.js';
 import { Ken, Ryu } from '../entitites/fighters/index.js';
 import {
@@ -26,6 +28,8 @@ export class BattleScene {
 	camera = undefined;
 	shadows = [];
 	entities = [];
+	FighterDrawOrder = [0, 1];
+	hurtTimer = 0;
 
 	constructor() {
 		this.stage = new KenStage();
@@ -61,7 +65,11 @@ export class BattleScene {
 	};
 
 	updateFighters = (time, context) => {
-		this.fighters.map((fighter) => fighter.update(time, context, this.camera));
+		this.fighters.map((fighter) => {
+			if (this.hurtTimer > time.previous) {
+				fighter.updateHurtShake(time, this.hurtTimer);
+			} else fighter.update(time, context, this.camera);
+		});
 	};
 
 	getHitSplashClass = (strength) => {
@@ -77,7 +85,8 @@ export class BattleScene {
 		}
 	};
 
-	handleAttackHit = (playerId, opponentId, position, strength) => {
+	handleAttackHit = (time, playerId, opponentId, position, strength) => {
+		this.FighterDrawOrder = [opponentId, playerId];
 		gameState.fighters[playerId].score += FighterAttackBaseData[strength].score;
 
 		gameState.fighters[opponentId].hitPoints -=
@@ -86,6 +95,8 @@ export class BattleScene {
 		const HitSplashClass = this.getHitSplashClass(strength);
 
 		this.addEntity(HitSplashClass, position.x, position.y, playerId);
+
+		this.hurtTimer = time.previous + FighterStruckDelay * FRAME_TIME;
 	};
 
 	updateShadows = (time, context) => {
@@ -134,7 +145,9 @@ export class BattleScene {
 	};
 
 	drawFighters(context) {
-		this.fighters.map((fighter) => fighter.draw(context, this.camera));
+		this.FighterDrawOrder.map((id) =>
+			this.fighters[id].draw(context, this.camera)
+		);
 	}
 
 	drawShadows(context) {

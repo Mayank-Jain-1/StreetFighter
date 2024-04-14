@@ -132,13 +132,13 @@ export class StatusBar {
 
 	updateHealthBars = (time) => {
 		this.healthBars.map(({ hitPoints }, index) => {
-			if (
-				!this.startingHealthRollUpDone &&
-				hitPoints <= gameState.fighters[index].hitPoints
-			)
+			if (!this.startingHealthRollUpDone) {
 				this.updateHealthBarRollUp(time, hitPoints, index);
-
-			if (hitPoints > gameState.fighters[index].hitPoints) {
+				return;
+			}
+			if (hitPoints <= gameState.fighters[index].hitPoints) {
+				this.updateHealthBarRollUp(time, hitPoints, index);
+			} else {
 				this.healthBars[index].hitPoints = Math.max(
 					0,
 					this.healthBars[index].hitPoints - FPS * time.secondsPassed

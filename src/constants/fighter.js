@@ -1,3 +1,5 @@
+import { FRAME_TIME } from './game.js';
+
 export const FIGHTER_START_DISTANCE = 88;
 
 export const FighterDirection = {
@@ -25,7 +27,15 @@ export const FighterState = {
 	LIGHT_KICK: 'lightKick',
 	MEDIUM_KICK: 'mediumKick',
 	HEAVY_KICK: 'heavyKick',
+	HURT_HEAD_LIGHT: 'hurtHeadLight',
+	HURT_HEAD_MEDIUM: 'hurtHeadMedium',
+	HURT_HEAD_HEAVY: 'hurtHeadHeavy',
+	HURT_BODY_LIGHT: 'hurtBodyLight',
+	HURT_BODY_MEDIUM: 'hurtBodyMedium',
+	HURT_BODY_HEAVY: 'hurtBodyHeavy',
 };
+
+export const FighterStruckDelay = 15;
 
 export const FrameDelay = {
 	FREEZE: 0,
@@ -42,6 +52,12 @@ export const PushBox = {
 	JUMP: [-16, -91, 32, 66],
 	BEND: [-16, -58, 32, 58],
 	CROUCH: [-16, -50, 32, 50],
+};
+
+export const FighterHurtArea = {
+	HEAD: 'head',
+	BODY: 'body',
+	LEGS: 'legs',
 };
 
 export const HurtBox = {
@@ -99,13 +115,46 @@ export const FighterAttackBaseData = {
 	[FighterAttackStrength.LIGHT]: {
 		score: 100,
 		damage: 12,
+		slide: {
+			velocity: 12 * FRAME_TIME,
+			friction: 600,
+		},
 	},
 	[FighterAttackStrength.MEDIUM]: {
 		score: 300,
 		damage: 20,
+		slide: {
+			velocity: 16 * FRAME_TIME,
+			friction: 600,
+		},
 	},
 	[FighterAttackStrength.HEAVY]: {
 		score: 100,
 		damage: 28,
+		slide: {
+			velocity: 22 * FRAME_TIME,
+			friction: 800,
+		},
 	},
 };
+
+export const FighterHurtStates = [
+	FighterState.IDLE,
+	FighterState.IDLE_TURN,
+	FighterState.WALK_FORWARD,
+	FighterState.WALK_BACKWARD,
+	FighterState.JUMP_START,
+	FighterState.JUMP_LAND,
+	FighterState.LIGHT_PUNCH,
+	FighterState.MEDIUM_PUNCH,
+	FighterState.HEAVY_PUNCH,
+	FighterState.LIGHT_KICK,
+	FighterState.MEDIUM_KICK,
+	FighterState.HEAVY_KICK,
+	FighterState.HURT_HEAD_LIGHT,
+	FighterState.HURT_HEAD_MEDIUM,
+	FighterState.HURT_HEAD_HEAVY,
+	FighterState.HURT_BODY_LIGHT,
+	FighterState.HURT_BODY_MEDIUM,
+	FighterState.HURT_BODY_HEAVY,
+];

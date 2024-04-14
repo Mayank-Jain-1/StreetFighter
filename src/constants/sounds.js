@@ -20,3 +20,5 @@ export const soundHitIds = {
 		KICK: 'sound-fighter-heavy-kick-hit',
 	},
 };
+
+export const GLOBAL_VOLUME = 0.0;

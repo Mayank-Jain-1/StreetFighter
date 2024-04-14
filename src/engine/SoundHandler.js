@@ -1,4 +1,6 @@
-export const playSound = (sound, volume = 1) => {
+import { GLOBAL_VOLUME } from '../constants/sounds.js';
+
+export const playSound = (sound, volume = GLOBAL_VOLUME) => {
 	sound.volume = volume;
 	if (!sound.paused && sound.currentTime > 0) {
 		sound.currentTime = 0;

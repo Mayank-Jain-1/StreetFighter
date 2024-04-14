@@ -63,7 +63,7 @@ export function DEBUG_drawCollisionInfo(fighter, context, camera) {
 	);
 
 	//Hurt Boxes
-	boxes.hurt.map((box) => {
+	Object.values(boxes.hurt).map((box) => {
 		drawDebugBox(context, camera, position, direction, box, '#5555ff');
 	});
 
