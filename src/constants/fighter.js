@@ -161,4 +161,7 @@ export const FighterHurtStates = [
 	FighterState.HURT_BODY_MEDIUM,
 	FighterState.HURT_BODY_HEAVY,
 	FighterState.SPECIAL_1,
+	FighterState.CROUCH,
+	FighterState.CROUCH_UP,
+	FighterState.CROUCH_DOWN,
 ];

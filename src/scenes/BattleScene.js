@@ -18,6 +18,7 @@ import {
 	MediumHitSplash,
 	Shadow,
 } from '../entitites/fighters/shared/index.js';
+import { Fireball } from '../entitites/fighters/special/Fireball.js';
 import { FpsCounter } from '../entitites/overlays/FpsCounter.js';
 import { StatusBar } from '../entitites/overlays/StatusBar.js';
 import { KenStage } from '../entitites/stage/KenStage.js';
@@ -50,7 +51,11 @@ export class BattleScene {
 
 	getFighterEntitiy = (id, index) => {
 		const FighterClass = this.getFighterClass(id);
-		return new FighterClass(index, this.handleAttackHit.bind(this));
+		return new FighterClass(
+			index,
+			this.handleAttackHit.bind(this),
+			this.addEntity.bind(this)
+		);
 	};
 
 	getFighterEntities = () => {
@@ -68,7 +73,7 @@ export class BattleScene {
 		this.fighters.map((fighter) => {
 			if (this.hurtTimer > time.previous) {
 				fighter.updateHurtShake(time, this.hurtTimer);
-			} else fighter.update(time, context, this.camera);
+			} else fighter.update(time, this.camera);
 		});
 	};
 
@@ -94,13 +99,14 @@ export class BattleScene {
 
 		const HitSplashClass = this.getHitSplashClass(strength);
 
-		this.addEntity(HitSplashClass, position.x, position.y, playerId);
+		position &&
+			this.addEntity(HitSplashClass, position.x, position.y, playerId);
 
 		this.hurtTimer = time.previous + FighterStruckDelay * FRAME_TIME;
 	};
 
-	updateShadows = (time, context) => {
-		this.shadows.map((shadow) => shadow.update(time, context));
+	updateShadows = (time) => {
+		this.shadows.map((shadow) => shadow.update(time));
 	};
 
 	startRound = () => {
@@ -125,23 +131,23 @@ export class BattleScene {
 		this.entities = this.entities.filter((thisEntity) => thisEntity !== entity);
 	};
 
-	updateEntities = (time, context) => {
+	updateEntities = (time, camera) => {
 		for (const entity of this.entities) {
-			entity.update(time, context);
+			entity.update(time, camera);
 		}
 	};
 
-	updateOverlays = (time, context) => {
-		this.overlays.map((overlay) => overlay.update(time, context));
+	updateOverlays = (time) => {
+		this.overlays.map((overlay) => overlay.update(time));
 	};
 
-	update = (time, context) => {
-		this.updateFighters(time, context);
-		this.updateShadows(time, context);
+	update = (time) => {
+		this.updateFighters(time);
+		this.updateShadows(time);
 		this.stage.update(time);
-		this.updateEntities(time, context);
+		this.updateEntities(time, this.camera);
 		this.camera.update(time);
-		this.updateOverlays(time, context);
+		this.updateOverlays(time);
 	};
 
 	drawFighters(context) {

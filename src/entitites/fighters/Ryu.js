@@ -1,4 +1,5 @@
 import {
+	FighterAttackStrength,
 	FighterId,
 	FighterState,
 	FighterStruckDelay,
@@ -9,11 +10,17 @@ import {
 import { soundHadoukenId } from '../../constants/sounds.js';
 import { playSound } from '../../engine/SoundHandler.js';
 import { Fighter } from './Fighter.js';
+import { Fireball } from './special/Fireball.js';
 
 export class Ryu extends Fighter {
 	image = document.getElementById('RyuImage');
 
 	soundHadouken = document.getElementById(soundHadoukenId[FighterId.RYU]);
+
+	fireball = {
+		fired: false,
+		strength: undefined,
+	};
 
 	frames = new Map([
 		// IDLE
@@ -1134,8 +1141,8 @@ export class Ryu extends Fighter {
 
 	gravity = 1000;
 
-	constructor(playerId, onAttackHit) {
-		super(playerId, onAttackHit);
+	constructor(playerId, onAttackHit, addEntity) {
+		super(playerId, onAttackHit, addEntity);
 
 		this.states[FighterState.SPECIAL_1] = {
 			init: this.handleHadoukenInit,
@@ -1156,13 +1163,21 @@ export class Ryu extends Fighter {
 			FighterState.SPECIAL_1,
 		];
 	}
+
 	handleHadoukenInit = () => {
 		this.resetVelocities();
-		playSound(this.soundHadouken);
+		this.fireball.fired = false;
+		this.fireball.strength = playSound(this.soundHadouken);
 	};
 
 	handleHadouken = (time) => {
+		if (this.animationFrame === 3 && !this.fireball.fired) {
+			this.addEntity(Fireball, this, FighterAttackStrength.HEAVY, time);
+			this.fireball.fired = true;
+		}
+
 		if (!this.isAnimationCompleted()) return;
+		this.fireball.fired = false;
 		this.changeState(FighterState.IDLE, time);
 	};
 }

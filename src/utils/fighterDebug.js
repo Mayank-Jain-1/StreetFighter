@@ -20,7 +20,7 @@ const drawOriginCross = (context, camera, position) => {
 	context.stroke();
 };
 
-const drawDebugBox = (
+export const drawDebugBox = (
 	context,
 	camera,
 	position,
