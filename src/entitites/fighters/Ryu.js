@@ -780,7 +780,7 @@ export class Ryu extends Fighter {
 				'hit-stomach-1',
 				[
 					[
-						[397, 2029, 58, 85],
+						[398, 2156, 58, 85],
 						[37, 83],
 					],
 					PushBox.IDLE,
@@ -795,7 +795,7 @@ export class Ryu extends Fighter {
 				'hit-stomach-2',
 				[
 					[
-						[470, 2032, 66, 82],
+						[470, 2160, 66, 82],
 						[41, 80],
 					],
 					PushBox.IDLE,
@@ -810,7 +810,7 @@ export class Ryu extends Fighter {
 				'hit-stomach-3',
 				[
 					[
-						[544, 2034, 68, 84],
+						[544, 2167, 68, 84],
 						[40, 81],
 					],
 					PushBox.IDLE,
@@ -825,14 +825,14 @@ export class Ryu extends Fighter {
 				'hit-stomach-4',
 				[
 					[
-						[936, 2280, 75, 72],
-						[50, 69],
+						[544, 2167, 68, 84],
+						[40, 81],
 					],
 					PushBox.IDLE,
 					[
-						[-28, -67, 28, 18],
+						[-17, 82, 28, 18],
 						[-41, -59, 38, 30],
-						[-40, -34, 42, 34],
+						[-34, -34, 42, 34],
 					],
 				],
 			],
