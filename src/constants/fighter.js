@@ -2,6 +2,8 @@ import { FRAME_TIME } from './game.js';
 
 export const FIGHTER_START_DISTANCE = 88;
 
+export const FIGHTER_DEFAULT_WIDTH = 40;
+
 export const FighterDirection = {
 	LEFT: -1,
 	RIGHT: 1,
@@ -98,7 +100,7 @@ export const HurtBox = {
 	],
 };
 
-export const PushFriction = 66;
+export const FIGHTER_PUSH_FRICTION = 66;
 
 export const FighterAttackType = {
 	PUNCH: 'punch',
