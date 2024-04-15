@@ -28,4 +28,4 @@ export const soundHitIds = {
 	},
 };
 
-export const GLOBAL_VOLUME = 0.0;
+export const GLOBAL_VOLUME = 0.1;
