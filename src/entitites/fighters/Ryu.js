@@ -1143,8 +1143,8 @@ export class Ryu extends Fighter {
 
 	gravity = 1000;
 
-	constructor(playerId, onAttackHit, addEntity) {
-		super(playerId, onAttackHit, addEntity);
+	constructor(playerId, onAttackHit, entities) {
+		super(playerId, onAttackHit, entities);
 
 		this.states[FighterState.SPECIAL_1] = {
 			init: this.handleHadoukenInit,
@@ -1174,7 +1174,7 @@ export class Ryu extends Fighter {
 
 	handleHadouken = (time) => {
 		if (this.animationFrame === 3 && !this.fireball.fired) {
-			this.fireballInstance = this.addEntity(
+			this.entities.addEntity(
 				Fireball,
 				this,
 				FighterAttackStrength.HEAVY,

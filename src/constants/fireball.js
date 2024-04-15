@@ -6,6 +6,11 @@ export const fireballVelocity = {
 	[FighterAttackStrength.HEAVY]: 300,
 };
 
+export const FireballCollisionType = {
+	OPPONENT: 'opponent',
+	FIREBALL: 'fireball',
+};
+
 export const FireballState = {
 	ACTIVE: 'active',
 	COLLIDED: 'collided',

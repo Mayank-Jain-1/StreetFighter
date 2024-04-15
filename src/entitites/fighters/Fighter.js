@@ -110,10 +110,10 @@ export class Fighter {
 
 	soundLand = document.getElementById(soundLandId);
 
-	constructor(playerId, onAttackHit, addEntity) {
+	constructor(playerId, onAttackHit, entities) {
 		this.playerId = playerId;
 		this.onAttackHit = onAttackHit;
-		this.addEntity = addEntity;
+		this.entities = entities;
 		this.position = {
 			x:
 				STAGE_MID_POINT +

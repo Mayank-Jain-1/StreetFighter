@@ -11,6 +11,7 @@ import {
 } from '../constants/fighter.js';
 import { FRAME_TIME } from '../constants/game.js';
 import { Camera } from '../engine/Camera.js';
+import { EntityList } from '../engine/EntityList.js';
 import { Ken, Ryu } from '../entitites/fighters/index.js';
 import {
 	HeavyHitSplash,
@@ -28,12 +29,12 @@ export class BattleScene {
 	fighters = [];
 	camera = undefined;
 	shadows = [];
-	entities = [];
 	FighterDrawOrder = [0, 1];
 	hurtTimer = 0;
 
 	constructor() {
 		this.stage = new KenStage();
+		this.entities = new EntityList();
 		this.overlays = [new StatusBar(this.fighters), new FpsCounter()];
 		this.startRound();
 	}
@@ -54,7 +55,7 @@ export class BattleScene {
 		return new FighterClass(
 			index,
 			this.handleAttackHit.bind(this),
-			this.addEntity.bind(this)
+			this.entities
 		);
 	};
 
@@ -100,7 +101,7 @@ export class BattleScene {
 		const HitSplashClass = this.getHitSplashClass(strength);
 
 		position &&
-			this.addEntity(HitSplashClass, position.x, position.y, playerId);
+			this.entities.addEntity(HitSplashClass, position.x, position.y, playerId);
 
 		this.hurtTimer = time.previous + FighterStruckDelay * FRAME_TIME;
 	};
@@ -120,25 +121,6 @@ export class BattleScene {
 		this.shadows = this.fighters.map((fighter) => new Shadow(fighter));
 	};
 
-	addEntity = (EntityClass, ...args) => {
-		const Entity = new EntityClass(...args, this.removeEntity);
-		this.entities.push(Entity);
-		return Entity;
-	};
-
-	// Either use arrow function as i keeps the 'this' reference of parent always and doesnt have own 'this'
-	// Or use normal function and use this.removeEntity.bind(this)
-
-	removeEntity = (entity) => {
-		this.entities = this.entities.filter((thisEntity) => thisEntity !== entity);
-	};
-
-	updateEntities = (time, camera) => {
-		for (const entity of this.entities) {
-			entity.update(time, camera);
-		}
-	};
-
 	updateOverlays = (time) => {
 		this.overlays.map((overlay) => overlay.update(time));
 	};
@@ -147,7 +129,7 @@ export class BattleScene {
 		this.updateFighters(time);
 		this.updateShadows(time);
 		this.stage.update(time);
-		this.updateEntities(time, this.camera);
+		this.entities.update(time, this.camera);
 		this.camera.update(time);
 		this.updateOverlays(time);
 	};
@@ -162,10 +144,6 @@ export class BattleScene {
 		this.shadows.map((shadow) => shadow.draw(context, this.camera));
 	}
 
-	drawEntities(context) {
-		this.entities.map((entity) => entity.draw(context, this.camera));
-	}
-
 	drawOverlays(context) {
 		this.overlays.map((overlay) => overlay.draw(context, this.camera));
 	}
@@ -174,7 +152,7 @@ export class BattleScene {
 		this.stage.drawBackground(context, this.camera);
 		this.drawShadows(context);
 		this.drawFighters(context);
-		this.drawEntities(context);
+		this.entities.draw(context, this.camera);
 		this.stage.drawForeground(context, this.camera);
 		this.drawOverlays(context);
 	};

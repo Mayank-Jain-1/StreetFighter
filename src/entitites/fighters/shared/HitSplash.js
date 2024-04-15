@@ -1,8 +1,8 @@
 import { FRAME_TIME } from '../../../constants/game.js';
 
 export class HitSplash {
-	constructor(x, y, playerId, removeSplash) {
-		this.removeSplash = removeSplash;
+	constructor(x, y, playerId, entities) {
+		this.entities = entities;
 		this.position = { x, y };
 		this.playerId = playerId;
 		this.image = document.getElementById('Decals');
@@ -18,7 +18,7 @@ export class HitSplash {
 		this.animationTimer = time.previous;
 		this.animationFrame++;
 		if (this.animationFrame >= this.frames[this.playerId].length)
-			this.removeSplash(this);
+			this.entities.removeEntity(this);
 	};
 
 	draw = (context, camera) => {
