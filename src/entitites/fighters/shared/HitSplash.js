@@ -18,7 +18,7 @@ export class HitSplash {
 		this.animationTimer = time.previous;
 		this.animationFrame++;
 		if (this.animationFrame >= this.frames[this.playerId].length)
-			this.entities.removeEntity(this);
+			this.entities.remove(this);
 	};
 
 	draw = (context, camera) => {

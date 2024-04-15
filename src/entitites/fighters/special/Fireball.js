@@ -115,7 +115,7 @@ export class Fireball {
 	}
 
 	endFireball = () => {
-		this.entities.removeEntity(this);
+		this.entities.remove(this);
 		this.fighter.fireballInstance = undefined;
 	};
 
@@ -160,8 +160,8 @@ export class Fireball {
 	};
 
 	handleCollisionWithFireball = (time, otherFireball) => {
-		this.handleCollidedInit(time, 0.15);
-		otherFireball.handleCollidedInit(time, 0.15);
+		this.handleCollidedInit(time, 0.1);
+		otherFireball.handleCollidedInit(time, 0.1);
 		this.currentState = FireballState.COLLIDED;
 		otherFireball.currentState = FireballState.COLLIDED;
 	};
@@ -216,7 +216,7 @@ export class Fireball {
 		return false;
 	};
 
-	hasFireballCollided = (time) => {
+	hasFireballCollided = () => {
 		var [x, y, width, height] = this.frames.get(
 			this.animations[this.currentState][this.animationFrame][0]
 		)[1];
@@ -227,7 +227,7 @@ export class Fireball {
 			{ x, y, width, height }
 		);
 		//Other Fireballs
-		for (const entity of this.entities.entities) {
+		for (const entity of this.entities.entitiesList) {
 			if (entity instanceof Fireball && entity !== this) {
 				const hasCollidedWithOtherFireball = this.hasCollidedWithOtherFireball(
 					actualFireballDimensions,
@@ -236,6 +236,7 @@ export class Fireball {
 				if (hasCollidedWithOtherFireball) return hasCollidedWithOtherFireball;
 			}
 		}
+
 		const hasCollidedWithOpponent = this.hasFireballCollidedWithOpponent(
 			actualFireballDimensions,
 			this.fighter.opponent

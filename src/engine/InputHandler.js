@@ -4,6 +4,7 @@ import { FighterDirection } from '../constants/fighter.js';
 
 const heldKeys = new Set();
 const pressedKeys = new Set();
+const pressedKeysControlHistory = new Set();
 const mappedKeys = controls
 	.map(({ keyboard }) => Object.values(keyboard))
 	.flat();
@@ -11,6 +12,14 @@ const mappedKeys = controls
 const isPressed = (code) => {
 	if (heldKeys.has(code) && !pressedKeys.has(code)) {
 		pressedKeys.add(code);
+		return true;
+	}
+	return false;
+};
+
+const isPressedControlHistory = (code) => {
+	if (heldKeys.has(code) && !pressedKeysControlHistory.has(code)) {
+		pressedKeysControlHistory.add(code);
 		return true;
 	}
 	return false;
@@ -29,6 +38,7 @@ const handleKeyUp = (event) => {
 	if (heldKeys.has(event.code)) {
 		heldKeys.delete(event.code);
 		pressedKeys.delete(event.code);
+		pressedKeysControlHistory.delete(event.code);
 	}
 };
 
@@ -64,25 +74,28 @@ export const isBackward = (id, direction) => {
 export const isIdle = (id) =>
 	isUp(id) || isDown(id) || isLeft(id) || isRight(id);
 
-export const isKeyPressed = (id, code) =>
-	isPressed(controls[id].keyboard[code]);
-
-export const isLightPunch = (id) => {
-	return isKeyPressed(id, Control.LIGHT_PUNCH);
-};
-export const isMediumPunch = (id) => {
-	return isKeyPressed(id, Control.MEDIUM_PUNCH);
-};
-export const isHeavyPunch = (id) => {
-	return isKeyPressed(id, Control.HEAVY_PUNCH);
+export const isKeyPressed = (id, code, forControlHistory) => {
+	if (forControlHistory)
+		return isPressedControlHistory(controls[id].keyboard[code]);
+	return isPressed(controls[id].keyboard[code]);
 };
 
-export const isLightKick = (id) => {
-	return isKeyPressed(id, Control.LIGHT_KICK);
+export const isLightPunch = (id, forControlHistory = false) => {
+	return isKeyPressed(id, Control.LIGHT_PUNCH, forControlHistory);
 };
-export const isMediumKick = (id) => {
-	return isKeyPressed(id, Control.MEDIUM_KICK);
+export const isMediumPunch = (id, forControlHistory = false) => {
+	return isKeyPressed(id, Control.MEDIUM_PUNCH, forControlHistory);
 };
-export const isHeavyKick = (id) => {
-	return isKeyPressed(id, Control.HEAVY_KICK);
+export const isHeavyPunch = (id, forControlHistory = false) => {
+	return isKeyPressed(id, Control.HEAVY_PUNCH, forControlHistory);
+};
+
+export const isLightKick = (id, forControlHistory = false) => {
+	return isKeyPressed(id, Control.LIGHT_KICK, forControlHistory);
+};
+export const isMediumKick = (id, forControlHistory = false) => {
+	return isKeyPressed(id, Control.MEDIUM_KICK, forControlHistory);
+};
+export const isHeavyKick = (id, forControlHistory = false) => {
+	return isKeyPressed(id, Control.HEAVY_KICK, forControlHistory);
 };

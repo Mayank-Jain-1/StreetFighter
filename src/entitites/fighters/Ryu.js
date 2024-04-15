@@ -1,3 +1,4 @@
+import { FighterControls } from '../../constants/controls.js';
 import {
 	FighterAttackStrength,
 	FighterId,
@@ -1121,11 +1122,25 @@ export class Ryu extends Fighter {
 			['stun-3', 9],
 			['stun-3', FrameDelay.TRANSITION],
 		],
-		[FighterState.SPECIAL_1]: [
+		[FighterState.SPECIAL_1_LIGHT]: [
 			['special-1', 2],
 			['special-2', 8],
 			['special-3', 2],
 			['special-4', 40],
+			['special-4', FrameDelay.TRANSITION],
+		],
+		[FighterState.SPECIAL_1_MEDIUM]: [
+			['special-1', 4],
+			['special-2', 10],
+			['special-3', 4],
+			['special-4', 46],
+			['special-4', FrameDelay.TRANSITION],
+		],
+		[FighterState.SPECIAL_1_HEAVY]: [
+			['special-1', 5],
+			['special-2', 10],
+			['special-3', 5],
+			['special-4', 60],
 			['special-4', FrameDelay.TRANSITION],
 		],
 	};
@@ -1140,13 +1155,34 @@ export class Ryu extends Fighter {
 		},
 		jump: -420,
 	};
+	specialMoveSequence = {
+		[FighterState.SPECIAL_1_LIGHT]: [
+			FighterControls.DOWN,
+			FighterControls.FORWARD_DOWN,
+			FighterControls.FORWARD,
+			FighterControls.LIGHT_PUNCH,
+		],
+		[FighterState.SPECIAL_1_MEDIUM]: [
+			FighterControls.DOWN,
+			FighterControls.FORWARD_DOWN,
+			FighterControls.FORWARD,
+			FighterControls.MEDIUM_PUNCH,
+		],
+		[FighterState.SPECIAL_1_HEAVY]: [
+			FighterControls.DOWN,
+			FighterControls.FORWARD_DOWN,
+			FighterControls.FORWARD,
+			FighterControls.HEAVY_PUNCH,
+		],
+	};
 
 	gravity = 1000;
 
-	constructor(playerId, onAttackHit, entities) {
-		super(playerId, onAttackHit, entities);
+	constructor(playerId, onAttackHit, entityList) {
+		super(playerId, onAttackHit, entityList);
 
-		this.states[FighterState.SPECIAL_1] = {
+		this.states[FighterState.SPECIAL_1_LIGHT] = {
+			attackStrength: FighterAttackStrength.LIGHT,
 			init: this.handleHadoukenInit,
 			update: this.handleHadouken,
 			shadow: [1.6, 1, 22, 0],
@@ -1158,15 +1194,56 @@ export class Ryu extends Fighter {
 				FighterState.CROUCH_DOWN,
 				FighterState.CROUCH,
 				FighterState.CROUCH_TURN,
+				FighterState.LIGHT_PUNCH,
+				FighterState.MEDIUM_PUNCH,
+				FighterState.HEAVY_PUNCH,
+			],
+		};
+		this.states[FighterState.SPECIAL_1_MEDIUM] = {
+			attackStrength: FighterAttackStrength.MEDIUM,
+			init: this.handleHadoukenInit,
+			update: this.handleHadouken,
+			shadow: [1.6, 1, 22, 0],
+			validFrom: [
+				FighterState.IDLE,
+				FighterState.IDLE_TURN,
+				FighterState.WALK_FORWARD,
+				FighterState.CROUCH_UP,
+				FighterState.CROUCH_DOWN,
+				FighterState.CROUCH,
+				FighterState.CROUCH_TURN,
+				FighterState.LIGHT_PUNCH,
+				FighterState.MEDIUM_PUNCH,
+				FighterState.HEAVY_PUNCH,
+			],
+		};
+		this.states[FighterState.SPECIAL_1_HEAVY] = {
+			attackStrength: FighterAttackStrength.HEAVY,
+			init: this.handleHadoukenInit,
+			update: this.handleHadouken,
+			shadow: [1.6, 1, 22, 0],
+			validFrom: [
+				FighterState.IDLE,
+				FighterState.IDLE_TURN,
+				FighterState.WALK_FORWARD,
+				FighterState.CROUCH_UP,
+				FighterState.CROUCH_DOWN,
+				FighterState.CROUCH,
+				FighterState.CROUCH_TURN,
+				FighterState.LIGHT_PUNCH,
+				FighterState.MEDIUM_PUNCH,
+				FighterState.HEAVY_PUNCH,
 			],
 		};
 		this.states[FighterState.IDLE].validFrom = [
 			...this.states[FighterState.IDLE].validFrom,
-			FighterState.SPECIAL_1,
+			FighterState.SPECIAL_1_LIGHT,
+			FighterState.SPECIAL_1_MEDIUM,
+			FighterState.SPECIAL_1_HEAVY,
 		];
 	}
 
-	handleHadoukenInit = () => {
+	handleHadoukenInit = (time) => {
 		this.resetVelocities();
 		this.fireball.fired = false;
 		this.fireball.strength = playSound(this.soundHadouken);
@@ -1174,10 +1251,10 @@ export class Ryu extends Fighter {
 
 	handleHadouken = (time) => {
 		if (this.animationFrame === 3 && !this.fireball.fired) {
-			this.entities.addEntity(
+			this.entityList.add(
 				Fireball,
 				this,
-				FighterAttackStrength.HEAVY,
+				this.states[this.currentState].attackStrength,
 				time
 			);
 			this.fireball.fired = true;

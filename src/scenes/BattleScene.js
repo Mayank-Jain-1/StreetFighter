@@ -31,7 +31,6 @@ export class BattleScene {
 	shadows = [];
 	FighterDrawOrder = [0, 1];
 	hurtTimer = 0;
-
 	constructor() {
 		this.stage = new KenStage();
 		this.entities = new EntityList();
@@ -101,7 +100,7 @@ export class BattleScene {
 		const HitSplashClass = this.getHitSplashClass(strength);
 
 		position &&
-			this.entities.addEntity(HitSplashClass, position.x, position.y, playerId);
+			this.entities.add(HitSplashClass, position.x, position.y, playerId);
 
 		this.hurtTimer = time.previous + FighterStruckDelay * FRAME_TIME;
 	};

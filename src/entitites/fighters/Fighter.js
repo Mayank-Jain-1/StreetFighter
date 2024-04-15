@@ -35,6 +35,7 @@ import {
 	soundLandId,
 } from '../../constants/sounds.js';
 import { playSound, stopSound } from '../../engine/SoundHandler.js';
+import { ControlHistory } from '../../engine/ControlHistory.js';
 
 // TODO Convert hurt: [[], [], []] to {head:[], body:[], legs:[],}
 
@@ -110,10 +111,10 @@ export class Fighter {
 
 	soundLand = document.getElementById(soundLandId);
 
-	constructor(playerId, onAttackHit, entities) {
+	constructor(playerId, onAttackHit, entityList) {
 		this.playerId = playerId;
 		this.onAttackHit = onAttackHit;
-		this.entities = entities;
+		this.entityList = entityList;
 		this.position = {
 			x:
 				STAGE_MID_POINT +
@@ -340,6 +341,7 @@ export class Fighter {
 				validFrom: FighterHurtStates,
 			},
 		};
+		this.controlHistory = new ControlHistory(this);
 	}
 
 	hasCollidedWithOpponent = () =>
@@ -404,6 +406,7 @@ export class Fighter {
 	};
 
 	changeState = (newState, time) => {
+
 		if (!this.states[newState].validFrom.includes(this.currentState)) {
 			console.log(`Illegal move from ${this.currentState} to ${newState}`);
 			return;
@@ -493,7 +496,7 @@ export class Fighter {
 		else if (control.isBackward(this.playerId, this.direction))
 			this.changeState(FighterState.WALK_BACKWARD, time);
 		else if (control.isLightPunch(this.playerId))
-			this.changeState(FighterState.SPECIAL_1, time);
+			this.changeState(FighterState.LIGHT_PUNCH, time);
 		else if (control.isMediumPunch(this.playerId))
 			this.changeState(FighterState.MEDIUM_PUNCH, time);
 		else if (control.isHeavyPunch(this.playerId))
@@ -883,6 +886,7 @@ export class Fighter {
 		this.updateAnimation(time);
 		this.updateStageConstraints(time, camera);
 		this.updateAttackBoxCollided(time);
+		this.controlHistory?.update(time);
 	};
 
 	draw = (context, camera) => {
