@@ -113,6 +113,20 @@ export class Fireball {
 		this.animationTimer = time.previous;
 	}
 
+	endFireball = () => {
+		this.onEnd(this);
+		this.fighter.fireballInstance = undefined;
+	};
+
+	handleCollidedInit = (time) => {
+		this.velocity /= 3;
+		this.currentState = FireballState.COLLIDED;
+		this.animationFrame = 0;
+		this.animationTimer =
+			time.previous +
+			this.animations[this.currentState][this.animationFrame][1] * FRAME_TIME;
+	};
+
 	updateAnimation = (time) => {
 		if (this.animationTimer > time.previous) return;
 
@@ -120,7 +134,7 @@ export class Fireball {
 
 		if (this.animationFrame >= this.animations[this.currentState].length) {
 			this.animationFrame = 0;
-			if (this.currentState === FireballState.COLLIDED) this.onEnd(this);
+			if (this.currentState === FireballState.COLLIDED) this.endFireball();
 		}
 		this.animationTimer =
 			time.previous +
@@ -133,22 +147,17 @@ export class Fireball {
 			this.position.x - camera.position.x >= SCENE_WIDTH + 56 ||
 			this.position.x - camera.position.x <= -56
 		) {
-			this.onEnd(this);
+			this.endFireball();
 		}
 
 		if (this.currentState === FireballState.COLLIDED) return;
 		const hasCollided = this.hasFireballCollided(time);
 		if (!hasCollided) return;
-		this.velocity /= 2;
-		this.currentState = FireballState.COLLIDED;
-		this.animationFrame = 0;
-		this.animationTimer =
-			time.previous +
-			this.animations[this.currentState][this.animationFrame][1] * FRAME_TIME;
+		this.handleCollidedInit(time);
 	};
 
 	hasFireballCollided = (time) => {
-		const [x, y, width, height] = this.frames.get(
+		var [x, y, width, height] = this.frames.get(
 			this.animations[this.currentState][this.animationFrame][0]
 		)[1];
 
@@ -157,6 +166,32 @@ export class Fireball {
 			this.direction,
 			{ x, y, width, height }
 		);
+
+		const opponentFireball = this.fighter.opponent.fireballInstance;
+		if (opponentFireball) {
+			[x, y, width, height] = opponentFireball.frames.get(
+				opponentFireball.animations[opponentFireball.currentState][
+					opponentFireball.animationFrame
+				][0]
+			)[1];
+
+			const actualOpponentFireballDimensions = getActualBoxDimensions(
+				opponentFireball.position,
+				opponentFireball.direction,
+				{ x, y, width, height }
+			);
+
+			if (
+				boxOverlap(actualFireballDimensions, actualOpponentFireballDimensions)
+			) {
+				this.handleCollidedInit(time);
+				opponentFireball.handleCollidedInit(time);
+				this.currentState = FireballState.COLLIDED;
+				opponentFireball.currentState = FireballState.COLLIDED;
+			}
+
+			console.log([x, y, width, height]);
+		}
 
 		for (const [hurtArea, dimensions] of Object.entries(
 			this.fighter.opponent.boxes.hurt

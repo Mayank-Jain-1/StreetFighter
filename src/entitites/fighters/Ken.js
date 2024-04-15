@@ -22,6 +22,8 @@ export class Ken extends Fighter {
 		strength: undefined,
 	};
 
+	fireballInstance = undefined;
+
 	frames = new Map([
 		// Idle
 		// [
@@ -1179,7 +1181,12 @@ export class Ken extends Fighter {
 
 	handleHadouken = (time) => {
 		if (this.animationFrame === 3 && !this.fireball.fired) {
-			this.addEntity(Fireball, this, FighterAttackStrength.HEAVY, time);
+			this.fireballInstance = this.addEntity(
+				Fireball,
+				this,
+				FighterAttackStrength.HEAVY,
+				time
+			);
 			this.fireball.fired = true;
 		}
 

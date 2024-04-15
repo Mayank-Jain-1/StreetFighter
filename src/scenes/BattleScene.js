@@ -121,7 +121,9 @@ export class BattleScene {
 	};
 
 	addEntity = (EntityClass, ...args) => {
-		this.entities.push(new EntityClass(...args, this.removeEntity));
+		const Entity = new EntityClass(...args, this.removeEntity);
+		this.entities.push(Entity);
+		return Entity;
 	};
 
 	// Either use arrow function as i keeps the 'this' reference of parent always and doesnt have own 'this'
