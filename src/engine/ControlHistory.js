@@ -169,7 +169,7 @@ export class ControlHistory {
 	};
 
 	updateSpecialMoveSequences = (time) => {
-		this.print();
+		// this.print();
 		this.fighter.specialMoves.forEach((move) => {
 			if (this.history[0][0] === move.sequence[move.cursor]) {
 				move.cursor++;

@@ -39,7 +39,7 @@ import { ControlHistory } from '../../engine/ControlHistory.js';
 // [Done] TODO Convert hurt: [[], [], []] to {head:[], body:[], legs:[],}
 // [FIXED]: handleHadoukenInit was being called in Fighter Idle.init TODO BUG: find what makes the hadouken sound call out of noWhere - happens when hitting and after atleast once the Hadouken is thrown
 
-//[FIxes] this.opponent.attackStruck = false was missing in handleHeadBodyHit TODO: if fighters move into each other for some time they wont take hits.
+//[FIXED] this.opponent.attackStruck = false was missing in handleHeadBodyHit TODO: if fighters move into each other for some time they wont take hits.
 
 export class Fighter {
 	velocity = {

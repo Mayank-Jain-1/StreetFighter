@@ -13,7 +13,7 @@ import { FPS } from '../../constants/game.js';
 import { gameState } from '../../states/gameState.js';
 import { drawFrame } from '../../utils/context.js';
 
-// TODO : KO flashing even at full HP
+// [FIXED] Was not /100 in Critical Health Constant TODO : KO flashing even at full HP
 
 export class StatusBar {
 	time = 99;
