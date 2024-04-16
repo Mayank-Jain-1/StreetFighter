@@ -1,5 +1,9 @@
 import { controls } from '../config/controls.js';
-import { FighterControls, POLLING_DELAY } from '../constants/controls.js';
+import {
+	SpecialMovesControls,
+	POLLING_DELAY,
+	MINIMUM_REPOLL_TIME,
+} from '../constants/controls.js';
 import { FighterState } from '../constants/fighter.js';
 import * as control from './InputHandler.js';
 
@@ -9,12 +13,12 @@ export class ControlHistory {
 	historyTimer = 0;
 
 	controlToButton = [
-		[control.isLightPunch, FighterControls.LIGHT_PUNCH],
-		[control.isMediumPunch, FighterControls.MEDIUM_PUNCH],
-		[control.isHeavyPunch, FighterControls.HEAVY_PUNCH],
-		[control.isLightKick, FighterControls.LIGHT_KICK],
-		[control.isMediumKick, FighterControls.MEDIUM_KICK],
-		[control.isHeavyKick, FighterControls.HEAVY_KICK],
+		[control.isLightPunch, SpecialMovesControls.LIGHT_PUNCH],
+		[control.isMediumPunch, SpecialMovesControls.MEDIUM_PUNCH],
+		[control.isHeavyPunch, SpecialMovesControls.HEAVY_PUNCH],
+		[control.isLightKick, SpecialMovesControls.LIGHT_KICK],
+		[control.isMediumKick, SpecialMovesControls.MEDIUM_KICK],
+		[control.isHeavyKick, SpecialMovesControls.HEAVY_KICK],
 	];
 
 	constructor(fighter) {
@@ -22,49 +26,27 @@ export class ControlHistory {
 		this.playerId = fighter.playerId;
 	}
 
-	matchMovesinArrays = (sequence, history) => {
-		if (history.length < sequence.length) return false;
-		for (let i = 0; i < sequence.length; i++) {
-			if (history[i][0] !== sequence[i]) return false;
-		}
-		this.history = [];
-		return true;
-	};
-
-	isMoveSequenceMade(fighterState) {
-		const sequence = this.fighter.specialMoveSequence[fighterState]
-			.slice()
-			.reverse();
-
-		return (
-			this.matchMovesinArrays(sequence, this.history) ||
-			this.matchMovesinArrays(sequence, this.history.slice(1)) ||
-			this.matchMovesinArrays(sequence, this.history.slice(2)) ||
-			this.matchMovesinArrays(sequence, this.history.slice(3))
-		);
-	}
-
 	getMove = () => {
 		if (control.isForward(this.playerId, this.fighter.direction)) {
 			if (control.isUp(this.playerId, this.fighter.direction))
-				return FighterControls.FORWARD_UP;
+				return SpecialMovesControls.FORWARD_UP;
 			else if (control.isDown(this.playerId, this.fighter.direction))
-				return FighterControls.FORWARD_DOWN;
-			return FighterControls.FORWARD;
+				return SpecialMovesControls.FORWARD_DOWN;
+			return SpecialMovesControls.FORWARD;
 		} else if (control.isBackward(this.playerId, this.fighter.direction)) {
 			if (control.isUp(this.playerId, this.fighter.direction))
-				return FighterControls.BACKWARD_UP;
+				return SpecialMovesControls.BACKWARD_UP;
 			else if (control.isDown(this.playerId, this.fighter.direction))
-				return FighterControls.BACKWARD_DOWN;
-			return FighterControls.BACKWARD;
+				return SpecialMovesControls.BACKWARD_DOWN;
+			return SpecialMovesControls.BACKWARD;
 		} else if (control.isUp(this.playerId, this.fighter.direction))
-			return FighterControls.UP;
+			return SpecialMovesControls.UP;
 		else if (control.isDown(this.playerId, this.fighter.direction))
-			return FighterControls.DOWN;
+			return SpecialMovesControls.DOWN;
 		else if (control.isLightPunch(this.playerId, this.fighter.direction))
-			return FighterControls.LIGHT_PUNCH;
+			return SpecialMovesControls.LIGHT_PUNCH;
 		else if (control.isMediumPunch(this.playerId, this.fighter.direction))
-			return FighterControls.MEDIUM_PUNCH;
+			return SpecialMovesControls.MEDIUM_PUNCH;
 		else return null;
 	};
 
@@ -80,7 +62,7 @@ export class ControlHistory {
 	isValidAddition = (control, time) => {
 		if (this.history.length === 0 || this.history[0][0] !== control)
 			return true;
-		if (time.previous - this.history[0][1] > 2 * POLLING_DELAY) return true;
+		if (time.previous - this.history[0][1] > MINIMUM_REPOLL_TIME) return true;
 		return false;
 	};
 
@@ -91,13 +73,15 @@ export class ControlHistory {
 		const button = this.getButton();
 		const move = this.getMove();
 
-		if (button && this.isValidAddition(button, time))
+		if (button && this.isValidAddition(button, time)) {
 			this.history.unshift([button, time.previous]);
+			this.updateSpecialMoveSequences(time);
+		}
 
-		if (move && this.isValidAddition(move, time))
+		if (move && this.isValidAddition(move, time)) {
 			this.history.unshift([move, time.previous]);
-
-		// this.print();
+			this.updateSpecialMoveSequences(time);
+		}
 	};
 
 	remove = (time) => {
@@ -111,24 +95,93 @@ export class ControlHistory {
 	};
 
 	print() {
-		let something = [];
-		for (const [name] of this.history) something.push(name);
-		console.log(something);
+		let historyWithNamesOnly = [];
+		for (const [name] of this.history) historyWithNamesOnly.push(name);
+		console.log(historyWithNamesOnly);
 	}
 
-	checkSequences = (time) => {
-		for (const [state, sequence] of Object.entries(
-			this.fighter.specialMoveSequence
-		)) {
-			if (this.isMoveSequenceMade(state)) {
-				this.fighter.changeState(state, time);
+	// older version which work with 	specialMoveSequence = {
+	// 	[FighterState.SPECIAL_1_LIGHT]: [
+	// 		SpecialMovesControls.DOWN,
+	// 		SpecialMovesControls.FORWARD_DOWN,
+	// 		SpecialMovesControls.FORWARD,
+	// 		SpecialMovesControls.LIGHT_PUNCH,
+	// 	],
+	// 	[FighterState.SPECIAL_1_MEDIUM]: [
+	// 		SpecialMovesControls.DOWN,
+	// 		SpecialMovesControls.FORWARD_DOWN,
+	// 		SpecialMovesControls.FORWARD,
+	// 		SpecialMovesControls.MEDIUM_PUNCH,
+	// 	],
+	// 	[FighterState.SPECIAL_1_HEAVY]: [
+	// 		SpecialMovesControls.DOWN,
+	// 		SpecialMovesControls.FORWARD_DOWN,
+	// 		SpecialMovesControls.FORWARD,
+	// 		SpecialMovesControls.HEAVY_PUNCH,
+	// 	],
+	// };
+
+	// NOT Used
+	OLD_VERSION_TO_CHECK_SEQUENCE = () => {
+		checkSequences = (time) => {
+			for (const [state, sequence] of Object.entries(
+				this.fighter.specialMoveSequence
+			)) {
+				if (this.isMoveSequenceMade(state)) {
+					this.fighter.changeState(state, time);
+				}
 			}
-		}
+		};
+		matchMovesinArrays = (sequence, history) => {
+			if (history.length < sequence.length) return false;
+			for (let i = 0; i < sequence.length; i++) {
+				if (history[i][0] !== sequence[i]) return false;
+			}
+			this.history = [];
+			return true;
+		};
+		isMoveSequenceMade = (fighterState) => {
+			const sequence = this.fighter.specialMoveSequence[fighterState]
+				.slice()
+				.reverse();
+
+			return (
+				this.matchMovesinArrays(sequence, this.history) ||
+				this.matchMovesinArrays(sequence, this.history.slice(1)) ||
+				this.matchMovesinArrays(sequence, this.history.slice(2)) ||
+				this.matchMovesinArrays(sequence, this.history.slice(3))
+			);
+		};
+	};
+
+	resetCursors = () => {
+		this.fighter.specialMoves.forEach((move) => {
+			move.cursor = 0;
+		});
+	};
+
+	checkSequences = (time) => {
+		this.fighter.specialMoves.forEach((move) => {
+			if (move.cursor === move.sequence.length) {
+				this.fighter.changeState(move.state, time);
+				move.cursor = 0;
+			}
+		});
+	};
+
+	updateSpecialMoveSequences = (time) => {
+		// this.print();
+		this.fighter.specialMoves.map(({ state, sequence, cursor }, index) => {
+			if (this.history[0][0] === sequence[cursor]) {
+				this.fighter.specialMoves[index].cursor++;
+				this.checkSequences(time);
+			} else this.fighter.specialMoves[index].cursor = 0;
+		});
 	};
 
 	update = (time) => {
 		this.add(time);
 		this.remove(time);
-		this.checkSequences(time);
+		if (this.history.length === 0) this.resetCursors();
 	};
 }

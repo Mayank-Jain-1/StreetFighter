@@ -1,4 +1,4 @@
-import { FighterControls } from '../../constants/controls.js';
+import { SpecialMovesControls } from '../../constants/controls.js';
 import {
 	FighterAttackStrength,
 	FighterId,
@@ -1152,26 +1152,38 @@ export class Ryu extends Fighter {
 		},
 		jump: -420,
 	};
-	specialMoveSequence = {
-		[FighterState.SPECIAL_1_LIGHT]: [
-			FighterControls.DOWN,
-			FighterControls.FORWARD_DOWN,
-			FighterControls.FORWARD,
-			FighterControls.LIGHT_PUNCH,
-		],
-		[FighterState.SPECIAL_1_MEDIUM]: [
-			FighterControls.DOWN,
-			FighterControls.FORWARD_DOWN,
-			FighterControls.FORWARD,
-			FighterControls.MEDIUM_PUNCH,
-		],
-		[FighterState.SPECIAL_1_HEAVY]: [
-			FighterControls.DOWN,
-			FighterControls.FORWARD_DOWN,
-			FighterControls.FORWARD,
-			FighterControls.HEAVY_PUNCH,
-		],
-	};
+	specialMoves = [
+		{
+			state: FighterState.SPECIAL_1_LIGHT,
+			sequence: [
+				SpecialMovesControls.DOWN,
+				SpecialMovesControls.FORWARD_DOWN,
+				SpecialMovesControls.FORWARD,
+				SpecialMovesControls.LIGHT_PUNCH,
+			],
+			cursor: 0,
+		},
+		{
+			state: FighterState.SPECIAL_1_MEDIUM,
+			sequence: [
+				SpecialMovesControls.DOWN,
+				SpecialMovesControls.FORWARD_DOWN,
+				SpecialMovesControls.FORWARD,
+				SpecialMovesControls.MEDIUM_PUNCH,
+			],
+			cursor: 0,
+		},
+		{
+			state: FighterState.SPECIAL_1_HEAVY,
+			sequence: [
+				SpecialMovesControls.DOWN,
+				SpecialMovesControls.FORWARD_DOWN,
+				SpecialMovesControls.FORWARD,
+				SpecialMovesControls.HEAVY_PUNCH,
+			],
+			cursor: 0,
+		},
+	];
 
 	gravity = 1000;
 

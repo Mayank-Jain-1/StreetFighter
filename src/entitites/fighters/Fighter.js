@@ -86,6 +86,8 @@ export class Fighter {
 		),
 	};
 
+	specialMoves = null;
+
 	soundHits = {
 		[FighterAttackStrength.LIGHT]: {
 			[FighterAttackType.PUNCH]: document.getElementById(
@@ -406,7 +408,6 @@ export class Fighter {
 	};
 
 	changeState = (newState, time) => {
-
 		if (!this.states[newState].validFrom.includes(this.currentState)) {
 			console.log(`Illegal move from ${this.currentState} to ${newState}`);
 			return;

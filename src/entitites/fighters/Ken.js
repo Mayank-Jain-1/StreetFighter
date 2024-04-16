@@ -1,4 +1,4 @@
-import { FighterControls } from '../../constants/controls.js';
+import { SpecialMovesControls } from '../../constants/controls.js';
 import {
 	FighterAttackStrength,
 	FighterId,
@@ -1148,6 +1148,39 @@ export class Ken extends Fighter {
 		],
 	};
 
+	specialMoves = [
+		{
+			state: FighterState.SPECIAL_1_LIGHT,
+			sequence: [
+				SpecialMovesControls.DOWN,
+				SpecialMovesControls.FORWARD_DOWN,
+				SpecialMovesControls.FORWARD,
+				SpecialMovesControls.LIGHT_PUNCH,
+			],
+			cursor: 0,
+		},
+		{
+			state: FighterState.SPECIAL_1_MEDIUM,
+			sequence: [
+				SpecialMovesControls.DOWN,
+				SpecialMovesControls.FORWARD_DOWN,
+				SpecialMovesControls.FORWARD,
+				SpecialMovesControls.MEDIUM_PUNCH,
+			],
+			cursor: 0,
+		},
+		{
+			state: FighterState.SPECIAL_1_HEAVY,
+			sequence: [
+				SpecialMovesControls.DOWN,
+				SpecialMovesControls.FORWARD_DOWN,
+				SpecialMovesControls.FORWARD,
+				SpecialMovesControls.HEAVY_PUNCH,
+			],
+			cursor: 0,
+		},
+	];
+
 	initialVelocity = {
 		x: {
 			[FighterState.WALK_FORWARD]: 3 * 60,
@@ -1157,27 +1190,6 @@ export class Ken extends Fighter {
 			[FighterState.JUMP_UP]: 0,
 		},
 		jump: -420,
-	};
-
-	specialMoveSequence = {
-		[FighterState.SPECIAL_1_LIGHT]: [
-			FighterControls.DOWN,
-			FighterControls.FORWARD_DOWN,
-			FighterControls.FORWARD,
-			FighterControls.LIGHT_PUNCH,
-		],
-		[FighterState.SPECIAL_1_MEDIUM]: [
-			FighterControls.DOWN,
-			FighterControls.FORWARD_DOWN,
-			FighterControls.FORWARD,
-			FighterControls.MEDIUM_PUNCH,
-		],
-		[FighterState.SPECIAL_1_HEAVY]: [
-			FighterControls.DOWN,
-			FighterControls.FORWARD_DOWN,
-			FighterControls.FORWARD,
-			FighterControls.HEAVY_PUNCH,
-		],
 	};
 
 	gravity = 1000;
@@ -1239,6 +1251,7 @@ export class Ken extends Fighter {
 				FighterState.HEAVY_PUNCH,
 			],
 		};
+
 		this.states[FighterState.IDLE].validFrom = [
 			...this.states[FighterState.IDLE].validFrom,
 			FighterState.SPECIAL_1_LIGHT,

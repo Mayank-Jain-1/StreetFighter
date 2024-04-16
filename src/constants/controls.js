@@ -11,7 +11,7 @@ export const Control = {
 	HEAVY_KICK: 'heavyKick',
 };
 
-export const FighterControls = {
+export const SpecialMovesControls = {
 	FORWARD: 'forward',
 	BACKWARD: 'backward',
 	UP: 'up',
@@ -28,6 +28,8 @@ export const FighterControls = {
 	HEAVY_KICK: 'heavyKick',
 };
 
-const POLLING_RATE = 20; // milliseconds . for per seconds = 1000/POLLING_RATE
+const POLLING_RATE = 30; // milliseconds . for per seconds = 1000/POLLING_RATE
 
 export const POLLING_DELAY = 1000 / POLLING_RATE;
+
+export const MINIMUM_REPOLL_TIME = 200; // milliseconds before the same move/button is added into the history back to back
