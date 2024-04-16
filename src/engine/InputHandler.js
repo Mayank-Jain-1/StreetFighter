@@ -1,15 +1,23 @@
-import { controls } from '../config/controls.js';
+import { CONTROLLER_DEADZONE, controls } from '../config/controls.js';
 import { Control } from '../constants/controls.js';
 import { FighterDirection } from '../constants/fighter.js';
-
-const gamePads = [];
 
 const mappedButtons = new Set(
 	controls.map(({ gamepad }) => Object.values(gamepad)).flat()
 );
-// console.log(mappedButtons);
 const heldGamepadButtons = [new Set(), new Set()];
 const pressedGamepadButtons = [new Set(), new Set()];
+
+const gamepadThumbstickAxes = [
+	{
+		x: 0,
+		y: 0,
+	},
+	{
+		x: 0,
+		y: 0,
+	},
+];
 
 const heldKeys = new Set();
 const pressedKeys = new Set();
@@ -82,39 +90,45 @@ export const registerKeyboardEvents = () => {
 
 const handleGamepadConnected = (event) => {
 	const gamepad = event.gamepad;
-	gamePads[gamepad.index] = gamepad;
+	console.log(
+		`gamepad named ${gamepad.id} connected for player ${gamepad.index + 1}`
+	);
 };
 
 const handleGamepadDisconnected = (event) => {
 	const gamepad = event.gamepad;
-	const index = gamepad.index;
-	gamepads.splice(index, 1);
+	console.log(
+		`gamepad named ${gamepad.id} disconnected for player ${gamepad.index + 1}`
+	);
+};
+
+const updateGamepadButtons = (gamePadIndex, gamePad) => {
+	if (!gamePad) return;
+	gamePad.buttons.forEach((button, index) => {
+		if (!mappedButtons.has(index)) return;
+		if (button.pressed) {
+			heldGamepadButtons[gamePadIndex].add(index);
+		} else {
+			heldGamepadButtons[gamePadIndex].delete(index);
+			pressedGamepadButtons[gamePadIndex].delete(index);
+			pressedKeysControlHistory[gamePadIndex].delete(index);
+		}
+	});
+};
+
+const updateGamepadAxes = (gamePadIndex, gamePad) => {
+	if (!gamePad) return;
+	gamepadThumbstickAxes[gamePadIndex].x = gamePad.axes[0];
+	gamepadThumbstickAxes[gamePadIndex].y = gamePad.axes[1];
 };
 
 export const updateGamePads = () => {
 	const gamepadList = navigator.getGamepads();
+
 	for (const [gamePadIndex, gamePad] of gamepadList.entries()) {
-		if (!gamePad) continue;
-		gamePad.buttons.forEach((button, index) => {
-			if (!mappedButtons.has(index)) return;
-			if (button.pressed) {
-				// console.log(index);
-				heldGamepadButtons[gamePadIndex].add(index);
-			} else {
-				heldGamepadButtons[gamePadIndex].delete(index);
-				pressedGamepadButtons[gamePadIndex].delete(index);
-				pressedKeysControlHistory[gamePadIndex].delete(index);
-			}
-		});
+		updateGamepadButtons(gamePadIndex, gamePad);
+		updateGamepadAxes(gamePadIndex, gamePad);
 	}
-	// if (gamepadList[0]) {
-	// 	console.log(gamepadList[0].buttons[controls[0].gamepad[Control.LEFT]]);
-	// 	console.log(
-	// 		gamepadList[0].buttons[controls[0].gamepad[Control.LEFT]].pressed
-	// 	);
-	// }
-	// if (gamepadList.some((gamepad) => gamepad))
-	// 	console.log(gamepadList[0].buttons);
 };
 
 export const registerGamepadEvents = () => {
@@ -123,6 +137,7 @@ export const registerGamepadEvents = () => {
 };
 
 export const isLeft = (id) => {
+	if (gamepadThumbstickAxes[id].x < -1 * CONTROLLER_DEADZONE) return true;
 	return (
 		heldKeys.has(controls[id].keyboard[Control.LEFT]) ||
 		heldGamepadButtons[id].has(controls[id].gamepad[Control.LEFT])
@@ -130,6 +145,8 @@ export const isLeft = (id) => {
 };
 
 export const isUp = (id) => {
+	if (gamepadThumbstickAxes[id].y < -1 * CONTROLLER_DEADZONE) return true;
+
 	return (
 		heldKeys.has(controls[id].keyboard[Control.UP]) ||
 		heldGamepadButtons[id].has(controls[id].gamepad[Control.UP])
@@ -137,6 +154,8 @@ export const isUp = (id) => {
 };
 
 export const isRight = (id) => {
+	if (gamepadThumbstickAxes[id].x > CONTROLLER_DEADZONE) return true;
+
 	return (
 		heldKeys.has(controls[id].keyboard[Control.RIGHT]) ||
 		heldGamepadButtons[id].has(controls[id].gamepad[Control.RIGHT])
@@ -144,6 +163,8 @@ export const isRight = (id) => {
 };
 
 export const isDown = (id) => {
+	if (gamepadThumbstickAxes[id].y > CONTROLLER_DEADZONE) return true;
+
 	return (
 		heldKeys.has(controls[id].keyboard[Control.DOWN]) ||
 		heldGamepadButtons[id].has(controls[id].gamepad[Control.DOWN])

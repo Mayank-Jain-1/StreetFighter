@@ -71,3 +71,5 @@ export const controls = [
 		},
 	},
 ];
+
+export const CONTROLLER_DEADZONE = 0.4;
