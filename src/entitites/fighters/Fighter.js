@@ -38,6 +38,7 @@ import { playSound, stopSound } from '../../engine/SoundHandler.js';
 import { ControlHistory } from '../../engine/ControlHistory.js';
 
 // TODO Convert hurt: [[], [], []] to {head:[], body:[], legs:[],}
+// TODO BUG: find what makes the hadouken sound call out of noWhere - happens when hitting and after atleast once the Hadouken is thrown
 
 export class Fighter {
 	velocity = {

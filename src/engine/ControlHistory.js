@@ -66,7 +66,7 @@ export class ControlHistory {
 		return false;
 	};
 
-	add = (time) => {
+	handleAdd = (time) => {
 		if (this.historyTimer > time.previous) return;
 		this.historyTimer = time.previous + POLLING_DELAY;
 
@@ -84,7 +84,7 @@ export class ControlHistory {
 		}
 	};
 
-	remove = (time) => {
+	handleRemove = (time) => {
 		for (let i = this.history.length - 1; i >= 0; i--) {
 			if (this.history[i][1] <= time.previous - this.historyTimerCap) {
 				this.history.splice(i, 1);
@@ -92,6 +92,7 @@ export class ControlHistory {
 				return;
 			}
 		}
+		if (this.history.length === 0) this.resetCursors();
 	};
 
 	print() {
@@ -160,28 +161,25 @@ export class ControlHistory {
 		});
 	};
 
-	checkSequences = (time) => {
-		this.fighter.specialMoves.forEach((move) => {
-			if (move.cursor === move.sequence.length) {
-				this.fighter.changeState(move.state, time);
-				move.cursor = 0;
-			}
-		});
+	checkSequence = (time, move) => {
+		if (move.cursor === move.sequence.length) {
+			this.fighter.changeState(move.state, time);
+			move.cursor = 0;
+		}
 	};
 
 	updateSpecialMoveSequences = (time) => {
 		// this.print();
-		this.fighter.specialMoves.map(({ state, sequence, cursor }, index) => {
-			if (this.history[0][0] === sequence[cursor]) {
-				this.fighter.specialMoves[index].cursor++;
-				this.checkSequences(time);
-			} else this.fighter.specialMoves[index].cursor = 0;
+		this.fighter.specialMoves.forEach((move) => {
+			if (this.history[0][0] === move.sequence[move.cursor]) {
+				move.cursor++;
+				this.checkSequence(time, move);
+			} else move.cursor = 0;
 		});
 	};
 
 	update = (time) => {
-		this.add(time);
-		this.remove(time);
-		if (this.history.length === 0) this.resetCursors();
+		this.handleAdd(time);
+		this.handleRemove(time);
 	};
 }
