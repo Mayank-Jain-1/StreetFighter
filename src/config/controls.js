@@ -1,7 +1,36 @@
 import { Control } from '../constants/controls.js';
 
+const PSControls = {
+	X: 0,
+	O: 1,
+	SQ: 2,
+	TR: 3,
+	L1: 4,
+	R1: 5,
+	L2: 6,
+	R2: 7,
+	L3: 10,
+	R3: 11,
+	UP: 12,
+	DOWN: 13,
+	LEFT: 14,
+	RIGHT: 15,
+};
+
 export const controls = [
 	{
+		gamepad: {
+			[Control.LEFT]: PSControls.LEFT,
+			[Control.RIGHT]: PSControls.RIGHT,
+			[Control.UP]: PSControls.UP,
+			[Control.DOWN]: PSControls.DOWN,
+			[Control.LIGHT_PUNCH]: PSControls.X,
+			[Control.MEDIUM_PUNCH]: PSControls.SQ,
+			[Control.HEAVY_PUNCH]: PSControls.L1,
+			[Control.LIGHT_KICK]: PSControls.O,
+			[Control.MEDIUM_KICK]: PSControls.TR,
+			[Control.HEAVY_KICK]: PSControls.R1,
+		},
 		keyboard: {
 			[Control.LEFT]: 'KeyA',
 			[Control.RIGHT]: 'KeyD',
@@ -16,6 +45,18 @@ export const controls = [
 		},
 	},
 	{
+		gamepad: {
+			[Control.LEFT]: PSControls.LEFT,
+			[Control.RIGHT]: PSControls.RIGHT,
+			[Control.UP]: PSControls.UP,
+			[Control.DOWN]: PSControls.DOWN,
+			[Control.LIGHT_PUNCH]: PSControls.X,
+			[Control.MEDIUM_PUNCH]: PSControls.SQ,
+			[Control.HEAVY_PUNCH]: PSControls.L1,
+			[Control.LIGHT_KICK]: PSControls.O,
+			[Control.MEDIUM_KICK]: PSControls.TR,
+			[Control.HEAVY_KICK]: PSControls.R1,
+		},
 		keyboard: {
 			[Control.LEFT]: 'ArrowLeft',
 			[Control.RIGHT]: 'ArrowRight',

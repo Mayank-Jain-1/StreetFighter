@@ -1,4 +1,8 @@
-import { registerKeyboardEvents } from './engine/InputHandler.js';
+import {
+	registerGamepadEvents,
+	registerKeyboardEvents,
+	updateGamePads,
+} from './engine/InputHandler.js';
 import { getContext } from './utils/context.js';
 import { BattleScene } from './scenes/BattleScene.js';
 import { GAME_SPEED } from './constants/game.js';
@@ -30,13 +34,14 @@ export class StreetFighterGame {
 			secondsPassed: (time - this.frameTime.previous) / 1000,
 			previous: time,
 		};
-
+		updateGamePads();
 		this.scene.update(this.frameTime);
 		this.scene.draw(this.context);
 	};
 
 	start() {
 		registerKeyboardEvents();
+		registerGamepadEvents();
 		window.requestAnimationFrame(this.frame.bind(this));
 	}
 }

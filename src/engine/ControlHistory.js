@@ -169,7 +169,7 @@ export class ControlHistory {
 	};
 
 	updateSpecialMoveSequences = (time) => {
-		// this.print();
+		this.print();
 		this.fighter.specialMoves.forEach((move) => {
 			if (this.history[0][0] === move.sequence[move.cursor]) {
 				move.cursor++;
@@ -181,5 +181,15 @@ export class ControlHistory {
 	update = (time) => {
 		this.handleAdd(time);
 		this.handleRemove(time);
+		// const gamepads = navigator.getGamepads();
+		// if (!gamepads) return;
+		// const gp = gamepads[0];
+		// if (gp) {
+		// 	gp.buttons.forEach((button, index) => {
+		// 		console.log(gp.axes[0]);
+		// 		if (button.pressed) console.log(index);
+		// 	});
+		// }
+		// if (gp && this.gp.buttons) console.log(this.gp.buttons);
 	};
 }
