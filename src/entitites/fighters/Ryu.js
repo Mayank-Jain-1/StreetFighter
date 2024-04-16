@@ -18,10 +18,7 @@ export class Ryu extends Fighter {
 
 	soundHadouken = document.getElementById(soundHadoukenId[FighterId.RYU]);
 
-	fireball = {
-		fired: false,
-		strength: undefined,
-	};
+	fireballFired = false;
 
 	fireballInstance = undefined;
 
@@ -1245,23 +1242,23 @@ export class Ryu extends Fighter {
 
 	handleHadoukenInit = (time) => {
 		this.resetVelocities();
-		this.fireball.fired = false;
-		this.fireball.strength = playSound(this.soundHadouken);
+		this.fireballFired = false;
+		playSound(this.soundHadouken);
 	};
 
 	handleHadouken = (time) => {
-		if (this.animationFrame === 3 && !this.fireball.fired) {
+		if (this.animationFrame === 3 && !this.fireballFired) {
 			this.entityList.add(
 				Fireball,
 				this,
 				this.states[this.currentState].attackStrength,
 				time
 			);
-			this.fireball.fired = true;
+			this.fireballFired = true;
 		}
 
 		if (!this.isAnimationCompleted()) return;
-		this.fireball.fired = false;
+		this.fireballFired = false;
 		this.changeState(FighterState.IDLE, time);
 	};
 }

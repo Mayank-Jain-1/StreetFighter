@@ -71,7 +71,6 @@ export class ControlHistory {
 	getButton = () => {
 		for (const [isButton, buttonName] of this.controlToButton) {
 			if (isButton(this.playerId, true)) {
-				console.log('button Pressed ', buttonName);
 				return buttonName;
 			}
 		}
