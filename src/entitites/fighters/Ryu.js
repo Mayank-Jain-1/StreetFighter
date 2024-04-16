@@ -1255,6 +1255,8 @@ export class Ryu extends Fighter {
 	handleHadoukenInit = (time) => {
 		this.resetVelocities();
 		this.fireballFired = false;
+		console.log('handleHadoukenInit called from RYU');
+
 		playSound(this.soundHadouken);
 	};
 

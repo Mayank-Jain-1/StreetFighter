@@ -1263,6 +1263,7 @@ export class Ken extends Fighter {
 	handleHadoukenInit = (time) => {
 		this.resetVelocities();
 		this.fireballFired = false;
+		console.log('handleHadoukenInit called from KEN')
 		playSound(this.soundHadouken);
 	};
 

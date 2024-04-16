@@ -30,7 +30,6 @@ import { DRAW_DEBUG, HIT_SPLASH_RANDOMNESS } from '../../constants/battle.js';
 import { DEBUG_drawCollisionInfo } from '../../utils/fighterDebug.js';
 import {
 	soundAttackIds,
-	soundHadoukenId,
 	soundHitIds,
 	soundLandId,
 } from '../../constants/sounds.js';
@@ -38,7 +37,7 @@ import { playSound, stopSound } from '../../engine/SoundHandler.js';
 import { ControlHistory } from '../../engine/ControlHistory.js';
 
 // TODO Convert hurt: [[], [], []] to {head:[], body:[], legs:[],}
-// TODO BUG: find what makes the hadouken sound call out of noWhere - happens when hitting and after atleast once the Hadouken is thrown
+// [FIXED]: handleHadoukenInit was being called in Fighter Idle.init TODO BUG: find what makes the hadouken sound call out of noWhere - happens when hitting and after atleast once the Hadouken is thrown
 
 export class Fighter {
 	velocity = {
@@ -131,7 +130,7 @@ export class Fighter {
 
 		this.states = {
 			[FighterState.IDLE]: {
-				init: this.handleHadoukenInit,
+				init: this.resetVelocities,
 				update: this.handleIdle,
 				validFrom: [
 					undefined,
@@ -483,11 +482,6 @@ export class Fighter {
 		this.velocity = { x: 0, y: 0 };
 	};
 
-	handleHadoukenInit = () => {
-		this.resetVelocities();
-		this.attackStruck = false;
-	};
-
 	handleIdle = (time) => {
 		if (control.isUp(this.playerId, this.direction))
 			this.changeState(FighterState.JUMP_START, time);
@@ -636,8 +630,6 @@ export class Fighter {
 	};
 
 	handleIdleTurnState = (time) => {
-		this.handleHadoukenInit();
-
 		if (this.isAnimationCompleted()) {
 			this.changeState(FighterState.IDLE, time);
 		}
