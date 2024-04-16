@@ -7,9 +7,12 @@ export const TIME_FRAME_KEYS = ['time', 'time-flash'];
 export const KO_FLASH_DELAY = [4 * FRAME_TIME, 7 * FRAME_TIME];
 export const KO_FLASH_KEYS = ['ko-white', 'ko-black'];
 
-export const HEALTH_MAX_HIT_POINTS = 144;
+export const HEALTH_MAX_HIT_POINTS = 244;
 
-export const HEALTH_CRITICAL_HIT_POINTS = 40;
+const HEALTH_CRITICAL_HIT_POINTS_PERCENTAGE = 40;
+
+export const HEALTH_CRITICAL_HIT_POINTS =
+	HEALTH_CRITICAL_HIT_POINTS_PERCENTAGE * HEALTH_MAX_HIT_POINTS;
 
 export const HEALTH_COLOR = '#f3f300'; //Not being used
 export const HEALTH_DAMAGE_COLOR = '#f30000';

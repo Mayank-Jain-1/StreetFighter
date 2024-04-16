@@ -176,13 +176,20 @@ export class StatusBar {
 		context.fillRect(
 			32,
 			21,
-			HEALTH_MAX_HIT_POINTS - Math.floor(this.healthBars[0].hitPoints),
+			Math.floor(
+				(144 * (HEALTH_MAX_HIT_POINTS - this.healthBars[0].hitPoints)) /
+					HEALTH_MAX_HIT_POINTS
+			),
 			9
 		);
 		context.fillRect(
-			208 + Math.floor(this.healthBars[1].hitPoints),
+			208 +
+				Math.ceil((144 * this.healthBars[1].hitPoints) / HEALTH_MAX_HIT_POINTS),
 			21,
-			Math.floor(HEALTH_MAX_HIT_POINTS - this.healthBars[1].hitPoints),
+			Math.floor(
+				(144 * (HEALTH_MAX_HIT_POINTS - this.healthBars[1].hitPoints)) /
+					HEALTH_MAX_HIT_POINTS
+			),
 			9
 		);
 	}

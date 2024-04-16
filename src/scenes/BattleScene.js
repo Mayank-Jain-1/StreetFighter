@@ -51,11 +51,7 @@ export class BattleScene {
 
 	getFighterEntitiy = (id, index) => {
 		const FighterClass = this.getFighterClass(id);
-		return new FighterClass(
-			index,
-			this.handleAttackHit.bind(this),
-			this.entities
-		);
+		return new FighterClass(index, this.handleAttackHit, this.entities);
 	};
 
 	getFighterEntities = () => {
