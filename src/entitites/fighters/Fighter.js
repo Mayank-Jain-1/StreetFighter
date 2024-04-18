@@ -64,6 +64,8 @@ export class Fighter {
 	hurtShakeTimer = 0;
 	hurtShake = 0;
 
+	victory = false;
+
 	opponent = undefined;
 	boxes = {
 		push: { pushX: 0, pushY: 0, pushWidth: 0, pushHeight: 0 },
@@ -346,6 +348,11 @@ export class Fighter {
 				update: this.handleHeadBodyHit,
 				validFrom: FighterHurtStates,
 			},
+			[FighterState.VICTORY]: {
+				init: this.resetVelocities,
+				update: () => {},
+				validFrom: Object.values(FighterState),
+			},
 		};
 		this.controlHistory = new ControlHistory(this);
 	}
@@ -492,6 +499,10 @@ export class Fighter {
 	};
 
 	handleIdle = (time) => {
+		if (this.victory) {
+			this.changeState(FighterState.VICTORY, time);
+			return;
+		}
 		if (control.isUp(this.playerId, this.direction))
 			this.changeState(FighterState.JUMP_START, time);
 		else if (control.isDown(this.playerId))

@@ -9,7 +9,7 @@ export const KO_FLASH_KEYS = ['ko-white', 'ko-black'];
 
 export const LOGO_FLASH_DELAY = [100 * FRAME_TIME, 20 * FRAME_TIME];
 
-export const HEALTH_MAX_HIT_POINTS = 244;
+export const HEALTH_MAX_HIT_POINTS = 14;
 
 const HEALTH_CRITICAL_HIT_POINTS_PERCENTAGE = 0.4;
 

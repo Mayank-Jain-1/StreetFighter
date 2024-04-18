@@ -9,6 +9,38 @@ export const FighterDirection = {
 	RIGHT: 1,
 };
 
+// export const AllFighterStates = [
+// 	IDLE,
+// 	WALK_FORWARD,
+// 	WALK_BACKWARD,
+// 	JUMP_START,
+// 	JUMP_UP,
+// 	JUMP_FORWARD,
+// 	JUMP_BACKWARD,
+// 	JUMP_LAND,
+// 	CROUCH,
+// 	CROUCH_UP,
+// 	CROUCH_DOWN,
+// 	IDLE_TURN,
+// 	CROUCH_TURN,
+// 	LIGHT_PUNCH,
+// 	MEDIUM_PUNCH,
+// 	HEAVY_PUNCH,
+// 	LIGHT_KICK,
+// 	MEDIUM_KICK,
+// 	HEAVY_KICK,
+// 	HURT_HEAD_LIGHT,
+// 	HURT_HEAD_MEDIUM,
+// 	HURT_HEAD_HEAVY,
+// 	HURT_BODY_LIGHT,
+// 	HURT_BODY_MEDIUM,
+// 	HURT_BODY_HEAVY,
+// 	SPECIAL_1_LIGHT,
+// 	SPECIAL_1_MEDIUM,
+// 	SPECIAL_1_HEAVY,
+// 	VICTORY,
+// ];
+
 export const FighterState = {
 	IDLE: 'idle',
 	WALK_FORWARD: 'walkForwards',
@@ -38,6 +70,7 @@ export const FighterState = {
 	SPECIAL_1_LIGHT: 'special1Light',
 	SPECIAL_1_MEDIUM: 'special1Medium',
 	SPECIAL_1_HEAVY: 'special1Heavy',
+	VICTORY: 'victory',
 };
 
 export const FighterStruckDelay = 15;
@@ -66,6 +99,12 @@ export const FighterHurtArea = {
 };
 
 export const HurtBox = {
+	INVINCLIBLE: [
+		[0, 0, 0, 0],
+		[0, 0, 0, 0],
+		[0, 0, 0, 0],
+	],
+
 	IDLE: [
 		[-8, -88, 24, 16],
 		[-26, -74, 40, 42],

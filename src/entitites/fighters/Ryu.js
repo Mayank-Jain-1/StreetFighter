@@ -943,6 +943,52 @@ export class Ryu extends Fighter {
 				],
 			],
 		],
+
+		// VICTORY
+		[
+			'victory-1',
+			[
+				[
+					[431, 1929, 60, 88],
+					[30, 87],
+				],
+				PushBox.IDLE,
+				HurtBox.IDLE,
+			],
+		],
+		[
+			'victory-2',
+			[
+				[
+					[503, 1920, 60, 97],
+					[30, 95],
+				],
+				PushBox.IDLE,
+				HurtBox.IDLE,
+			],
+		],
+		[
+			'victory-3',
+			[
+				[
+					[576, 1894, 55, 122],
+					[34, 120],
+				],
+				PushBox.IDLE,
+				HurtBox.IDLE,
+			],
+		],
+		[
+			'victory-4',
+			[
+				[
+					[637, 1903, 57, 113],
+					[32, 111],
+				],
+				PushBox.IDLE,
+				HurtBox.IDLE,
+			],
+		],
 	]);
 
 	animations = {
@@ -1139,6 +1185,15 @@ export class Ryu extends Fighter {
 			['special-3', 5],
 			['special-4', 60],
 			['special-4', FrameDelay.TRANSITION],
+		],
+
+		[FighterState.VICTORY]: [
+			['idle-1', 20],
+			['victory-1', 20],
+			['victory-2', 10],
+			['victory-3', 15],
+			['victory-4', 15],
+			['victory-3', FrameDelay.FREEZE],
 		],
 	};
 

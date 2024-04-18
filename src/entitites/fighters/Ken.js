@@ -949,6 +949,63 @@ export class Ken extends Fighter {
 				],
 			],
 		],
+
+		// Victor
+		[
+			'victory-1',
+			[
+				[
+					[71, 3625, 60, 89],
+					[30, 88],
+				],
+				PushBox.IDLE,
+				HurtBox.IDLE,
+			],
+		],
+		[
+			'victory-2',
+			[
+				[
+					[140, 3617, 60, 97],
+					[30, 96],
+				],
+				PushBox.IDLE,
+				HurtBox.IDLE,
+			],
+		],
+		[
+			'victory-3',
+			[
+				[
+					[207, 3601, 57, 113],
+					[33, 112],
+				],
+				PushBox.IDLE,
+				HurtBox.IDLE,
+			],
+		],
+		[
+			'victory-4',
+			[
+				[
+					[272, 3616, 56, 99],
+					[34, 98],
+				],
+				PushBox.IDLE,
+				HurtBox.IDLE,
+			],
+		],
+		[
+			'victory-5',
+			[
+				[
+					[344, 3622, 61, 94],
+					[32, 92],
+				],
+				PushBox.IDLE,
+				HurtBox.IDLE,
+			],
+		],
 	]);
 
 	animations = {
@@ -1145,6 +1202,15 @@ export class Ken extends Fighter {
 			['special-3', 5],
 			['special-4', 60],
 			['special-4', FrameDelay.TRANSITION],
+		],
+
+		[FighterState.VICTORY]: [
+			['idle-1', 20],
+			['victory-1', 20],
+			['victory-2', 10],
+			['victory-3', 15],
+			['victory-4', 15],
+			['victory-5', FrameDelay.FREEZE],
 		],
 	};
 

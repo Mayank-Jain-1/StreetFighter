@@ -36,7 +36,7 @@ export class StreetFighterGame {
 	};
 
 	constructor() {
-		this.startScene(StartScene);
+		this.startScene(BattleScene);
 	}
 
 	updateScenes = () => {

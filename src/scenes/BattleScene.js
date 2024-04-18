@@ -7,9 +7,10 @@ import {
 	FighterAttackBaseData,
 	FighterAttackStrength,
 	FighterId,
+	FighterState,
 	FighterStruckDelay,
 } from '../constants/fighter.js';
-import { FRAME_TIME } from '../constants/game.js';
+import { FRAME_TIME, GAME_SPEED } from '../constants/game.js';
 import { Camera } from '../engine/Camera.js';
 import { EntityList } from '../engine/EntityList.js';
 import { Ken, Ryu } from '../entitites/fighters/index.js';
@@ -23,7 +24,8 @@ import { Fireball } from '../entitites/fighters/special/Fireball.js';
 import { FpsCounter } from '../entitites/overlays/FpsCounter.js';
 import { StatusBar } from '../entitites/overlays/StatusBar.js';
 import { KenStage } from '../entitites/stage/KenStage.js';
-import { gameState } from '../states/gameState.js';
+import { gameState, resetGameState } from '../states/gameState.js';
+import { StartScene } from './StartScene.js';
 
 export class BattleScene {
 	fighters = [];
@@ -31,11 +33,13 @@ export class BattleScene {
 	shadows = [];
 	FighterDrawOrder = [0, 1];
 	hurtTimer = 0;
+	battleEnded = false;
 	constructor(changeScene) {
 		this.changeScene = changeScene;
 		this.stage = new KenStage();
 		this.entities = new EntityList();
 		this.overlays = [new StatusBar(this.fighters), new FpsCounter()];
+		resetGameState();
 		this.startRound();
 	}
 
@@ -56,9 +60,11 @@ export class BattleScene {
 	};
 
 	getFighterEntities = () => {
-		const fighterEntities = gameState.fighters.map(({ id }, index) =>
-			this.getFighterEntitiy(id, index)
-		);
+		const fighterEntities = gameState.fighters.map(({ id }, index) => {
+			const fighterEntity = this.getFighterEntitiy(id, index);
+			gameState.fighters[index].instance = fighterEntity;
+			return fighterEntity;
+		});
 
 		fighterEntities[0].opponent = fighterEntities[1];
 		fighterEntities[1].opponent = fighterEntities[0];
@@ -121,6 +127,18 @@ export class BattleScene {
 		this.overlays.map((overlay) => overlay.update(time));
 	};
 
+	updateSceneChange = (time) => {
+		gameState.fighters.map((fighter, index) => {
+			if (fighter.hitPoints <= 0 && !this.battleEnded) {
+				this.fighters[index].opponent.victory = true;
+				this.battleEnded = true;
+				setTimeout(() => {
+					this.changeScene(StartScene);
+				}, 10000 / GAME_SPEED);
+			}
+		});
+	};
+
 	update = (time) => {
 		this.updateFighters(time);
 		this.updateShadows(time);
@@ -128,6 +146,7 @@ export class BattleScene {
 		this.entities.update(time, this.camera);
 		this.camera.update(time);
 		this.updateOverlays(time);
+		this.updateSceneChange(time);
 	};
 
 	drawFighters(context) {

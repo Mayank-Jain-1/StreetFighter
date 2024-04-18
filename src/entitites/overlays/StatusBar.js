@@ -110,7 +110,7 @@ export class StatusBar {
 		['tag-ryu', [16, 56, 28, 9]],
 	]);
 
-	constructor() {
+	constructor(handleTimeEnd) {
 		this.image = document.getElementById('hud');
 		this.nameTags = gameState.fighters.map(
 			({ id }) => `tag-${id.toLowerCase()}`
