@@ -989,6 +989,64 @@ export class Ryu extends Fighter {
 				HurtBox.IDLE,
 			],
 		],
+
+		// Falling
+
+		[
+			'fall-1',
+			[
+				[
+					[636, 2164, 82, 77],
+					[50, 80],
+				],
+				PushBox.IDLE,
+				HurtBox.INVINCLIBLE,
+			],
+		],
+		[
+			'fall-2',
+			[
+				[
+					[726, 2197, 102, 45],
+					[50, 80],
+				],
+				PushBox.IDLE,
+				HurtBox.INVINCLIBLE,
+			],
+		],
+		[
+			'fall-3',
+			[
+				[
+					[828, 2164, 78, 80],
+					[40, 80],
+				],
+				PushBox.IDLE,
+				HurtBox.INVINCLIBLE,
+			],
+		],
+		[
+			'fall-4',
+			[
+				[
+					[911, 2193, 120, 53],
+					[60, 45],
+				],
+				PushBox.IDLE,
+				HurtBox.INVINCLIBLE,
+			],
+		],
+		[
+			'fall-5',
+			[
+				[
+					[1040, 2217, 128, 31],
+					[60, 30],
+				],
+				PushBox.IDLE,
+				HurtBox.INVINCLIBLE,
+			],
+		],
 	]);
 
 	animations = {
@@ -1188,12 +1246,20 @@ export class Ryu extends Fighter {
 		],
 
 		[FighterState.VICTORY]: [
-			['idle-1', 20],
+			['idle-1', 60],
 			['victory-1', 20],
 			['victory-2', 10],
 			['victory-3', 15],
 			['victory-4', 15],
 			['victory-3', FrameDelay.FREEZE],
+		],
+		[FighterState.KO]: [
+			['hit-stomach-2', 9],
+			['fall-1', 15],
+			['fall-2', 9],
+			['fall-3', 12],
+			['fall-4', 15],
+			['fall-5', FrameDelay.FREEZE],
 		],
 	};
 

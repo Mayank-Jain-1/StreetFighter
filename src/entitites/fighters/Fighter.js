@@ -353,6 +353,12 @@ export class Fighter {
 				update: () => {},
 				validFrom: Object.values(FighterState),
 			},
+			[FighterState.KO]: {
+				init: this.resetVelocities,
+				update: this.handleHeadBodyHit,
+				shadow: [2.4, 1, 0, 0],
+				validFrom: Object.values(FighterState),
+			},
 		};
 		this.controlHistory = new ControlHistory(this);
 	}

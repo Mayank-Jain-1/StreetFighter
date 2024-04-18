@@ -1006,6 +1006,64 @@ export class Ken extends Fighter {
 				HurtBox.IDLE,
 			],
 		],
+
+		// Falling
+
+		[
+			'fall-1',
+			[
+				[
+					[1, 3504, 82, 68],
+					[50, 80],
+				],
+				PushBox.IDLE,
+				HurtBox.INVINCLIBLE,
+			],
+		],
+		[
+			'fall-2',
+			[
+				[
+					[84, 3460, 102, 45],
+					[50, 80],
+				],
+				PushBox.IDLE,
+				HurtBox.INVINCLIBLE,
+			],
+		],
+		[
+			'fall-3',
+			[
+				[
+					[188, 3465, 77, 80],
+					[40, 80],
+				],
+				PushBox.IDLE,
+				HurtBox.INVINCLIBLE,
+			],
+		],
+		[
+			'fall-4',
+			[
+				[
+					[340, 3477, 124, 48],
+					[60, 45],
+				],
+				PushBox.IDLE,
+				HurtBox.INVINCLIBLE,
+			],
+		],
+		[
+			'fall-5',
+			[
+				[
+					[709, 3568, 128, 31],
+					[60, 30],
+				],
+				PushBox.IDLE,
+				HurtBox.INVINCLIBLE,
+			],
+		],
 	]);
 
 	animations = {
@@ -1205,12 +1263,21 @@ export class Ken extends Fighter {
 		],
 
 		[FighterState.VICTORY]: [
-			['idle-1', 20],
+			['idle-1', 60],
 			['victory-1', 20],
 			['victory-2', 10],
 			['victory-3', 15],
 			['victory-4', 15],
 			['victory-5', FrameDelay.FREEZE],
+		],
+
+		[FighterState.KO]: [
+			['hit-stomach-2', 9],
+			['fall-1', 15],
+			['fall-2', 9],
+			['fall-3', 12],
+			['fall-4', 15],
+			['fall-5', FrameDelay.FREEZE],
 		],
 	};
 

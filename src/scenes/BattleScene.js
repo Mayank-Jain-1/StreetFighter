@@ -102,6 +102,13 @@ export class BattleScene {
 
 		const HitSplashClass = this.getHitSplashClass(strength);
 
+		if (gameState.fighters[opponentId].hitPoints <= 0) {
+			this.fighters[opponentId].changeState(FighterState.KO, time);
+		}
+
+		this.fighters[opponentId].direction =
+			this.fighters[playerId].direction * -1;
+
 		position &&
 			this.entities.add(HitSplashClass, position.x, position.y, playerId);
 

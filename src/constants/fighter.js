@@ -71,6 +71,7 @@ export const FighterState = {
 	SPECIAL_1_MEDIUM: 'special1Medium',
 	SPECIAL_1_HEAVY: 'special1Heavy',
 	VICTORY: 'victory',
+	KO: 'ko',
 };
 
 export const FighterStruckDelay = 15;
