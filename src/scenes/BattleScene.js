@@ -28,17 +28,23 @@ import { gameState, resetGameState } from '../states/gameState.js';
 import { StartScene } from './StartScene.js';
 
 export class BattleScene {
+	image = document.getElementById('Winner');
 	fighters = [];
 	camera = undefined;
 	shadows = [];
 	FighterDrawOrder = [0, 1];
 	hurtTimer = 0;
 	battleEnded = false;
+	winnerId = undefined;
+
 	constructor(changeScene) {
 		this.changeScene = changeScene;
 		this.stage = new KenStage();
 		this.entities = new EntityList();
-		this.overlays = [new StatusBar(this.fighters), new FpsCounter()];
+		this.overlays = [
+			new StatusBar(this.fighters, this.onTimeEnd),
+			new FpsCounter(),
+		];
 		resetGameState();
 		this.startRound();
 	}
@@ -130,18 +136,40 @@ export class BattleScene {
 		this.shadows = this.fighters.map((fighter) => new Shadow(fighter));
 	};
 
+	goToStartScene = () => {
+		setTimeout(() => {
+			this.changeScene(StartScene);
+		}, 6000);
+	};
+
+	drawWinnerText = (context, id) => {
+		context.drawImage(this.image, 0, 11 * id, 70, 9, 120, 60, 140, 30);
+	};
+
+	onTimeEnd = (time) => {
+		if (gameState.fighters[0].hitPoints >= gameState.fighters[1].hitPoints) {
+			this.fighters[0].victory = true;
+			this.fighters[1].changeState(FighterState.KO, time);
+			this.winnerId = 0;
+		} else {
+			this.fighters[1].victory = true;
+			this.fighters[0].changeState(FighterState.KO, time);
+			this.winnerId = 1;
+		}
+		this.goToStartScene();
+	};
+
 	updateOverlays = (time) => {
 		this.overlays.map((overlay) => overlay.update(time));
 	};
 
-	updateSceneChange = (time) => {
+	updateFighterHP = (time) => {
 		gameState.fighters.map((fighter, index) => {
 			if (fighter.hitPoints <= 0 && !this.battleEnded) {
 				this.fighters[index].opponent.victory = true;
+				this.winnerId = 1 - index;
 				this.battleEnded = true;
-				setTimeout(() => {
-					this.changeScene(StartScene);
-				}, 10000 / GAME_SPEED);
+				this.goToStartScene();
 			}
 		});
 	};
@@ -153,7 +181,7 @@ export class BattleScene {
 		this.entities.update(time, this.camera);
 		this.camera.update(time);
 		this.updateOverlays(time);
-		this.updateSceneChange(time);
+		this.updateFighterHP(time);
 	};
 
 	drawFighters(context) {
@@ -168,6 +196,9 @@ export class BattleScene {
 
 	drawOverlays(context) {
 		this.overlays.map((overlay) => overlay.draw(context, this.camera));
+		if (this.winnerId !== undefined) {
+			this.drawWinnerText(context, this.winnerId);
+		}
 	}
 
 	draw = (context) => {

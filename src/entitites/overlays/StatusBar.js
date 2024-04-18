@@ -1,4 +1,5 @@
 import {
+	BATTLE_TIME,
 	HEALTH_CRITICAL_HIT_POINTS,
 	HEALTH_DAMAGE_COLOR,
 	HEALTH_MAX_HIT_POINTS,
@@ -16,7 +17,7 @@ import { drawFrame } from '../../utils/context.js';
 // [FIXED] Was not /100 in Critical Health Constant TODO : KO flashing even at full HP
 
 export class StatusBar {
-	time = 99;
+	time = BATTLE_TIME;
 	timeTimer = 0;
 
 	timeFlashTimer = 0;
@@ -110,7 +111,8 @@ export class StatusBar {
 		['tag-ryu', [16, 56, 28, 9]],
 	]);
 
-	constructor(handleTimeEnd) {
+	constructor(fighters, onTimeEnd) {
+		this.onTimeEnd = onTimeEnd;
 		this.image = document.getElementById('hud');
 		this.nameTags = gameState.fighters.map(
 			({ id }) => `tag-${id.toLowerCase()}`
@@ -224,6 +226,7 @@ export class StatusBar {
 			this.timeFlashTimer = time.previous;
 			this.useFlashFrames = !this.useFlashFrames;
 		}
+		if (this.time === -2) this.onTimeEnd(time);
 	}
 
 	update(time) {
