@@ -16,21 +16,12 @@ export class StartScene {
 	sceneEnded = false;
 
 	endStartScene = () => {
+		this.changeScene(BattleScene);
 		window.removeEventListener('click', this.endStartScene);
-		this.contextHandler.startDimDown();
-		this.sceneEnded = true;
 	};
 
-	startBattleScene = () => {
-		this.contextHandler.startDimDown();
-		while (this.contextHandler.dimDown !== false) {
-			continue;
-		}
-		this.changeScene(BattleScene);
-	};
-	constructor(changeScene, contextHandler) {
+	constructor(changeScene) {
 		this.changeScene = changeScene;
-		this.contextHandler = contextHandler;
 		window.removeEventListener('click', this.endStartScene);
 		window.addEventListener('click', this.endStartScene);
 	}
@@ -45,17 +36,7 @@ export class StartScene {
 		this.position -= time.secondsPassed * 100;
 	};
 
-	updateSceneChange = (time) => {
-		if (!this.contextHandler.dimDown) {
-			this.changeScene(BattleScene);
-		}
-	};
-
 	update = (time) => {
-		if (this.sceneEnded) {
-			this.updateSceneChange(time);
-			return;
-		}
 		this.updateLogo(time);
 		this.updateTextPosition(time);
 	};

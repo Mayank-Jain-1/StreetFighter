@@ -31,10 +31,8 @@ export class BattleScene {
 	shadows = [];
 	FighterDrawOrder = [0, 1];
 	hurtTimer = 0;
-	constructor(changeScene, contextHandler) {
+	constructor(changeScene) {
 		this.changeScene = changeScene;
-		this.contextHandler = contextHandler;
-		contextHandler.startGlowUp();
 		this.stage = new KenStage();
 		this.entities = new EntityList();
 		this.overlays = [new StatusBar(this.fighters), new FpsCounter()];

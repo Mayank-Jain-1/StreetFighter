@@ -18,17 +18,33 @@ export class StreetFighterGame {
 	};
 
 	timeStarted = 0;
+	sceneStarted = false;
+	nextScene = undefined;
 
 	contextHandler = new ContextHandler(this.context);
 
 	changeScene = (SceneClass) => {
-		console.log('scene changed');
-		this.scene = new SceneClass(this.changeScene, this.contextHandler);
+		this.contextHandler.startDimDown();
+		this.sceneStarted = false;
+		this.nextScene = SceneClass;
+	};
+
+	startScene = (SceneClass) => {
+		this.contextHandler.startGlowUp();
+		this.scene = new SceneClass(this.changeScene);
+		this.sceneStarted = true;
 	};
 
 	constructor() {
-		this.scene = new StartScene(this.changeScene, this.contextHandler);
+		this.startScene(StartScene);
 	}
+
+	updateScenes = () => {
+		this.scene.draw(this.context);
+		if (this.contextHandler.dimDown) return;
+		if (!this.sceneStarted) this.startScene(this.nextScene);
+		this.scene.update(this.frameTime);
+	};
 
 	frame = (time) => {
 		window.requestAnimationFrame(this.frame.bind(this));
@@ -46,9 +62,7 @@ export class StreetFighterGame {
 		updateGamePads();
 		this.contextHandler.update(this.frameTime);
 		this.context.filter = `brightness(${this.contextHandler.brightness}) contrast(${this.contextHandler.contrast})`;
-
-		this.scene.update(this.frameTime);
-		this.scene.draw(this.context);
+		this.updateScenes();
 	};
 
 	start() {
