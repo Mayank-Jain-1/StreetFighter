@@ -39,9 +39,9 @@ export const controls = [
 			[Control.LIGHT_PUNCH]: 'KeyQ',
 			[Control.MEDIUM_PUNCH]: 'KeyE',
 			[Control.HEAVY_PUNCH]: 'KeyR',
-			[Control.LIGHT_KICK]: 'KeyZ',
-			[Control.MEDIUM_KICK]: 'KeyX',
-			[Control.HEAVY_KICK]: 'KeyC',
+			[Control.LIGHT_KICK]: 'KeyF',
+			[Control.MEDIUM_KICK]: 'KeyV',
+			[Control.HEAVY_KICK]: 'KeyG',
 		},
 	},
 	{

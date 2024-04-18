@@ -39,6 +39,8 @@ import { ControlHistory } from '../../engine/ControlHistory.js';
 // [Done] TODO Convert hurt: [[], [], []] to {head:[], body:[], legs:[],}
 // [FIXED]: handleHadoukenInit was being called in Fighter Idle.init TODO BUG: find what makes the hadouken sound call out of noWhere - happens when hitting and after atleast once the Hadouken is thrown
 
+// [Found not fixed] !!TODO One of the fighters randomly stops registering hits - Happens because illegal hurtState - from jumping to hurtHeadBody- jugaad by changing attackStruck in handleIdle
+
 //[FIXED] this.opponent.attackStruck = false was missing in handleHeadBodyHit TODO: if fighters move into each other for some time they wont take hits.
 
 export class Fighter {
@@ -132,7 +134,7 @@ export class Fighter {
 
 		this.states = {
 			[FighterState.IDLE]: {
-				init: this.resetVelocities,
+				init: this.handleIdleInit,
 				update: this.handleIdle,
 				validFrom: [
 					undefined,
@@ -482,6 +484,11 @@ export class Fighter {
 
 	resetVelocities = () => {
 		this.velocity = { x: 0, y: 0 };
+	};
+
+	handleIdleInit = () => {
+		this.resetVelocities();
+		this.opponent.attackStruck = false;
 	};
 
 	handleIdle = (time) => {
@@ -883,7 +890,7 @@ export class Fighter {
 		this.updateAnimation(time);
 		this.updateStageConstraints(time, camera);
 		this.updateAttackBoxCollided(time);
-		this.controlHistory?.update(time);
+		this.controlHistory.update(time);
 	};
 
 	draw = (context, camera) => {
