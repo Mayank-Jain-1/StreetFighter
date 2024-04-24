@@ -47,14 +47,11 @@ To get started with the project, follow these steps:
 
 1. Clone the repository:
    ```
-   git clone <repository-url>
+   git clone https://github.com/Mayank-Jain-1/StreetFighter
    ```
 2. Open `index.html` in your preferred web browser.
 
 That's it! You should now be able to play the Street Fighter game in your browser.
-
-
-Sure, here's the updated section with each heading smaller and indented:
 
 ---
 
