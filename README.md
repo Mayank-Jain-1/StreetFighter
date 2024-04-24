@@ -4,7 +4,7 @@ You can access the hosted version of the Street Fighter game by following this l
 
 This hosted version allows you to play the game directly in your web browser without the need for any downloads or installations. Experience the excitement of classic arcade-style fighting gameplay right from your device!
 
-![Gameplay](src/images/gameplay.png)
+<img src="assets/images/gameplay.png" alt="Gameplay" width="390" height="240">
 
 ## Project Overview
 This project is a simple Street Fighter game implemented using JavaScript and HTML5 canvas. It features classic characters like Ryu and Ken, along with various sound effects and stages.
@@ -47,14 +47,11 @@ To get started with the project, follow these steps:
 
 1. Clone the repository:
    ```
-   git clone <repository-url>
+   git clone https://github.com/Mayank-Jain-1/StreetFighter
    ```
 2. Open `index.html` in your preferred web browser.
 
 That's it! You should now be able to play the Street Fighter game in your browser.
-
-
-Sure, here's the updated section with each heading smaller and indented:
 
 ---
 
