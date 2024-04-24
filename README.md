@@ -3,11 +3,16 @@
 You can access the hosted version of the Street Fighter game by following this link: [Street Fighter Game](https://streetfighterbymayank.netlify.app/)
 
 This hosted version allows you to play the game directly in your web browser without the need for any downloads or installations. Experience the excitement of classic arcade-style fighting gameplay right from your device!
+
+![Gameplay](src/images/gameplay.png)
+
 ## Project Overview
 This project is a simple Street Fighter game implemented using JavaScript and HTML5 canvas. It features classic characters like Ryu and Ken, along with various sound effects and stages.
 
 ## Game Controls
 The game controls are as follows:
+
+![Controls](assets/images/Controls.png)
 
 ### Player 1:
 - **Movement**: 
