@@ -1256,7 +1256,7 @@ export class Ryu extends Fighter {
 		[FighterState.KO]: [
 			['hit-stomach-2', 9],
 			['fall-1', 15],
-			['fall-2', 9],
+			['fall-2', FrameDelay.FREEZE],
 			['fall-3', 12],
 			['fall-4', 15],
 			['fall-5', FrameDelay.FREEZE],

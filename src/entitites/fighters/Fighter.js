@@ -355,7 +355,7 @@ export class Fighter {
 			},
 			[FighterState.KO]: {
 				init: this.resetVelocities,
-				update: this.handleHeadBodyHit,
+				update: this.handleFallBack,
 				shadow: [2.4, 1, 0, 0],
 				validFrom: Object.values(FighterState),
 			},
@@ -750,6 +750,19 @@ export class Fighter {
 	};
 
 	handleHeadBodyHit = (time) => {
+		if (!this.isAnimationCompleted()) return;
+		this.hurtShake = 0;
+		this.hurtShakeTimer = 0;
+		this.opponent.attackStruck = false;
+		this.changeState(FighterState.IDLE, time);
+	};
+
+	handleFallBack = (time) => {
+		if (this.animationFrame === 2 && this.position.y >= STAGE_FLOOR) {
+			this.animationFrame++;
+			this.velocity.y = 0;
+			this.position.y = STAGE_FLOOR;
+		} else if (this.animationFrame === 2) this.velocity.y = 120;
 		if (!this.isAnimationCompleted()) return;
 		this.hurtShake = 0;
 		this.hurtShakeTimer = 0;
