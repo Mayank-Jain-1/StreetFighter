@@ -4,18 +4,22 @@ You can access the hosted version of the Street Fighter game by following this l
 
 This hosted version allows you to play the game directly in your web browser without the need for any downloads or installations. Experience the excitement of classic arcade-style fighting gameplay right from your device!
 
-<img src="assets/images/gameplay.png" alt="Gameplay" width="390" height="240">
+<img src="public/images/gameplay.png" alt="Gameplay" width="390" height="240">
 
 ## Project Overview
+
 This project is a simple Street Fighter game implemented using JavaScript and HTML5 canvas. It features classic characters like Ryu and Ken, along with various sound effects and stages.
 
 ## Game Controls
+
 The game controls are as follows:
 
-![Controls](assets/images/Controls.png)
+![Controls](public/images/Controls.png)
 
 ### Player 1:
-- **Movement**: 
+
+- **Movement**:
+
   - Keyboard: Arrow keys (Left, Right, Up, Down)
   - Gamepad: Left thumbstick
 
@@ -28,7 +32,9 @@ The game controls are as follows:
   - Heavy Kick: G (Keyboard) / R1 (Gamepad)
 
 ### Player 2:
-- **Movement**: 
+
+- **Movement**:
+
   - Keyboard: WASD keys (W for Up)
   - Gamepad: Left thumbstick
 
@@ -43,6 +49,7 @@ The game controls are as follows:
 Please note that for gamepad controls, the controller left thumbstick also works as movement input.
 
 ## Getting Started
+
 To get started with the project, follow these steps:
 
 1. Clone the repository:
@@ -101,11 +108,11 @@ const battleScene = new BattleScene(changeScene);
 
 // Main game loop
 function gameLoop() {
-    // Update the battle scene
-    battleScene.update(time);
+	// Update the battle scene
+	battleScene.update(time);
 
-    // Draw the battle scene
-    battleScene.draw(context);
+	// Draw the battle scene
+	battleScene.draw(context);
 }
 ```
 
@@ -168,15 +175,15 @@ const player2Fighter = new Fighter(player2Id, onAttackHit, entityList);
 
 // Main game loop
 function gameLoop() {
-    // Update player 1 fighter
-    player1Fighter.update(time, camera);
+	// Update player 1 fighter
+	player1Fighter.update(time, camera);
 
-    // Update player 2 fighter
-    player2Fighter.update(time, camera);
+	// Update player 2 fighter
+	player2Fighter.update(time, camera);
 
-    // Render fighters
-    player1Fighter.draw(context, camera);
-    player2Fighter.draw(context, camera);
+	// Render fighters
+	player1Fighter.draw(context, camera);
+	player2Fighter.draw(context, camera);
 }
 ```
 
@@ -228,8 +235,8 @@ const controlHistory = new ControlHistory(fighter);
 
 // Main game loop
 function gameLoop() {
-    // Update control history
-    controlHistory.update(time);
+	// Update control history
+	controlHistory.update(time);
 }
 ```
 
@@ -271,8 +278,8 @@ const camera = new Camera(initialX, initialY, fighters);
 
 // Main game loop
 function gameLoop() {
-    // Update camera position
-    camera.update(time, context);
+	// Update camera position
+	camera.update(time, context);
 }
 ```
 
@@ -293,10 +300,12 @@ function gameLoop() {
 During the development of the game, the following websites and applications were utilized for creating and editing sprites, as well as obtaining sounds:
 
 1. **GraphicsGale**:
+
    - **Description**: GraphicsGale is a versatile graphics editor primarily used for creating and editing sprites, animations, and pixel art.
    - **Usage**: GraphicsGale was used extensively throughout the development process for designing and refining sprite graphics, including character animations, backgrounds, and visual effects.
 
 2. **The Spriters Resource** (https://www.spriters-resource.com/):
+
    - **Description**: The Spriters Resource is an online repository of sprite sheets, game graphics, and artwork sourced from various video games across different platforms.
    - **Usage**: The Spriters Resource served as a valuable resource for obtaining sprite sheets and game graphics to use in the game development process. It provided a wide range of sprites for characters, objects, and environments, which were incorporated into the game with appropriate modifications.
 
@@ -306,12 +315,14 @@ During the development of the game, the following websites and applications were
 
 By leveraging these resources, the game development process was enriched with high-quality graphics and audio elements, contributing to the overall immersion and enjoyment of the gaming experience.
 
-
 ## Contributing
+
 If you would like to contribute to the project, feel free to open an issue or submit a pull request. Any contributions are welcome!
 
 ## License
+
 This project is licensed under the [MIT License](LICENSE).
 
 ---
+
 Feel free to update this README as the project progresses!
