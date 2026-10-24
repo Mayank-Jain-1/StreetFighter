@@ -329,6 +329,11 @@ If you would like to contribute to the project, feel free to open an issue or su
 
 This project is licensed under the [MIT License](LICENSE).
 
+The MIT License covers the **code only**. The sprites in `public/images/` and the
+sounds and music in `public/sounds/` are the property of their respective owners
+(Capcom and others) and are not mine to license — they are included here for
+educational, non-commercial use. If you reuse this project, replace them.
+
 ---
 
 Feel free to update this README as the project progresses!
